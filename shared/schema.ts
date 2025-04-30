@@ -31,6 +31,7 @@ export interface PilatesSession {
   id: string;
   name: string;
   trainer: string;
+  room: string;
   date: string;
   startTime: string;
   duration: number;
@@ -45,6 +46,7 @@ export interface PilatesSession {
 export interface CreateSessionInput {
   name: string;
   trainer: string;
+  room: string;
   date: string;
   startTime: string;
   duration: number;
@@ -56,6 +58,7 @@ export interface CreateSessionInput {
 export const createSessionSchema = z.object({
   name: z.string().min(1, "Activity name is required"),
   trainer: z.string().min(1, "Trainer name is required"),
+  room: z.string().min(1, "Room is required"),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
   startTime: z.string().regex(/^\d{2}:\d{2}$/, "Start time must be in HH:MM format"),
   duration: z.number().int().min(15, "Duration must be at least 15 minutes"),

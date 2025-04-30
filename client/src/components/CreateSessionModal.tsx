@@ -28,12 +28,14 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   
   const activities = ['Mat Pilates', 'Reformer Pilates', 'Barre Fusion', 'Prenatal Pilates'];
   const trainers = ['Sarah Johnson', 'Mike Davis', 'Emma Wilson'];
+  const rooms = ['Studio A', 'Studio B', 'Reformer Room', 'Private Room'];
   
   const form = useForm<z.infer<typeof createSessionSchema>>({
     resolver: zodResolver(createSessionSchema),
     defaultValues: editSession ? {
       name: editSession.name,
       trainer: editSession.trainer,
+      room: editSession.room,
       date: editSession.date,
       startTime: editSession.startTime,
       duration: editSession.duration,
@@ -43,6 +45,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     } : {
       name: 'Mat Pilates',
       trainer: 'Sarah Johnson',
+      room: 'Studio A',
       date: new Date().toISOString().split('T')[0],
       startTime: '10:00',
       duration: 60,
@@ -146,6 +149,34 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                       {trainers.map(trainer => (
                         <SelectItem key={trainer} value={trainer}>
                           {trainer}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="room"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Room</FormLabel>
+                  <Select 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value}
+                  >
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a room" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {rooms.map(room => (
+                        <SelectItem key={room} value={room}>
+                          {room}
                         </SelectItem>
                       ))}
                     </SelectContent>

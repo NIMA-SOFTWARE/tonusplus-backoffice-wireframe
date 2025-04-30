@@ -1,5 +1,6 @@
 import { PilatesSession, Participant, CreateSessionInput, SessionStatus } from '@shared/schema';
 import { generateUniqueId } from './utils';
+import { format, addDays } from 'date-fns';
 
 const STORAGE_KEY = 'pilatesSessions';
 
@@ -311,6 +312,87 @@ const getSampleSessions = (): PilatesSession[] => {
         name: `Participant ${i+1}`,
         email: `afternoon${i+1}@example.com`,
         phone: `555-666-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    // Add sessions for the rest of the week
+    {
+      id: "session7",
+      name: "Mat Pilates",
+      trainer: "Sarah Johnson",
+      room: "Studio A",
+      date: format(addDays(today, 1), 'yyyy-MM-dd'),
+      startTime: "09:00",
+      duration: 60,
+      maxSpots: 12,
+      maxWaitlist: 5,
+      status: "open",
+      participants: Array.from({ length: 3 }, (_, i) => ({
+        id: `p${i+60}`,
+        name: `Participant ${i+1}`,
+        email: `tomorrow${i+1}@example.com`,
+        phone: `555-777-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session8",
+      name: "Barre Fusion",
+      trainer: "Emma Wilson",
+      room: "Studio B",
+      date: format(addDays(today, 2), 'yyyy-MM-dd'),
+      startTime: "17:00",
+      duration: 60,
+      maxSpots: 10,
+      maxWaitlist: 3,
+      status: "open",
+      participants: Array.from({ length: 5 }, (_, i) => ({
+        id: `p${i+70}`,
+        name: `Participant ${i+1}`,
+        email: `day3${i+1}@example.com`,
+        phone: `555-888-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session9",
+      name: "Reformer Pilates",
+      trainer: "Mike Davis",
+      room: "Reformer Room",
+      date: format(addDays(today, 3), 'yyyy-MM-dd'),
+      startTime: "10:00",
+      duration: 60,
+      maxSpots: 8,
+      maxWaitlist: 3,
+      status: "open",
+      participants: Array.from({ length: 6 }, (_, i) => ({
+        id: `p${i+80}`,
+        name: `Participant ${i+1}`,
+        email: `day4${i+1}@example.com`,
+        phone: `555-999-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session10",
+      name: "Prenatal Pilates",
+      trainer: "Sarah Johnson",
+      room: "Private Room",
+      date: format(addDays(today, 4), 'yyyy-MM-dd'),
+      startTime: "14:00",
+      duration: 60,
+      maxSpots: 5,
+      maxWaitlist: 2,
+      status: "open",
+      participants: Array.from({ length: 2 }, (_, i) => ({
+        id: `p${i+90}`,
+        name: `Participant ${i+1}`,
+        email: `day5${i+1}@example.com`,
+        phone: `555-000-${1000+i}`
       })),
       waitlist: [],
       createdAt: new Date().toISOString()

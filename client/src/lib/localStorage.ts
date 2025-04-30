@@ -1,169 +1,275 @@
-import { Session, Participant } from './types';
+import { PilatesSession, Participant, CreateSessionInput, SessionStatus } from '@shared/schema';
+import { generateUniqueId } from './utils';
 
-const SESSIONS_KEY = 'pilates_sessions';
+const STORAGE_KEY = 'pilatesSessions';
 
-// Initialize localStorage with default sessions if empty
-export const initializeStorage = (): void => {
-  if (!localStorage.getItem(SESSIONS_KEY)) {
-    const initialSessions: Session[] = [
-      {
-        id: '1',
-        activity: 'Mat Pilates',
-        trainer: 'Sarah Johnson',
-        date: '2023-09-15',
-        startTime: '10:00',
-        duration: 60,
-        capacity: 12,
-        participants: [],
-        waitingList: [],
-        status: 'open'
-      },
-      {
-        id: '2',
-        activity: 'Reformer',
-        trainer: 'Michael Chen',
-        date: '2023-09-15',
-        startTime: '14:00',
-        duration: 60,
-        capacity: 10,
-        participants: [],
-        waitingList: [],
-        status: 'open'
-      },
-      {
-        id: '3',
-        activity: 'Barre Fusion',
-        trainer: 'Emma Wilson',
-        date: '2023-09-15',
-        startTime: '17:30',
-        duration: 60,
-        capacity: 8,
-        participants: [],
-        waitingList: [],
-        status: 'open'
-      }
-    ];
-    localStorage.setItem(SESSIONS_KEY, JSON.stringify(initialSessions));
+export interface PilatesStore {
+  sessions: PilatesSession[];
+}
+
+// Initialize local storage with default data if empty
+export const initLocalStorage = (): void => {
+  if (!localStorage.getItem(STORAGE_KEY)) {
+    const initialData: PilatesStore = {
+      sessions: getSampleSessions(),
+    };
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
   }
 };
 
-// Get all sessions from localStorage
-export const getSessions = (): Session[] => {
-  const sessions = localStorage.getItem(SESSIONS_KEY);
-  return sessions ? JSON.parse(sessions) : [];
-};
-
-// Save sessions to localStorage
-export const saveSessions = (sessions: Session[]): void => {
-  localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+// Get all sessions from local storage
+export const getSessions = (): PilatesSession[] => {
+  const data = localStorage.getItem(STORAGE_KEY);
+  if (!data) {
+    initLocalStorage();
+    return getSessions();
+  }
+  return JSON.parse(data).sessions;
 };
 
 // Add a new session
-export const addSession = (session: Omit<Session, 'id'>): Session => {
+export const createSession = (sessionData: CreateSessionInput): PilatesSession => {
   const sessions = getSessions();
-  const newSession = {
-    ...session,
-    id: Date.now().toString(),
+  const newSession: PilatesSession = {
+    id: generateUniqueId(),
+    ...sessionData,
+    participants: [],
+    waitlist: [],
+    createdAt: new Date().toISOString(),
   };
-  sessions.push(newSession);
-  saveSessions(sessions);
+  
+  const updatedSessions = [...sessions, newSession];
+  saveSessionsToStorage(updatedSessions);
   return newSession;
 };
 
 // Update a session
-export const updateSession = (updatedSession: Session): void => {
+export const updateSession = (id: string, sessionData: Partial<PilatesSession>): PilatesSession | null => {
   const sessions = getSessions();
-  const index = sessions.findIndex(session => session.id === updatedSession.id);
-  if (index !== -1) {
-    sessions[index] = updatedSession;
-    saveSessions(sessions);
-  }
+  const sessionIndex = sessions.findIndex(session => session.id === id);
+  
+  if (sessionIndex === -1) return null;
+  
+  const updatedSession = { ...sessions[sessionIndex], ...sessionData };
+  sessions[sessionIndex] = updatedSession;
+  saveSessionsToStorage(sessions);
+  return updatedSession;
 };
 
 // Delete a session
-export const deleteSession = (id: string): void => {
+export const deleteSession = (id: string): boolean => {
   const sessions = getSessions();
-  const filteredSessions = sessions.filter(session => session.id !== id);
-  saveSessions(filteredSessions);
-};
-
-// Book a participant into a session
-export const bookSession = (sessionId: string, participant: Participant): boolean => {
-  const sessions = getSessions();
-  const index = sessions.findIndex(session => session.id === sessionId);
+  const updatedSessions = sessions.filter(session => session.id !== id);
   
-  if (index === -1) return false;
+  if (updatedSessions.length === sessions.length) return false;
   
-  const session = sessions[index];
-  
-  // Check if session has available spots
-  if (session.participants.length < session.capacity) {
-    session.participants.push(participant);
-    
-    // Update status if full
-    if (session.participants.length === session.capacity) {
-      session.status = 'closed';
-    }
-    
-    saveSessions(sessions);
-    return true;
-  }
-  
-  return false;
-};
-
-// Join the waiting list for a session
-export const joinWaitingList = (sessionId: string, participant: Participant): boolean => {
-  const sessions = getSessions();
-  const index = sessions.findIndex(session => session.id === sessionId);
-  
-  if (index === -1) return false;
-  
-  // Add to waiting list
-  sessions[index].waitingList.push(participant);
-  saveSessions(sessions);
+  saveSessionsToStorage(updatedSessions);
   return true;
 };
 
-// Cancel a booking
-export const cancelBooking = (sessionId: string, participantId: string): void => {
+// Book a participant into a session
+export const bookSession = (sessionId: string, participant: Participant): { success: boolean; message: string; isWaitlisted: boolean } => {
   const sessions = getSessions();
-  const index = sessions.findIndex(session => session.id === sessionId);
+  const sessionIndex = sessions.findIndex(session => session.id === sessionId);
   
-  if (index === -1) return;
+  if (sessionIndex === -1) {
+    return { success: false, message: 'Session not found', isWaitlisted: false };
+  }
   
-  const session = sessions[index];
-  session.participants = session.participants.filter(p => p.id !== participantId);
+  const session = sessions[sessionIndex];
   
-  // Move first person from waiting list if available
-  if (session.waitingList.length > 0 && session.participants.length < session.capacity) {
-    const nextParticipant = session.waitingList.shift();
-    if (nextParticipant) {
-      session.participants.push(nextParticipant);
+  // Check if already booked
+  const alreadyBooked = [...session.participants, ...session.waitlist].some(
+    p => p.email === participant.email
+  );
+  
+  if (alreadyBooked) {
+    return { success: false, message: 'You are already booked for this session', isWaitlisted: false };
+  }
+  
+  // Check if session is open for booking
+  if (session.status !== 'open') {
+    return { success: false, message: `Cannot book a ${session.status} session`, isWaitlisted: false };
+  }
+  
+  // Check if session has available spots
+  if (session.participants.length < session.maxSpots) {
+    session.participants.push(participant);
+    
+    // Update session status if full
+    if (session.participants.length === session.maxSpots) {
+      session.status = 'closed' as SessionStatus;
     }
+    
+    sessions[sessionIndex] = session;
+    saveSessionsToStorage(sessions);
+    return { success: true, message: 'Booking successful', isWaitlisted: false };
   }
   
-  // Update status
-  if (session.participants.length < session.capacity) {
-    session.status = 'open';
+  // Add to waitlist if main session is full
+  if (session.waitlist.length < session.maxWaitlist) {
+    session.waitlist.push(participant);
+    sessions[sessionIndex] = session;
+    saveSessionsToStorage(sessions);
+    return { success: true, message: 'Added to waitlist', isWaitlisted: true };
   }
   
-  saveSessions(sessions);
+  return { success: false, message: 'Session and waitlist are full', isWaitlisted: false };
 };
 
-// Remove from waiting list
-export const removeFromWaitingList = (sessionId: string, participantId: string): void => {
+// Cancel a booking
+export const cancelBooking = (sessionId: string, participantEmail: string): { success: boolean; message: string } => {
   const sessions = getSessions();
-  const index = sessions.findIndex(session => session.id === sessionId);
+  const sessionIndex = sessions.findIndex(session => session.id === sessionId);
   
-  if (index === -1) return;
+  if (sessionIndex === -1) {
+    return { success: false, message: 'Session not found' };
+  }
   
-  sessions[index].waitingList = sessions[index].waitingList.filter(p => p.id !== participantId);
-  saveSessions(sessions);
+  const session = sessions[sessionIndex];
+  const participantIndex = session.participants.findIndex(p => p.email === participantEmail);
+  
+  if (participantIndex !== -1) {
+    // Remove from participants
+    session.participants.splice(participantIndex, 1);
+    
+    // Move someone from waitlist if available
+    if (session.waitlist.length > 0) {
+      const nextParticipant = session.waitlist.shift();
+      if (nextParticipant) {
+        session.participants.push(nextParticipant);
+      }
+    }
+    
+    // Update status if needed
+    if (session.status === 'closed' && session.participants.length < session.maxSpots) {
+      session.status = 'open' as SessionStatus;
+    }
+    
+    sessions[sessionIndex] = session;
+    saveSessionsToStorage(sessions);
+    return { success: true, message: 'Booking cancelled successfully' };
+  }
+  
+  // Check waitlist
+  const waitlistIndex = session.waitlist.findIndex(p => p.email === participantEmail);
+  if (waitlistIndex !== -1) {
+    session.waitlist.splice(waitlistIndex, 1);
+    sessions[sessionIndex] = session;
+    saveSessionsToStorage(sessions);
+    return { success: true, message: 'Waitlist position cancelled successfully' };
+  }
+  
+  return { success: false, message: 'Participant not found in this session' };
 };
 
-// Get session by ID
-export const getSessionById = (id: string): Session | undefined => {
+// Change session status
+export const updateSessionStatus = (sessionId: string, status: SessionStatus): boolean => {
   const sessions = getSessions();
-  return sessions.find(session => session.id === id);
+  const sessionIndex = sessions.findIndex(session => session.id === sessionId);
+  
+  if (sessionIndex === -1) return false;
+  
+  sessions[sessionIndex].status = status;
+  saveSessionsToStorage(sessions);
+  return true;
+};
+
+// Helper function to save sessions to localStorage
+const saveSessionsToStorage = (sessions: PilatesSession[]): void => {
+  const data: PilatesStore = { sessions };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+// Sample sessions for initial data
+const getSampleSessions = (): PilatesSession[] => {
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  const dayAfterTomorrow = new Date(today);
+  dayAfterTomorrow.setDate(dayAfterTomorrow.getDate() + 2);
+  
+  return [
+    {
+      id: "session1",
+      name: "Reformer Pilates",
+      trainer: "Sarah Johnson",
+      date: today.toISOString().split('T')[0],
+      startTime: "10:00",
+      duration: 60,
+      maxSpots: 8,
+      maxWaitlist: 5,
+      status: "open",
+      participants: [
+        { id: "p1", name: "Jane Smith", email: "jane@example.com", phone: "555-123-4567" },
+        { id: "p2", name: "John Doe", email: "john@example.com", phone: "555-765-4321" },
+        { id: "p3", name: "Emily Brown", email: "emily@example.com", phone: "555-987-6543" },
+        { id: "p4", name: "Michael Wong", email: "michael@example.com", phone: "555-456-7890" },
+        { id: "p5", name: "Sarah Davis", email: "sarah@example.com", phone: "555-789-0123" }
+      ],
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session2",
+      name: "Barre Fusion",
+      trainer: "Emma Wilson",
+      date: today.toISOString().split('T')[0],
+      startTime: "15:00",
+      duration: 60,
+      maxSpots: 8,
+      maxWaitlist: 5,
+      status: "closed",
+      participants: Array.from({ length: 8 }, (_, i) => ({
+        id: `p${i+10}`,
+        name: `Participant ${i+1}`,
+        email: `participant${i+1}@example.com`,
+        phone: `555-111-${1000+i}`
+      })),
+      waitlist: [
+        { id: "w1", name: "Waiting Person 1", email: "wait1@example.com", phone: "555-222-1111" },
+        { id: "w2", name: "Waiting Person 2", email: "wait2@example.com", phone: "555-222-2222" },
+        { id: "w3", name: "Waiting Person 3", email: "wait3@example.com", phone: "555-222-3333" }
+      ],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session3",
+      name: "Mat Pilates",
+      trainer: "Mike Davis",
+      date: tomorrow.toISOString().split('T')[0],
+      startTime: "09:00",
+      duration: 60,
+      maxSpots: 10,
+      maxWaitlist: 5,
+      status: "open",
+      participants: Array.from({ length: 5 }, (_, i) => ({
+        id: `p${i+20}`,
+        name: `Participant ${i+1}`,
+        email: `matparticipant${i+1}@example.com`,
+        phone: `555-333-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session4",
+      name: "Prenatal Pilates",
+      trainer: "Sarah Johnson",
+      date: dayAfterTomorrow.toISOString().split('T')[0],
+      startTime: "14:00",
+      duration: 60,
+      maxSpots: 5,
+      maxWaitlist: 3,
+      status: "open",
+      participants: Array.from({ length: 3 }, (_, i) => ({
+        id: `p${i+30}`,
+        name: `Participant ${i+1}`,
+        email: `prenatal${i+1}@example.com`,
+        phone: `555-444-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    }
+  ];
 };

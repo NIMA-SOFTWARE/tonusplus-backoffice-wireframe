@@ -68,9 +68,34 @@
 }
 
 /* Status colors matching the design */
-.status-pending { background-color: #e2e8f0; }
-.status-open { background-color: #10b981; }
-.status-closed { background-color: #64748b; }
-.status-ongoing { background-color: #f59e0b; }
-.status-finished { background-color: #475569; }
-.status-cancelled { background-color: #ef4444; }
+.status-pending { background-color: #f1f5f9; }
+.status-open { background-color: #ecfdf5; }
+.status-closed { background-color: #f1f5f9; }
+.status-ongoing { background-color: #fffbeb; }
+.status-finished { background-color: #e2e8f0; }
+.status-cancelled { background-color: #fef2f2; }
+
+/* Status indicators */
+.status-pending::before,
+.status-open::before,
+.status-closed::before,
+.status-ongoing::before,
+.status-finished::before,
+.status-cancelled::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  position: absolute;
+  right: 6px;
+  top: 6px;
+}
+
+.status-pending::before { background-color: #94a3b8; }
+.status-open::before { background-color: #10b981; }
+.status-closed::before { background-color: #64748b; }
+.status-ongoing::before { background-color: #f59e0b; }
+.status-finished::before { background-color: #475569; }
+.status-cancelled::before { background-color: #ef4444; }

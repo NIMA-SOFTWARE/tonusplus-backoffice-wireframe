@@ -194,6 +194,7 @@ const getSampleSessions = (): PilatesSession[] => {
       id: "session1",
       name: "Reformer Pilates",
       trainer: "Sarah Johnson",
+      room: "Reformer Room",
       date: today.toISOString().split('T')[0],
       startTime: "10:00",
       duration: 60,
@@ -214,6 +215,7 @@ const getSampleSessions = (): PilatesSession[] => {
       id: "session2",
       name: "Barre Fusion",
       trainer: "Emma Wilson",
+      room: "Studio B",
       date: today.toISOString().split('T')[0],
       startTime: "15:00",
       duration: 60,
@@ -237,6 +239,7 @@ const getSampleSessions = (): PilatesSession[] => {
       id: "session3",
       name: "Mat Pilates",
       trainer: "Mike Davis",
+      room: "Studio A",
       date: tomorrow.toISOString().split('T')[0],
       startTime: "09:00",
       duration: 60,
@@ -256,6 +259,7 @@ const getSampleSessions = (): PilatesSession[] => {
       id: "session4",
       name: "Prenatal Pilates",
       trainer: "Sarah Johnson",
+      room: "Private Room",
       date: dayAfterTomorrow.toISOString().split('T')[0],
       startTime: "14:00",
       duration: 60,
@@ -267,6 +271,46 @@ const getSampleSessions = (): PilatesSession[] => {
         name: `Participant ${i+1}`,
         email: `prenatal${i+1}@example.com`,
         phone: `555-444-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session5",
+      name: "Mat Pilates",
+      trainer: "Emma Wilson",
+      room: "Studio A",
+      date: today.toISOString().split('T')[0],
+      startTime: "08:00",
+      duration: 60,
+      maxSpots: 12,
+      maxWaitlist: 5,
+      status: "open",
+      participants: Array.from({ length: 6 }, (_, i) => ({
+        id: `p${i+40}`,
+        name: `Participant ${i+1}`,
+        email: `morning${i+1}@example.com`,
+        phone: `555-555-${1000+i}`
+      })),
+      waitlist: [],
+      createdAt: new Date().toISOString()
+    },
+    {
+      id: "session6",
+      name: "Reformer Pilates",
+      trainer: "Mike Davis",
+      room: "Reformer Room",
+      date: today.toISOString().split('T')[0],
+      startTime: "13:00",
+      duration: 60,
+      maxSpots: 8,
+      maxWaitlist: 3,
+      status: "open",
+      participants: Array.from({ length: 4 }, (_, i) => ({
+        id: `p${i+50}`,
+        name: `Participant ${i+1}`,
+        email: `afternoon${i+1}@example.com`,
+        phone: `555-666-${1000+i}`
       })),
       waitlist: [],
       createdAt: new Date().toISOString()

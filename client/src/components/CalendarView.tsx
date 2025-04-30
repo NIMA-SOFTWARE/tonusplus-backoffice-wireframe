@@ -1,20 +1,31 @@
 import React, { useState, useEffect } from 'react';
-import { PilatesSession } from '@shared/schema';
+import { PilatesSession, CreateSessionInput } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
 import { format, addDays, subDays, isSameDay, parseISO, isToday } from 'date-fns';
 import { formatTimeRange } from '@/lib/utils';
+import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
+import CreateSessionModal from './CreateSessionModal';
 
 interface CalendarViewProps {
   onSessionClick?: (session: PilatesSession) => void;
+  isAdminView?: boolean;
 }
 
-const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick }) => {
-  const { filteredSessions } = usePilates();
+const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView = false }) => {
+  const { filteredSessions, addSession, editSession } = usePilates();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [rooms, setRooms] = useState<string[]>([]);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
   const [weekDates, setWeekDates] = useState<Date[]>([]);
+  
+  // Create session modal state
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [newSessionData, setNewSessionData] = useState<{
+    date: string;
+    startTime: string;
+    room: string;
+  } | null>(null);
 
   // Time slots from 6:00 to 22:00 with hourly increments
   useEffect(() => {
@@ -94,29 +105,84 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick }) => {
     return filteredSessions.filter(session => session.date === formattedDate);
   };
 
+  // Handle creating a new session when clicking on an empty slot
+  const handleCreateSessionClick = (timeSlot: string, room: string, date: Date) => {
+    if (!isAdminView) return;
+    
+    setNewSessionData({
+      date: format(date, 'yyyy-MM-dd'),
+      startTime: timeSlot,
+      room: room
+    });
+    setIsCreateModalOpen(true);
+  };
+  
+  // Handle drag end for rescheduling
+  const handleDragEnd = (result: DropResult) => {
+    if (!result.destination || !isAdminView) return;
+    
+    const { draggableId, destination } = result;
+    const [destRoom, destTimeSlot, destDate] = destination.droppableId.split('|');
+    
+    // Find the session that was dragged
+    const session = filteredSessions.find(s => s.id === draggableId);
+    
+    if (session) {
+      // Update the session with new room and time
+      editSession(session.id, {
+        ...session,
+        room: destRoom,
+        startTime: destTimeSlot,
+        date: destDate
+      });
+    }
+  };
+  
+  // Handle creation of a new session
+  const handleCreateSession = (sessionData: CreateSessionInput) => {
+    addSession(sessionData);
+    setIsCreateModalOpen(false);
+    setNewSessionData(null);
+  };
+  
+  // Render a draggable session cell
   const renderSessionCell = (sessions: PilatesSession[]) => {
     if (sessions.length === 0) {
       return null;
     }
     
-    return sessions.map(session => (
-      <div 
-        key={session.id}
-        onClick={() => onSessionClick && onSessionClick(session)}
-        className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
-        style={{ borderLeftColor: getActivityColor(session.name) }}
+    return sessions.map((session, index) => (
+      <Draggable 
+        key={session.id} 
+        draggableId={session.id}
+        index={index}
+        isDragDisabled={!isAdminView}
       >
-        <div className="font-semibold">{session.name}</div>
-        <div>{formatTimeRange(session.startTime, session.duration)}</div>
-        <div className="text-xs text-slate-500">{session.trainer}</div>
-        <div className="text-xs mt-1">
-          <span className="font-medium">{session.participants.length}</span>
-          <span className="text-slate-500">/{session.maxSpots}</span>
-          {session.waitlist.length > 0 && 
-            <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
-          }
-        </div>
-      </div>
+        {(provided) => (
+          <div
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+            {...provided.dragHandleProps}
+            onClick={() => onSessionClick && onSessionClick(session)}
+            className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
+            style={{
+              ...provided.draggableProps.style,
+              borderLeftColor: getActivityColor(session.name)
+            }}
+          >
+            <div className="font-semibold">{session.name}</div>
+            <div>{formatTimeRange(session.startTime, session.duration)}</div>
+            <div className="text-xs text-slate-500">{session.trainer}</div>
+            <div className="text-xs mt-1">
+              <span className="font-medium">{session.participants.length}</span>
+              <span className="text-slate-500">/{session.maxSpots}</span>
+              {session.waitlist.length > 0 && 
+                <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
+              }
+            </div>
+          </div>
+        )}
+      </Draggable>
     ));
   };
 
@@ -137,89 +203,154 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick }) => {
 
   // Render day view (rooms as columns, hours as rows)
   const renderDayView = () => (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-slate-50">
-            <th className="w-20 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Time</th>
-            {rooms.map((room, idx) => (
-              <th key={`room-${idx}`} className="p-2 border-b border-slate-200 text-center min-w-[180px] text-sm font-medium text-slate-700">
-                {room}
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {timeSlots.map((timeSlot, index) => (
-            <tr key={`timeslot-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-              <td className="p-2 border-r border-b border-slate-200 text-xs font-medium text-slate-500 whitespace-nowrap">
-                {timeSlot}
-              </td>
-              {rooms.map((room, roomIdx) => {
-                const sessions = getSessionsForTimeAndRoom(timeSlot, room);
-                return (
-                  <td key={`${room}-${timeSlot}-${roomIdx}`} className="p-1 border-b border-slate-200 align-top">
-                    {renderSessionCell(sessions)}
-                  </td>
-                );
-              })}
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-slate-50">
+              <th className="w-20 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Time</th>
+              {rooms.map((room, idx) => (
+                <th key={`room-${idx}`} className="p-2 border-b border-slate-200 text-center min-w-[180px] text-sm font-medium text-slate-700">
+                  {room}
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {timeSlots.map((timeSlot, index) => (
+              <tr key={`timeslot-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                <td className="p-2 border-r border-b border-slate-200 text-xs font-medium text-slate-500 whitespace-nowrap">
+                  {timeSlot}
+                </td>
+                {rooms.map((room, roomIdx) => {
+                  const sessions = getSessionsForTimeAndRoom(timeSlot, room);
+                  const droppableId = `${room}|${timeSlot}|${format(currentDate, 'yyyy-MM-dd')}`;
+                  
+                  return (
+                    <Droppable droppableId={droppableId} key={droppableId}>
+                      {(provided, snapshot) => (
+                        <td
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          key={`${room}-${timeSlot}-${roomIdx}`}
+                          className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
+                            snapshot.isDraggingOver ? 'bg-indigo-50' : ''
+                          } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                          onClick={isAdminView && sessions.length === 0 ? 
+                            () => handleCreateSessionClick(timeSlot, room, currentDate) : undefined}
+                        >
+                          {renderSessionCell(sessions)}
+                          {provided.placeholder}
+                          
+                          {/* Empty cell placeholder with + sign for admin mode */}
+                          {isAdminView && sessions.length === 0 && (
+                            <div className="h-full min-h-[50px] border border-dashed border-slate-200 rounded flex items-center justify-center">
+                              <span className="text-slate-400 text-xl">+</span>
+                            </div>
+                          )}
+                        </td>
+                      )}
+                    </Droppable>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </DragDropContext>
   );
 
   // Render week view (days as columns, rooms as rows)
   const renderWeekView = () => (
-    <div className="overflow-x-auto">
-      <table className="w-full border-collapse">
-        <thead>
-          <tr className="bg-slate-50">
-            <th className="w-32 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Room</th>
-            {weekDates.map((day, idx) => (
-              <th 
-                key={`day-${idx}`} 
-                className={`p-2 border-b border-slate-200 text-center min-w-[160px] text-sm font-medium ${isToday(day) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700'}`}
-              >
-                <div>{format(day, 'EEE')}</div>
-                <div className="text-base">{format(day, 'd')}</div>
-              </th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {rooms.map((room, roomIdx) => (
-            <tr key={`room-week-${roomIdx}`} className={roomIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-              <td className="p-2 border-r border-b border-slate-200 font-medium whitespace-nowrap">
-                {room}
-              </td>
-              {weekDates.map((day, dayIdx) => {
-                const sessionsForDay = getSessionsForDay(day).filter(session => session.room === room);
-                return (
-                  <td key={`${room}-${dayIdx}`} className="p-1 border-b border-slate-200 align-top min-h-[100px] h-24">
-                    <div className="space-y-1">
-                      {sessionsForDay.map(session => (
-                        <div 
-                          key={session.id}
-                          onClick={() => onSessionClick && onSessionClick(session)}
-                          className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
-                          style={{ borderLeftColor: getActivityColor(session.name) }}
-                        >
-                          <div className="font-semibold">{session.name}</div>
-                          <div>{formatTimeRange(session.startTime, session.duration)}</div>
-                          <div className="text-xs text-slate-500">{session.trainer}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </td>
-                );
-              })}
+    <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="overflow-x-auto">
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="bg-slate-50">
+              <th className="w-32 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Room</th>
+              {weekDates.map((day, idx) => (
+                <th 
+                  key={`day-${idx}`} 
+                  className={`p-2 border-b border-slate-200 text-center min-w-[160px] text-sm font-medium ${isToday(day) ? 'bg-indigo-50 text-indigo-700' : 'text-slate-700'}`}
+                >
+                  <div>{format(day, 'EEE')}</div>
+                  <div className="text-base">{format(day, 'd')}</div>
+                </th>
+              ))}
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {rooms.map((room, roomIdx) => (
+              <tr key={`room-week-${roomIdx}`} className={roomIdx % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                <td className="p-2 border-r border-b border-slate-200 font-medium whitespace-nowrap">
+                  {room}
+                </td>
+                {weekDates.map((day, dayIdx) => {
+                  const sessionsForDay = getSessionsForDay(day).filter(session => session.room === room);
+                  // Creating a droppableId that includes info about the day and room
+                  const droppableId = `${room}|09:00|${format(day, 'yyyy-MM-dd')}`;
+                  
+                  return (
+                    <Droppable droppableId={droppableId} key={droppableId}>
+                      {(provided, snapshot) => (
+                        <td 
+                          ref={provided.innerRef}
+                          {...provided.droppableProps}
+                          key={`${room}-${dayIdx}`} 
+                          className={`p-1 border-b border-slate-200 align-top min-h-[100px] h-24 ${
+                            snapshot.isDraggingOver ? 'bg-indigo-50' : ''
+                          } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                          onClick={isAdminView && sessionsForDay.length === 0 ? 
+                            () => handleCreateSessionClick('09:00', room, day) : undefined}
+                        >
+                          <div className="space-y-1">
+                            {sessionsForDay.map((session, index) => (
+                              <Draggable 
+                                key={session.id} 
+                                draggableId={session.id}
+                                index={index}
+                                isDragDisabled={!isAdminView}
+                              >
+                                {(provided) => (
+                                  <div
+                                    ref={provided.innerRef}
+                                    {...provided.draggableProps}
+                                    {...provided.dragHandleProps}
+                                    onClick={() => onSessionClick && onSessionClick(session)}
+                                    className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
+                                    style={{
+                                      ...provided.draggableProps.style,
+                                      borderLeftColor: getActivityColor(session.name)
+                                    }}
+                                  >
+                                    <div className="font-semibold">{session.name}</div>
+                                    <div>{formatTimeRange(session.startTime, session.duration)}</div>
+                                    <div className="text-xs text-slate-500">{session.trainer}</div>
+                                  </div>
+                                )}
+                              </Draggable>
+                            ))}
+                            {provided.placeholder}
+                            
+                            {/* Empty cell placeholder with + sign for admin mode */}
+                            {isAdminView && sessionsForDay.length === 0 && (
+                              <div className="h-full min-h-[80px] border border-dashed border-slate-200 rounded flex items-center justify-center">
+                                <span className="text-slate-400 text-xl">+</span>
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </Droppable>
+                  );
+                })}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </DragDropContext>
   );
 
   return (
@@ -278,6 +409,20 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick }) => {
       </div>
 
       {viewMode === 'day' ? renderDayView() : renderWeekView()}
+      
+      {/* Create session modal */}
+      {isCreateModalOpen && newSessionData && (
+        <CreateSessionModal
+          isOpen={isCreateModalOpen}
+          onClose={() => setIsCreateModalOpen(false)}
+          initialData={{
+            date: newSessionData.date,
+            startTime: newSessionData.startTime,
+            room: newSessionData.room
+          }}
+          onCreateSession={handleCreateSession}
+        />
+      )}
     </div>
   );
 };

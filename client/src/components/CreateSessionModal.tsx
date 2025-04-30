@@ -15,12 +15,20 @@ interface CreateSessionModalProps {
   isOpen: boolean;
   onClose: () => void;
   editSession?: PilatesSession;
+  initialData?: {
+    date: string;
+    startTime: string;
+    room: string;
+  };
+  onCreateSession?: (sessionData: any) => void;
 }
 
 const CreateSessionModal: React.FC<CreateSessionModalProps> = ({ 
   isOpen, 
   onClose, 
-  editSession 
+  editSession,
+  initialData,
+  onCreateSession
 }) => {
   const { addSession, editSession: updateSession } = usePilates();
   const { toast } = useToast();
@@ -30,9 +38,10 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   const trainers = ['Sarah Johnson', 'Mike Davis', 'Emma Wilson'];
   const rooms = ['Studio A', 'Studio B', 'Reformer Room', 'Private Room'];
   
-  const form = useForm<z.infer<typeof createSessionSchema>>({
-    resolver: zodResolver(createSessionSchema),
-    defaultValues: editSession ? {
+  // Determine default values based on provided data
+  let defaultValues;
+  if (editSession) {
+    defaultValues = {
       name: editSession.name,
       trainer: editSession.trainer,
       room: editSession.room,
@@ -42,7 +51,21 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       maxSpots: editSession.maxSpots,
       maxWaitlist: editSession.maxWaitlist,
       status: editSession.status
-    } : {
+    };
+  } else if (initialData) {
+    defaultValues = {
+      name: 'Mat Pilates',
+      trainer: 'Sarah Johnson',
+      room: initialData.room || 'Studio A',
+      date: initialData.date || new Date().toISOString().split('T')[0],
+      startTime: initialData.startTime || '10:00',
+      duration: 60,
+      maxSpots: 8,
+      maxWaitlist: 5,
+      status: 'open' as SessionStatus
+    };
+  } else {
+    defaultValues = {
       name: 'Mat Pilates',
       trainer: 'Sarah Johnson',
       room: 'Studio A',
@@ -52,7 +75,12 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       maxSpots: 8,
       maxWaitlist: 5,
       status: 'open' as SessionStatus
-    }
+    };
+  }
+  
+  const form = useForm<z.infer<typeof createSessionSchema>>({
+    resolver: zodResolver(createSessionSchema),
+    defaultValues
   });
   
   const onSubmit = async (values: z.infer<typeof createSessionSchema>) => {

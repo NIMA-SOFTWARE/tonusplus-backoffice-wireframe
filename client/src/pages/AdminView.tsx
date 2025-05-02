@@ -180,6 +180,11 @@ const AdminView: React.FC = () => {
         isOpen={createModalOpen} 
         onClose={() => setCreateModalOpen(false)}
         editSession={isEditing && selectedSession ? selectedSession : undefined}
+        onViewDetails={(session) => {
+          setCreateModalOpen(false);
+          setSelectedSession(session);
+          setDetailsModalOpen(true);
+        }}
       />
       
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

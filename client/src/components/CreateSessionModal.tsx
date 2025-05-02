@@ -322,6 +322,7 @@ interface CreateSessionModalProps {
     room: string;
   };
   onCreateSession?: (sessionData: any) => void;
+  onViewDetails?: (session: PilatesSession) => void;
 }
 
 const CreateSessionModal: React.FC<CreateSessionModalProps> = ({ 
@@ -329,7 +330,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   onClose, 
   editSession,
   initialData,
-  onCreateSession
+  onCreateSession,
+  onViewDetails
 }) => {
   const { addSession, editSession: updateSession } = usePilates();
   const { toast } = useToast();
@@ -791,13 +793,32 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
               </TabsContent>
             </Tabs>
             
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : editSession ? 'Update Session' : 'Create Session'}
-              </Button>
+            <DialogFooter className="flex justify-between flex-wrap gap-2">
+              <div>
+                {editSession && onViewDetails && (
+                  <Button 
+                    type="button" 
+                    variant="outline"
+                    onClick={() => {
+                      onViewDetails(editSession);
+                      onClose();
+                    }}
+                    disabled={isSubmitting}
+                    className="text-indigo-600 border-indigo-200 hover:bg-indigo-50 mr-2"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z" /><circle cx="12" cy="12" r="3" /></svg>
+                    View Details
+                  </Button>
+                )}
+              </div>
+              <div className="flex space-x-2">
+                <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+                  Cancel
+                </Button>
+                <Button type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? 'Submitting...' : editSession ? 'Update Session' : 'Create Session'}
+                </Button>
+              </div>
             </DialogFooter>
           </form>
         </Form>

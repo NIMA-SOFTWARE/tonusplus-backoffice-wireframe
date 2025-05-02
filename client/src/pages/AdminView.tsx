@@ -6,6 +6,7 @@ import { formatDate, formatTimeRange } from '@/lib/utils';
 import FilterSection from '@/components/FilterSection';
 import CalendarView from '@/components/CalendarView';
 import CreateSessionModal from '@/components/CreateSessionModal';
+import SessionDetailsModal from '@/components/SessionDetailsModal';
 import StatusBadge from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +16,7 @@ const AdminView: React.FC = () => {
   const { filteredSessions, changeSessionStatus } = usePilates();
   const { toast } = useToast();
   const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [detailsModalOpen, setDetailsModalOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<PilatesSession | null>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -29,6 +31,11 @@ const AdminView: React.FC = () => {
     setSelectedSession({...session}); // Create a copy to ensure independent editing
     setIsEditing(true);
     setCreateModalOpen(true);
+  };
+  
+  const handleViewDetails = (session: PilatesSession) => {
+    setSelectedSession({...session}); // Create a copy to ensure independent viewing
+    setDetailsModalOpen(true);
   };
   
   const handleCancelSession = (session: PilatesSession) => {
@@ -89,7 +96,7 @@ const AdminView: React.FC = () => {
       </Button>
       
       <CalendarView 
-        onSessionClick={(session) => handleEditSession(session)} 
+        onSessionClick={(session) => handleViewDetails(session)} 
         isAdminView={true} 
       />
       
@@ -141,6 +148,12 @@ const AdminView: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
                       <button 
+                        className="text-blue-600 hover:text-blue-900 mr-3"
+                        onClick={() => handleViewDetails(session)}
+                      >
+                        View Details
+                      </button>
+                      <button 
                         className="text-indigo-600 hover:text-indigo-900 mr-3"
                         onClick={() => handleEditSession(session)}
                       >
@@ -185,6 +198,18 @@ const AdminView: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      
+      {/* Session Details Modal */}
+      {selectedSession && (
+        <SessionDetailsModal
+          isOpen={detailsModalOpen}
+          onClose={() => {
+            setDetailsModalOpen(false);
+            setSelectedSession(null);
+          }}
+          session={selectedSession}
+        />
+      )}
     </div>
   );
 };

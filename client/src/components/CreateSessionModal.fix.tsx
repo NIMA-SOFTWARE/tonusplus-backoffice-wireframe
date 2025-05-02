@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PilatesSession, createSessionSchema, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
@@ -273,7 +273,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       duration: editSession.duration,
       maxSpots: editSession.maxSpots,
       maxWaitlist: editSession.maxWaitlist,
-      status: editSession.status
+      status: editSession.status,
+      equipmentBookings: editSession.equipmentBookings
     };
   } else if (initialData) {
     defaultValues = {
@@ -331,7 +332,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         duration: 60,
         maxSpots: 8,
         maxWaitlist: 5,
-        status: 'open' as SessionStatus
+        status: 'open' as SessionStatus,
+        equipmentBookings: undefined
       });
     } else {
       form.reset({
@@ -343,7 +345,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         duration: 60,
         maxSpots: 8,
         maxWaitlist: 5,
-        status: 'open' as SessionStatus
+        status: 'open' as SessionStatus,
+        equipmentBookings: undefined
       });
     }
   }, [editSession, initialData, form]);
@@ -402,6 +405,9 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
           <DialogTitle>
             {editSession ? 'Edit Session' : 'Create New Session'}
           </DialogTitle>
+          <DialogDescription className="text-xs">
+            Fill out the form below
+          </DialogDescription>
         </DialogHeader>
         
         <Form {...form}>
@@ -451,7 +457,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                         <FormLabel className="text-xs">Trainer</FormLabel>
                         <Select 
                           onValueChange={field.onChange} 
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="h-8 text-xs">
@@ -479,7 +485,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                         <FormLabel className="text-xs">Room</FormLabel>
                         <Select 
                           onValueChange={field.onChange} 
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="h-8 text-xs">
@@ -602,7 +608,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                         <FormLabel className="text-xs">Status</FormLabel>
                         <Select 
                           onValueChange={field.onChange} 
-                          defaultValue={field.value}
+                          value={field.value}
                         >
                           <FormControl>
                             <SelectTrigger className="h-8 text-xs">

@@ -189,8 +189,16 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
               <Button type="button" variant="outline" onClick={onClose}>
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Processing...' : isWaitlist ? 'Join Waitlist' : 'Confirm Booking'}
+              <Button 
+                type="submit" 
+                disabled={isSubmitting || (isWaitlist && !session.enableWaitlist)}
+              >
+                {isSubmitting 
+                  ? 'Processing...' 
+                  : (isWaitlist && session.enableWaitlist) 
+                    ? 'Join Waitlist' 
+                    : 'Confirm Booking'
+                }
               </Button>
             </DialogFooter>
           </form>

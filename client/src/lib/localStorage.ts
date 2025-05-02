@@ -1,141 +1,161 @@
-import { PilatesSession, Participant, CreateSessionInput, SessionStatus } from '@shared/schema';
-import { generateUniqueId } from './utils';
+import { PilatesSession, CreateSessionInput, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
 import { format, addDays } from 'date-fns';
 
-const STORAGE_KEY = 'pilatesSessions';
+// Storage key
+const STORAGE_KEY = 'pilates-studio-data';
 
 export interface PilatesStore {
   sessions: PilatesSession[];
 }
 
-// Initialize local storage with default data if empty
+// Initialize localStorage with sample data if needed
 export const initLocalStorage = (): void => {
   if (!localStorage.getItem(STORAGE_KEY)) {
     const initialData: PilatesStore = {
-      sessions: getSampleSessions(),
+      sessions: getSampleSessions()
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
   }
 };
 
-// Get all sessions from local storage
+// Get all sessions
 export const getSessions = (): PilatesSession[] => {
   const data = localStorage.getItem(STORAGE_KEY);
   if (!data) {
-    initLocalStorage();
-    return getSessions();
+    return [];
   }
-  return JSON.parse(data).sessions;
+  
+  try {
+    const parsed = JSON.parse(data) as PilatesStore;
+    return parsed.sessions;
+  } catch (error) {
+    console.error('Error parsing sessions from localStorage:', error);
+    return [];
+  }
 };
 
-// Generic function to check if a specific equipment is available for booking
+// Check equipment availability for a specific time slot
 export const isEquipmentAvailable = (
+  sessions: PilatesSession[],
   equipmentType: 'laser' | 'reformer' | 'cadillac' | 'barrel' | 'chair',
-  date: string, 
-  startTime: string, 
-  startMinute: number, 
-  endMinute: number
+  date: string,
+  startTime: string,
+  startMinute: number,
+  endMinute: number,
+  excludeSessionId?: string
 ): boolean => {
-  const sessions = getSessions();
+  // Filter sessions on the same date
+  const sessionsOnDate = sessions.filter(session => 
+    session.date === date && 
+    (excludeSessionId ? session.id !== excludeSessionId : true)
+  );
   
-  // Filter sessions on the same date and with the specified equipment booked
-  const conflictingSessions = sessions.filter(session => {
-    if (session.date !== date) return false;
+  // Check each session for equipment booking conflicts
+  for (const session of sessionsOnDate) {
+    // Skip if session doesn't have equipment bookings
+    if (!session.equipmentBookings || !session.equipmentBookings[equipmentType]) {
+      continue;
+    }
     
-    // Check if the session has this equipment booked
-    const equipment = session.equipmentBookings?.[equipmentType];
-    if (!equipment) return false;
+    const sessionStartTime = session.startTime;
+    const booking = session.equipmentBookings[equipmentType]!;
     
-    // Convert time to minutes for comparison
-    const sessionHour = parseInt(session.startTime.split(':')[0], 10);
-    const sessionMinute = parseInt(session.startTime.split(':')[1], 10);
-    const sessionTotalStartMinutes = sessionHour * 60 + sessionMinute;
+    // Convert session start time to minutes for easier comparison
+    const [sessionHours, sessionMinutes] = sessionStartTime.split(':').map(Number);
+    const sessionStartMinutes = sessionHours * 60 + sessionMinutes;
     
-    const requestHour = parseInt(startTime.split(':')[0], 10);
-    const requestMinute = parseInt(startTime.split(':')[1], 10);
-    const requestTotalStartMinutes = requestHour * 60 + requestMinute;
+    // Convert requested start time to minutes
+    const [requestedHours, requestedMinutes] = startTime.split(':').map(Number);
+    const requestedStartMinutes = requestedHours * 60 + requestedMinutes;
     
-    // Calculate the absolute start and end times
-    const sessionEquipStartTime = sessionTotalStartMinutes + equipment.startMinute;
-    const sessionEquipEndTime = sessionTotalStartMinutes + equipment.endMinute;
+    // Calculate actual start and end minutes for each booking
+    const bookingStartMinutes = sessionStartMinutes + booking.startMinute;
+    const bookingEndMinutes = sessionStartMinutes + booking.endMinute;
     
-    const requestEquipStartTime = requestTotalStartMinutes + startMinute;
-    const requestEquipEndTime = requestTotalStartMinutes + endMinute;
+    const requestedStartTotalMinutes = requestedStartMinutes + startMinute;
+    const requestedEndTotalMinutes = requestedStartMinutes + endMinute;
     
-    // Check for overlap
-    return (
-      (requestEquipStartTime >= sessionEquipStartTime && requestEquipStartTime < sessionEquipEndTime) ||
-      (requestEquipEndTime > sessionEquipStartTime && requestEquipEndTime <= sessionEquipEndTime) ||
-      (requestEquipStartTime <= sessionEquipStartTime && requestEquipEndTime >= sessionEquipEndTime)
-    );
-  });
+    // Check for time overlap
+    if (
+      (requestedStartTotalMinutes < bookingEndMinutes && requestedEndTotalMinutes > bookingStartMinutes) ||
+      (bookingStartMinutes < requestedEndTotalMinutes && bookingEndMinutes > requestedStartTotalMinutes)
+    ) {
+      return false; // There's an overlap
+    }
+  }
   
-  return conflictingSessions.length === 0;
+  return true; // No conflicts found
 };
 
-// Equipment-specific availability checker functions
+// Specific equipment availability checks
 export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable('laser', date, startTime, startMinute, endMinute);
+  return isEquipmentAvailable(getSessions(), 'laser', date, startTime, startMinute, endMinute);
 };
 
 export const isReformerAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable('reformer', date, startTime, startMinute, endMinute);
+  return isEquipmentAvailable(getSessions(), 'reformer', date, startTime, startMinute, endMinute);
 };
 
 export const isCadillacAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable('cadillac', date, startTime, startMinute, endMinute);
+  return isEquipmentAvailable(getSessions(), 'cadillac', date, startTime, startMinute, endMinute);
 };
 
 export const isBarrelAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable('barrel', date, startTime, startMinute, endMinute);
+  return isEquipmentAvailable(getSessions(), 'barrel', date, startTime, startMinute, endMinute);
 };
 
 export const isChairAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable('chair', date, startTime, startMinute, endMinute);
+  return isEquipmentAvailable(getSessions(), 'chair', date, startTime, startMinute, endMinute);
 };
 
-// Add a new session
+// Create a new session
 export const createSession = (sessionData: CreateSessionInput): PilatesSession => {
   const sessions = getSessions();
+  
   const newSession: PilatesSession = {
-    id: generateUniqueId(),
+    id: Math.random().toString(36).substring(2, 9), // Simple ID generation
     ...sessionData,
     participants: [],
     waitlist: [],
-    createdAt: new Date().toISOString(),
+    createdAt: new Date().toISOString()
   };
   
-  const updatedSessions = [...sessions, newSession];
-  saveSessionsToStorage(updatedSessions);
+  sessions.push(newSession);
+  saveSessionsToStorage(sessions);
+  
   return newSession;
 };
 
-// Update a session
+// Update an existing session
 export const updateSession = (id: string, sessionData: Partial<PilatesSession>): PilatesSession | null => {
   const sessions = getSessions();
   const sessionIndex = sessions.findIndex(session => session.id === id);
   
   if (sessionIndex === -1) return null;
   
+  // Merge the session data with the updates
   const updatedSession = { ...sessions[sessionIndex], ...sessionData };
   sessions[sessionIndex] = updatedSession;
   saveSessionsToStorage(sessions);
+  
   return updatedSession;
 };
 
 // Delete a session
 export const deleteSession = (id: string): boolean => {
   const sessions = getSessions();
-  const updatedSessions = sessions.filter(session => session.id !== id);
+  const sessionIndex = sessions.findIndex(session => session.id === id);
   
-  if (updatedSessions.length === sessions.length) return false;
+  if (sessionIndex === -1) return false;
   
-  saveSessionsToStorage(updatedSessions);
+  sessions.splice(sessionIndex, 1);
+  saveSessionsToStorage(sessions);
+  
   return true;
 };
 
-// Book a participant into a session
-export const bookSession = (sessionId: string, participant: Participant): { success: boolean; message: string; isWaitlisted: boolean } => {
+// Book a session or join waitlist
+export const bookSession = (sessionId: string, participant: { id: string; name: string; email: string; phone?: string; notes?: string }): { success: boolean; message: string; isWaitlisted: boolean } => {
   const sessions = getSessions();
   const sessionIndex = sessions.findIndex(session => session.id === sessionId);
   
@@ -145,18 +165,10 @@ export const bookSession = (sessionId: string, participant: Participant): { succ
   
   const session = sessions[sessionIndex];
   
-  // Check if already booked
-  const alreadyBooked = [...session.participants, ...session.waitlist].some(
-    p => p.email === participant.email
-  );
-  
-  if (alreadyBooked) {
-    return { success: false, message: 'You are already booked for this session', isWaitlisted: false };
-  }
-  
-  // Check if session is open for booking
-  if (session.status !== 'open') {
-    return { success: false, message: `Cannot book a ${session.status} session`, isWaitlisted: false };
+  // Check if participant is already booked
+  if (session.participants.some(p => p.email === participant.email) || 
+      session.waitlist.some(p => p.email === participant.email)) {
+    return { success: false, message: 'You are already booked or on the waitlist for this session', isWaitlisted: false };
   }
   
   // Check if session has available spots
@@ -173,15 +185,15 @@ export const bookSession = (sessionId: string, participant: Participant): { succ
     return { success: true, message: 'Booking successful', isWaitlisted: false };
   }
   
-  // Add to waitlist if main session is full
-  if (session.waitlist.length < session.maxWaitlist) {
+  // Add to waitlist if main session is full and waitlist is enabled
+  if (session.enableWaitlist) {
     session.waitlist.push(participant);
     sessions[sessionIndex] = session;
     saveSessionsToStorage(sessions);
     return { success: true, message: 'Added to waitlist', isWaitlisted: true };
   }
   
-  return { success: false, message: 'Session and waitlist are full', isWaitlisted: false };
+  return { success: false, message: session.enableWaitlist ? 'Session and waitlist are full' : 'Session is full and does not have a waitlist', isWaitlisted: false };
 };
 
 // Cancel a booking
@@ -266,7 +278,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "10:00",
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: "open",
       participants: [
         { id: "p1", name: "Jane Smith", email: "jane@example.com", phone: "555-123-4567" },
@@ -290,7 +302,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "15:00",
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: "closed",
       participants: Array.from({ length: 8 }, (_, i) => ({
         id: `p${i+10}`,
@@ -314,7 +326,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "09:00",
       duration: 60,
       maxSpots: 10,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 5 }, (_, i) => ({
         id: `p${i+20}`,
@@ -334,7 +346,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "14:00",
       duration: 60,
       maxSpots: 5,
-      maxWaitlist: 3,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 3 }, (_, i) => ({
         id: `p${i+30}`,
@@ -354,7 +366,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "08:00",
       duration: 60,
       maxSpots: 12,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 6 }, (_, i) => ({
         id: `p${i+40}`,
@@ -377,7 +389,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "13:00",
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 3,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 4 }, (_, i) => ({
         id: `p${i+50}`,
@@ -401,7 +413,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "09:00",
       duration: 60,
       maxSpots: 12,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 3 }, (_, i) => ({
         id: `p${i+60}`,
@@ -421,7 +433,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "17:00",
       duration: 60,
       maxSpots: 10,
-      maxWaitlist: 3,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 5 }, (_, i) => ({
         id: `p${i+70}`,
@@ -441,7 +453,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "10:00",
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 3,
+      enableWaitlist: false, // No waitlist for this session
       status: "open",
       participants: Array.from({ length: 6 }, (_, i) => ({
         id: `p${i+80}`,
@@ -461,7 +473,7 @@ const getSampleSessions = (): PilatesSession[] => {
       startTime: "14:00",
       duration: 60,
       maxSpots: 5,
-      maxWaitlist: 2,
+      enableWaitlist: true,
       status: "open",
       participants: Array.from({ length: 2 }, (_, i) => ({
         id: `p${i+90}`,

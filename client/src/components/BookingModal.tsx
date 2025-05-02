@@ -76,7 +76,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
   const isWaitlist = session.participants.length >= session.maxSpots;
   const availableSpots = session.maxSpots - session.participants.length;
   const spotText = isWaitlist 
-    ? `Full (waitlist: ${session.waitlist.length}/${session.maxWaitlist})` 
+    ? `Full ${session.enableWaitlist ? `(waitlist: ${session.waitlist.length} people)` : '(no waitlist available)'}` 
     : `${availableSpots} spot${availableSpots === 1 ? '' : 's'} available`;
 
   return (
@@ -84,7 +84,7 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>
-            {isWaitlist ? 'Join Waitlist' : 'Book Session'}: {session.name}
+            {isWaitlist && session.enableWaitlist ? 'Join Waitlist' : 'Book Session'}: {session.name}
           </DialogTitle>
           <DialogDescription>
             {formatDate(session.date)} · {formatTimeRange(session.startTime, session.duration)}<br />

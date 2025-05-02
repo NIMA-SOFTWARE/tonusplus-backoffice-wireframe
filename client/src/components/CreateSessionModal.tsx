@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PilatesSession, createSessionSchema, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
 import { useToast } from '@/hooks/use-toast';
+import { formatDate, formatTime } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -174,58 +175,60 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
       
       {useEquipment && (
         <div className="mt-2">
-          <FormLabel className="block mb-2 text-xs">Select 15-minute time slot:</FormLabel>
-          <RadioGroup 
+          <FormLabel className="block mb-2 text-xs">Select time slot:</FormLabel>
+          <Select
             value={selectedTimeSlot || ''}
             onValueChange={handleTimeSlotChange}
-            className="space-y-1"
           >
-            {timeSlots.map(slot => {
-              // Only show slots that fit within the session duration
-              const [, end] = slot.id.split('-').map(Number);
-              if (end > duration) return null;
+            <SelectTrigger className="h-8 text-xs">
+              <SelectValue placeholder="I'm not using this equipment" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="">I'm not using this equipment</SelectItem>
               
-              const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
-              const isDisabled = !isAvailable && (!editSession || 
-                !editSession.equipmentBookings?.[equipmentType] || 
-                editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
-              
-              return (
-                <div 
-                  key={slot.id} 
-                  className={`flex items-start space-x-2 ${isDisabled ? 'opacity-50' : ''}`}
-                >
-                  <RadioGroupItem 
-                    value={slot.id} 
-                    id={`${equipmentType}-time-${slot.id}`} 
+              {timeSlots.map(slot => {
+                // Only show slots that fit within the session duration
+                const [start, end] = slot.id.split('-').map(Number);
+                if (end > duration) return null;
+                
+                const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
+                const isDisabled = !isAvailable && (!editSession || 
+                  !editSession.equipmentBookings?.[equipmentType] || 
+                  editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
+                
+                // Format the time slot as HH:MM based on session start time
+                let slotLabel = slot.id;
+                if (startTime) {
+                  const [hours, minutes] = startTime.split(':').map(Number);
+                  const startTimeDate = new Date();
+                  startTimeDate.setHours(hours, minutes + start, 0);
+                  const endTimeDate = new Date();
+                  endTimeDate.setHours(hours, minutes + end, 0);
+                  
+                  const formatTimeValue = (date: Date) => {
+                    return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                  };
+                  
+                  slotLabel = `${formatTimeValue(startTimeDate)} - ${formatTimeValue(endTimeDate)}`;
+                }
+                
+                return (
+                  <SelectItem 
+                    key={slot.id} 
+                    value={slot.id}
                     disabled={isDisabled}
-                    className="mt-0.5"
-                  />
-                  <label
-                    htmlFor={`${equipmentType}-time-${slot.id}`}
-                    className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col"
                   >
-                    <span>{slot.label}</span>
-                    {!isAvailable && availabilityChecked && (
-                      <span className="text-[10px] text-red-500 mt-1">
-                        {isDisabled ? 'Not available - already booked' : 'Currently booked by this session'}
-                      </span>
-                    )}
-                  </label>
-                </div>
-              );
-            })}
-          </RadioGroup>
+                    {slotLabel}
+                    {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
           
           {!availabilityChecked && (
             <p className="text-[10px] text-amber-600 mt-1">
               Enter valid date and time to check equipment availability
-            </p>
-          )}
-          
-          {availabilityChecked && !selectedTimeSlot && (
-            <p className="text-[10px] text-amber-600 mt-1">
-              Please select an available time slot
             </p>
           )}
         </div>
@@ -272,7 +275,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       startTime: editSession.startTime,
       duration: editSession.duration,
       maxSpots: editSession.maxSpots,
-      maxWaitlist: editSession.maxWaitlist,
+      enableWaitlist: editSession.enableWaitlist,
       status: editSession.status,
       equipmentBookings: editSession.equipmentBookings
     };
@@ -285,7 +288,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       startTime: initialData.startTime || '10:00',
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: 'open' as SessionStatus
     };
   } else {
@@ -297,7 +300,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       startTime: '10:00',
       duration: 60,
       maxSpots: 8,
-      maxWaitlist: 5,
+      enableWaitlist: true,
       status: 'open' as SessionStatus
     };
   }
@@ -318,7 +321,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         startTime: editSession.startTime,
         duration: editSession.duration,
         maxSpots: editSession.maxSpots,
-        maxWaitlist: editSession.maxWaitlist,
+        enableWaitlist: editSession.enableWaitlist,
         status: editSession.status,
         equipmentBookings: editSession.equipmentBookings
       });
@@ -331,7 +334,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         startTime: initialData.startTime || '10:00',
         duration: 60,
         maxSpots: 8,
-        maxWaitlist: 5,
+        enableWaitlist: true,
         status: 'open' as SessionStatus,
         equipmentBookings: undefined
       });
@@ -344,7 +347,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         startTime: '10:00',
         duration: 60,
         maxSpots: 8,
-        maxWaitlist: 5,
+        enableWaitlist: true,
         status: 'open' as SessionStatus,
         equipmentBookings: undefined
       });
@@ -584,19 +587,18 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   
                   <FormField
                     control={form.control}
-                    name="maxWaitlist"
+                    name="enableWaitlist"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-xs">Waitlist</FormLabel>
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0 h-8">
                         <FormControl>
-                          <Input 
-                            type="number" 
-                            min="0"
-                            className="h-8 text-xs" 
-                            {...field}
-                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          <Checkbox 
+                            checked={field.value} 
+                            onCheckedChange={field.onChange}
                           />
                         </FormControl>
+                        <FormLabel className="text-xs font-normal">
+                          Enable waitlist
+                        </FormLabel>
                         <FormMessage className="text-xs" />
                       </FormItem>
                     )}

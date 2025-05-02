@@ -5,6 +5,7 @@ import { format, addDays, subDays, isSameDay, parseISO, isToday } from 'date-fns
 import { formatTimeRange } from '@/lib/utils';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import CreateSessionModal from './CreateSessionModal';
+import { useToast } from '@/hooks/use-toast';
 
 interface CalendarViewProps {
   onSessionClick?: (session: PilatesSession) => void;

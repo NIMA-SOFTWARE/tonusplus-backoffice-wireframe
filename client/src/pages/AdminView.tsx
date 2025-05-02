@@ -26,13 +26,13 @@ const AdminView: React.FC = () => {
   };
   
   const handleEditSession = (session: PilatesSession) => {
-    setSelectedSession(session);
+    setSelectedSession({...session}); // Create a copy to ensure independent editing
     setIsEditing(true);
     setCreateModalOpen(true);
   };
   
   const handleCancelSession = (session: PilatesSession) => {
-    setSelectedSession(session);
+    setSelectedSession({...session}); // Create a copy to ensure independent editing
     setDeleteDialogOpen(true);
   };
   
@@ -88,7 +88,10 @@ const AdminView: React.FC = () => {
         Create New Session
       </Button>
       
-      <CalendarView onSessionClick={(session) => handleEditSession(session)} />
+      <CalendarView 
+        onSessionClick={(session) => handleEditSession(session)} 
+        isAdminView={true} 
+      />
       
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <div className="px-4 py-3 border-b border-slate-200">
@@ -163,7 +166,7 @@ const AdminView: React.FC = () => {
       <CreateSessionModal 
         isOpen={createModalOpen} 
         onClose={() => setCreateModalOpen(false)}
-        editSession={isEditing ? selectedSession : undefined}
+        editSession={isEditing && selectedSession ? selectedSession : undefined}
       />
       
       <AlertDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>

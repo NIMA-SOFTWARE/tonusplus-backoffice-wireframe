@@ -99,13 +99,24 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
         }
       } else {
         // Create new session
-        const result = await addSession(values);
-        if (result) {
+        if (onCreateSession) {
+          // Use the provided callback
+          onCreateSession(values);
           toast({
             title: 'Success',
             description: 'Session created successfully',
           });
           onClose();
+        } else {
+          // Use the context method
+          const result = await addSession(values);
+          if (result) {
+            toast({
+              title: 'Success',
+              description: 'Session created successfully',
+            });
+            onClose();
+          }
         }
       }
     } catch (error) {

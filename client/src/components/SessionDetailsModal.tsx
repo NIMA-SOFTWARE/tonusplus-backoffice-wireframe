@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { PilatesSession, Participant } from '@shared/schema';
 import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
 import { usePilates } from '@/context/PilatesContext';
 import { formatTimeRange } from '@/lib/utils';
-import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin } from 'lucide-react';
+import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle } from 'lucide-react';
+import AddParticipantForm from '@/components/AddParticipantForm';
 
 interface SessionDetailsModalProps {
   isOpen: boolean;
@@ -23,7 +24,32 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
   session,
   onEdit
 }) => {
-  const { removeSession, editSession, cancelUserBooking } = usePilates();
+  const { removeSession, editSession, cancelUserBooking, sessions } = usePilates();
+  const [showAddParticipant, setShowAddParticipant] = useState(false);
+  const [showAddWaitlist, setShowAddWaitlist] = useState(false);
+  
+  // Get all unique customers from all sessions for autocomplete
+  const existingCustomers = React.useMemo(() => {
+    const customersMap = new Map<string, Participant>();
+    
+    // Add all participants from all sessions
+    sessions.forEach(s => {
+      s.participants.forEach(p => {
+        if (!customersMap.has(p.email)) {
+          customersMap.set(p.email, p);
+        }
+      });
+      
+      // Add all waitlist participants too
+      s.waitlist.forEach(p => {
+        if (!customersMap.has(p.email)) {
+          customersMap.set(p.email, p);
+        }
+      });
+    });
+    
+    return Array.from(customersMap.values());
+  }, [sessions]);
 
   // Format date in a more readable format
   const formattedDate = format(new Date(session.date), 'EEEE, MMMM d, yyyy');
@@ -101,6 +127,75 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
       }
     }
   };
+  
+  // Handle adding a participant to the regular list
+  const handleAddParticipant = async (participant: Participant) => {
+    // Check if the session is full
+    if (session.participants.length >= session.maxSpots) {
+      alert('This session is already at full capacity. Consider adding to the waiting list instead.');
+      return;
+    }
+    
+    // Check if participant with same email already exists
+    if (session.participants.some(p => p.email === participant.email)) {
+      alert('This participant is already registered for this session.');
+      return;
+    }
+    
+    // Also check waitlist
+    if (session.waitlist.some(p => p.email === participant.email)) {
+      alert('This participant is already on the waiting list for this session.');
+      return;
+    }
+    
+    // Add participant to the session
+    const updatedSession = {
+      ...session,
+      participants: [...session.participants, participant]
+    };
+    
+    const result = await editSession(session.id, updatedSession);
+    if (result) {
+      alert('Participant added successfully');
+      setShowAddParticipant(false);
+    } else {
+      alert('Failed to add participant');
+    }
+  };
+  
+  // Handle adding a participant to the waiting list
+  const handleAddToWaitlist = async (participant: Participant) => {
+    // Check if waitlist is enabled
+    if (!session.enableWaitlist) {
+      alert('Waiting list is not enabled for this session.');
+      return;
+    }
+    
+    // Check if participant with same email already exists in either list
+    if (session.participants.some(p => p.email === participant.email)) {
+      alert('This participant is already registered for this session.');
+      return;
+    }
+    
+    if (session.waitlist.some(p => p.email === participant.email)) {
+      alert('This participant is already on the waiting list for this session.');
+      return;
+    }
+    
+    // Add participant to the waiting list
+    const updatedSession = {
+      ...session,
+      waitlist: [...session.waitlist, participant]
+    };
+    
+    const result = await editSession(session.id, updatedSession);
+    if (result) {
+      alert('Participant added to waiting list successfully');
+      setShowAddWaitlist(false);
+    } else {
+      alert('Failed to add participant to waiting list');
+    }
+  };
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -157,6 +252,30 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
           </TabsList>
           
           <TabsContent value="participants" className="mt-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-sm font-medium">Participant List</h3>
+              {session.status !== 'cancelled' && session.participants.length < session.maxSpots && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setShowAddParticipant(!showAddParticipant)}
+                  className="flex items-center text-sm"
+                >
+                  {showAddParticipant ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
+                  {showAddParticipant ? 'Cancel' : 'Add Participant'}
+                </Button>
+              )}
+            </div>
+            
+            {showAddParticipant && (
+              <div className="mb-6">
+                <AddParticipantForm 
+                  onAdd={handleAddParticipant} 
+                  existingCustomers={existingCustomers} 
+                />
+              </div>
+            )}
+            
             {session.participants.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 No participants have signed up for this session yet.
@@ -200,41 +319,69 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
               <div className="text-center py-8 text-muted-foreground">
                 Waiting list is not enabled for this session.
               </div>
-            ) : session.waitlist.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No one is on the waiting list for this session.
-              </div>
             ) : (
-              <div className="border rounded-md">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="py-2 px-4 text-left font-medium">Name</th>
-                      <th className="py-2 px-4 text-left font-medium">Email</th>
-                      <th className="py-2 px-4 text-left font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {session.waitlist.map((participant, index) => (
-                      <tr key={participant.id} className={index % 2 === 0 ? '' : 'bg-muted/30'}>
-                        <td className="py-2 px-4">{participant.name}</td>
-                        <td className="py-2 px-4">{participant.email}</td>
-                        <td className="py-2 px-4">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleRemoveFromWaitingList(participant)}
-                            className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <X className="h-4 w-4 mr-1" />
-                            Remove
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+              <>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-sm font-medium">Waiting List</h3>
+                  {session.status !== 'cancelled' && session.enableWaitlist && (
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setShowAddWaitlist(!showAddWaitlist)}
+                      className="flex items-center text-sm"
+                    >
+                      {showAddWaitlist ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
+                      {showAddWaitlist ? 'Cancel' : 'Add to Waitlist'}
+                    </Button>
+                  )}
+                </div>
+                
+                {showAddWaitlist && (
+                  <div className="mb-6">
+                    <AddParticipantForm 
+                      onAdd={handleAddToWaitlist} 
+                      existingCustomers={existingCustomers} 
+                    />
+                  </div>
+                )}
+                
+                {session.waitlist.length === 0 ? (
+                  <div className="text-center py-8 text-muted-foreground">
+                    No one is on the waiting list for this session.
+                  </div>
+                ) : (
+                  <div className="border rounded-md">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b bg-muted/50">
+                          <th className="py-2 px-4 text-left font-medium">Name</th>
+                          <th className="py-2 px-4 text-left font-medium">Email</th>
+                          <th className="py-2 px-4 text-left font-medium">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {session.waitlist.map((participant, index) => (
+                          <tr key={participant.id} className={index % 2 === 0 ? '' : 'bg-muted/30'}>
+                            <td className="py-2 px-4">{participant.name}</td>
+                            <td className="py-2 px-4">{participant.email}</td>
+                            <td className="py-2 px-4">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => handleRemoveFromWaitingList(participant)}
+                                className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                              >
+                                <X className="h-4 w-4 mr-1" />
+                                Remove
+                              </Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </>
             )}
           </TabsContent>
         </Tabs>

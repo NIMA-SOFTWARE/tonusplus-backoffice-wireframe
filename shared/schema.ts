@@ -16,7 +16,7 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-export type SessionStatus = 'pending' | 'open' | 'closed' | 'ongoing' | 'finished' | 'cancelled';
+export type SessionStatus = 'draft' | 'open' | 'closed' | 'on going' | 'finished' | 'cancelled';
 
 export interface Participant {
   id: string;
@@ -46,11 +46,11 @@ export interface PilatesSession {
   waitlist: Participant[];
   createdAt: string;
   equipmentBookings?: {
-    laser?: EquipmentTimeSlot;
-    reformer?: EquipmentTimeSlot;
-    cadillac?: EquipmentTimeSlot;
-    barrel?: EquipmentTimeSlot;
-    chair?: EquipmentTimeSlot;
+    laser?: EquipmentTimeSlot[];
+    reformer?: EquipmentTimeSlot[];
+    cadillac?: EquipmentTimeSlot[];
+    barrel?: EquipmentTimeSlot[];
+    chair?: EquipmentTimeSlot[];
   };
 }
 
@@ -65,11 +65,11 @@ export interface CreateSessionInput {
   enableWaitlist: boolean;
   status: SessionStatus;
   equipmentBookings?: {
-    laser?: EquipmentTimeSlot;
-    reformer?: EquipmentTimeSlot;
-    cadillac?: EquipmentTimeSlot;
-    barrel?: EquipmentTimeSlot;
-    chair?: EquipmentTimeSlot;
+    laser?: EquipmentTimeSlot[];
+    reformer?: EquipmentTimeSlot[];
+    cadillac?: EquipmentTimeSlot[];
+    barrel?: EquipmentTimeSlot[];
+    chair?: EquipmentTimeSlot[];
   };
 }
 
@@ -88,7 +88,7 @@ export const createSessionSchema = z.object({
   duration: z.number().int().min(15, "Duration must be at least 15 minutes"),
   maxSpots: z.number().int().min(1, "Maximum spots must be at least 1"),
   enableWaitlist: z.boolean().default(true),
-  status: z.enum(['pending', 'open', 'closed', 'ongoing', 'finished', 'cancelled']),
+  status: z.enum(['draft', 'open', 'closed', 'on going', 'finished', 'cancelled']),
   equipmentBookings: z.object({
     laser: equipmentTimeSlotSchema.optional(),
     reformer: equipmentTimeSlotSchema.optional(),

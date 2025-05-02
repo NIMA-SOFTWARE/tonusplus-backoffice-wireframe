@@ -96,7 +96,7 @@ const AdminView: React.FC = () => {
       </Button>
       
       <CalendarView 
-        onSessionClick={(session) => handleViewDetails(session)} 
+        onSessionClick={(session) => handleEditSession(session)} 
         isAdminView={true} 
       />
       
@@ -208,6 +208,10 @@ const AdminView: React.FC = () => {
             setSelectedSession(null);
           }}
           session={selectedSession}
+          onEdit={(session) => {
+            setDetailsModalOpen(false);
+            handleEditSession(session);
+          }}
         />
       )}
     </div>

@@ -14,12 +14,14 @@ interface SessionDetailsModalProps {
   isOpen: boolean;
   onClose: () => void;
   session: PilatesSession;
+  onEdit?: (session: PilatesSession) => void;
 }
 
 const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
   isOpen,
   onClose,
-  session
+  session,
+  onEdit
 }) => {
   const { removeSession, editSession, cancelUserBooking } = usePilates();
 
@@ -291,9 +293,23 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
               Delete Session
             </Button>
           </div>
-          <Button variant="outline" onClick={onClose}>
-            Close
-          </Button>
+          <div className="flex space-x-2">
+            {onEdit && (
+              <Button 
+                variant="default"
+                onClick={() => {
+                  onClose();
+                  onEdit(session);
+                }}
+                className="bg-indigo-600 hover:bg-indigo-700"
+              >
+                Edit Session
+              </Button>
+            )}
+            <Button variant="outline" onClick={onClose}>
+              Close
+            </Button>
+          </div>
         </DialogFooter>
       </DialogContent>
     </Dialog>

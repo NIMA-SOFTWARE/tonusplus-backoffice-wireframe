@@ -34,12 +34,12 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
   // Get equipment icons
   const getEquipmentIcon = (type: string) => {
     switch (type) {
-      case 'laser': return '🔆'; // Light/laser icon
-      case 'reformer': return '🏋️'; // Exercise/fitness equipment
-      case 'cadillac': return '🛌'; // Bed/platform
-      case 'barrel': return '🔄'; // Circular/rotation motion
-      case 'chair': return '🪑'; // Chair
-      default: return '⚙️'; // Generic equipment
+      case 'laser': return '⚡';
+      case 'reformer': return '🔄';
+      case 'cadillac': return '🛏️';
+      case 'barrel': return '🛢️';
+      case 'chair': return '🪑';
+      default: return '📊';
     }
   };
   

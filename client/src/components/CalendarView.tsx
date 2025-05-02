@@ -6,6 +6,7 @@ import { formatTimeRange } from '@/lib/utils';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import CreateSessionModal from './CreateSessionModal';
 import EquipmentSchedule from './EquipmentSchedule';
+import SessionCard from './SessionCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 
@@ -174,22 +175,23 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            onClick={() => onSessionClick && onSessionClick(session)}
-            className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
-            style={{
-              ...provided.draggableProps.style,
-              borderLeftColor: getActivityColor(session.name)
-            }}
           >
-            <div className="font-semibold">{session.name}</div>
-            <div>{formatTimeRange(session.startTime, session.duration)}</div>
-            <div className="text-xs text-slate-500">{session.trainer}</div>
-            <div className="text-xs mt-1">
-              <span className="font-medium">{session.participants.length}</span>
-              <span className="text-slate-500">/{session.maxSpots}</span>
-              {session.waitlist.length > 0 && 
-                <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
-              }
+            {/* Use SessionCard component for unified look and equipment icons */}
+            <div 
+              className="mb-1"
+              onClick={(e) => {
+                e.stopPropagation();
+                onSessionClick && onSessionClick(session);
+              }}
+              style={{
+                ...provided.draggableProps.style,
+                borderLeftColor: getActivityColor(session.name)
+              }}
+            >
+              <SessionCard 
+                session={session} 
+                onClick={() => onSessionClick && onSessionClick(session)}
+              />
             </div>
           </div>
         )}

@@ -2,6 +2,7 @@ import React from 'react';
 import { PilatesSession } from '@shared/schema';
 import { formatDate, formatTimeRange } from '@/lib/utils';
 import StatusBadge from './StatusBadge';
+import EquipmentTooltip from './EquipmentTooltip';
 import {
   Tooltip,
   TooltipContent,
@@ -29,13 +30,13 @@ const SessionItem: React.FC<SessionItemProps> = ({
   
   const SessionDetails = () => (
     <div className="mt-1 text-sm text-slate-500">
-      <p>{formatDate(date)} · {formatTimeRange(startTime, duration)} ({duration} min)</p>
-      <p>Instructor: {trainer}</p>
-      <p>
+      <div>{formatDate(date)} · {formatTimeRange(startTime, duration)} ({duration} min)</div>
+      <div>Instructor: {trainer}</div>
+      <div>
         {availableSpots > 0 
           ? `${availableSpots} spot${availableSpots === 1 ? '' : 's'} available` 
           : `0 spots available${waitlist.length > 0 ? ` (${waitlist.length} on waitlist)` : ''}`}
-      </p>
+      </div>
     </div>
   );
 
@@ -127,11 +128,17 @@ const SessionItem: React.FC<SessionItemProps> = ({
         <div className="font-semibold mb-1">Equipment:</div>
         <div className="grid grid-cols-1 gap-1 text-xs">
           {equipment.map((item, index) => (
-            <div key={index} className="flex items-center">
-              <span className="mr-1">{item.icon}</span>
-              <span>{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span>
-              <span className="ml-auto">{item.timeSlot}</span>
-            </div>
+            <EquipmentTooltip 
+              key={index} 
+              type={item.type} 
+              timeSlot={item.timeSlot}
+            >
+              <div className="flex items-center cursor-help">
+                <span className="mr-1">{item.icon}</span>
+                <span>{item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span>
+                <span className="ml-auto">{item.timeSlot}</span>
+              </div>
+            </EquipmentTooltip>
           ))}
         </div>
       </div>

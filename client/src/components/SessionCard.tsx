@@ -7,6 +7,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import EquipmentTooltip from './EquipmentTooltip';
 
 interface SessionCardProps {
   session: PilatesSession;
@@ -142,9 +143,15 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
             {bookedEquipment.length > 0 && (
               <div className="mt-1 text-[10px] font-semibold space-y-0.5">
                 {bookedEquipment.map((item, index) => (
-                  <div key={index}>
-                    {item.icon} {item.type.charAt(0).toUpperCase() + item.type.slice(1)}: {item.timeSlot}
-                  </div>
+                  <EquipmentTooltip 
+                    key={index} 
+                    type={item.type} 
+                    timeSlot={item.timeSlot}
+                  >
+                    <div className="cursor-help">
+                      {item.icon} {item.type.charAt(0).toUpperCase() + item.type.slice(1)}: {item.timeSlot}
+                    </div>
+                  </EquipmentTooltip>
                 ))}
               </div>
             )}

@@ -509,6 +509,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
             <EquipmentSchedule 
               sessions={filteredSessions} 
               date={format(currentDate, 'yyyy-MM-dd')}
+              onSessionClick={onSessionClick}
             />
           </div>
         )}

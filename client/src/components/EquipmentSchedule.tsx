@@ -19,6 +19,7 @@ interface EquipmentScheduleProps {
   sessions: PilatesSession[];
   date: string;
   className?: string;
+  onSessionClick?: (session: PilatesSession) => void;
 }
 
 // List of all equipment types we want to display
@@ -27,7 +28,8 @@ const EQUIPMENT_TYPES = ['laser', 'reformer', 'cadillac', 'barrel', 'chair'];
 const EquipmentSchedule: React.FC<EquipmentScheduleProps> = ({
   sessions,
   date,
-  className
+  className,
+  onSessionClick
 }) => {
   // Get the icon for the equipment
   const getEquipmentIcon = (type: string) => {
@@ -185,6 +187,16 @@ const EquipmentSchedule: React.FC<EquipmentScheduleProps> = ({
     }
   };
   
+  // Find session by ID
+  const handleSessionClick = (sessionId: string) => {
+    if (!onSessionClick) return;
+    
+    const session = sessions.find(s => s.id === sessionId);
+    if (session) {
+      onSessionClick(session);
+    }
+  };
+  
   return (
     <div className={cn("flex flex-col space-y-2 p-3 bg-background border rounded-md", className)}>
       <div className="flex items-center justify-between">
@@ -212,8 +224,9 @@ const EquipmentSchedule: React.FC<EquipmentScheduleProps> = ({
                     className={cn(
                       colorClasses.bg, 
                       colorClasses.border, 
-                      "border rounded-sm px-2 py-1 text-xs"
+                      "border rounded-sm px-2 py-1 text-xs cursor-pointer hover:opacity-90"
                     )}
+                    onClick={() => handleSessionClick(booking.sessionId)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="font-medium">{booking.sessionName}</div>

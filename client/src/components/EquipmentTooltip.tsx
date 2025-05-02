@@ -6,6 +6,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
+/**
+ * FINALIZED VERSION - Equipment Tooltip Component
+ * 
+ * This component displays a tooltip for equipment icons in session cards.
+ * It shows the equipment type and time slot information on hover.
+ */
 interface EquipmentTooltipProps {
   type: string;
   timeSlot: string;

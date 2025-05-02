@@ -201,7 +201,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     return equipment;
   };
 
-  // Render a draggable session cell
+  // FINALIZED VERSION - Render a draggable session cell with equipment icons
+  // This is the locked design for session cards with equipment icons in bottom right
   const renderSessionCell = (sessions: PilatesSession[]) => {
     if (sessions.length === 0) {
       return null;

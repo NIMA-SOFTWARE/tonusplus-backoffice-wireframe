@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
 import { PilatesSession, Participant } from '@shared/schema';
 import { format } from 'date-fns';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Separator } from '@/components/ui/separator';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '@/components/ui/card';
 import { usePilates } from '@/context/PilatesContext';
 import { formatTimeRange } from '@/lib/utils';
-import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle } from 'lucide-react';
+import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle, 
+  UserPlus, ChevronsDown, FileEdit, Trash2, ExternalLink, ArrowUpRight, Dumbbell } from 'lucide-react';
 import AddParticipantForm from '@/components/AddParticipantForm';
 
 interface SessionDetailsModalProps {
@@ -199,265 +201,375 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl flex items-center">
-            <span className="mr-2">{session.name}</span>
-            <Badge className={getStatusColor(session.status)}>
-              {session.status}
-            </Badge>
-          </DialogTitle>
-        </DialogHeader>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div className="space-y-2">
-            <div className="flex items-center text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4 mr-2" />
-              {formattedDate}
+          <div className="flex justify-between items-center">
+            <div>
+              <DialogTitle className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-700 to-blue-500 bg-clip-text text-transparent">
+                {session.name}
+              </DialogTitle>
+              <DialogDescription className="mt-1 flex items-center">
+                <span className="text-sm text-muted-foreground mr-2">Session Status:</span>
+                <Badge className={`${getStatusColor(session.status)} text-xs font-semibold`}>
+                  {session.status}
+                </Badge>
+              </DialogDescription>
             </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <ClockIcon className="h-4 w-4 mr-2" />
-              {formatTimeRange(session.startTime, session.duration)}
-            </div>
-            <div className="flex items-center text-sm text-muted-foreground">
-              <MapPin className="h-4 w-4 mr-2" />
-              {session.room}
-            </div>
-          </div>
-          <div className="space-y-2">
-            <div className="text-sm text-muted-foreground">
-              <span className="font-medium">Trainer:</span> {session.trainer}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <span className="font-medium">Available Spots:</span> {session.maxSpots - session.participants.length} of {session.maxSpots}
-            </div>
-            <div className="text-sm text-muted-foreground">
-              <span className="font-medium">Waitlist:</span> {session.waitlist.length} {session.enableWaitlist ? 'enabled' : 'disabled'}
-            </div>
-          </div>
-        </div>
-
-        <Separator className="my-4" />
-        
-        <Tabs defaultValue="participants" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="participants" className="flex items-center">
-              <Users className="h-4 w-4 mr-2" />
-              Participants ({session.participants.length}/{session.maxSpots})
-            </TabsTrigger>
-            <TabsTrigger value="waitlist" className="flex items-center">
-              <AlertCircle className="h-4 w-4 mr-2" />
-              Waiting List ({session.waitlist.length})
-            </TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="participants" className="mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-sm font-medium">Participant List</h3>
-              {session.status !== 'cancelled' && session.participants.length < session.maxSpots && (
+            
+            {/* Session Actions */}
+            <div className="flex gap-2">
+              {onEdit && (
                 <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setShowAddParticipant(!showAddParticipant)}
-                  className="flex items-center text-sm"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    onClose();
+                    onEdit(session);
+                  }}
+                  className="text-indigo-600 border-indigo-200 hover:bg-indigo-50"
                 >
-                  {showAddParticipant ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
-                  {showAddParticipant ? 'Cancel' : 'Add Existing Customer'}
+                  <FileEdit className="h-4 w-4 mr-1.5" />
+                  Edit
                 </Button>
               )}
+              
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="text-red-500 border-red-200 hover:bg-red-50"
+                onClick={handleCancelSession}
+                disabled={session.status === 'cancelled'}
+              >
+                <X className="h-4 w-4 mr-1.5" />
+                Cancel
+              </Button>
             </div>
-            
-            {showAddParticipant && (
-              <div className="mb-6">
-                <AddParticipantForm 
-                  onAdd={handleAddParticipant} 
-                  existingCustomers={existingCustomers} 
-                />
-              </div>
-            )}
-            
-            {session.participants.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                No participants have signed up for this session yet.
-              </div>
-            ) : (
-              <div className="border rounded-md">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b bg-muted/50">
-                      <th className="py-2 px-4 text-left font-medium">Name</th>
-                      <th className="py-2 px-4 text-left font-medium">Email</th>
-                      <th className="py-2 px-4 text-left font-medium">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {session.participants.map((participant, index) => (
-                      <tr key={participant.id} className={index % 2 === 0 ? '' : 'bg-muted/30'}>
-                        <td className="py-2 px-4">{participant.name}</td>
-                        <td className="py-2 px-4">{participant.email}</td>
-                        <td className="py-2 px-4">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleRemoveParticipant(participant)}
-                            className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                          >
-                            <X className="h-4 w-4 mr-1" />
-                            Remove
-                          </Button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </TabsContent>
-          
-          <TabsContent value="waitlist" className="mt-4">
-            {!session.enableWaitlist ? (
-              <div className="text-center py-8 text-muted-foreground">
-                Waiting list is not enabled for this session.
-              </div>
-            ) : (
-              <>
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-sm font-medium">Waiting List</h3>
-                  {session.status !== 'cancelled' && session.enableWaitlist && (
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      onClick={() => setShowAddWaitlist(!showAddWaitlist)}
-                      className="flex items-center text-sm"
-                    >
-                      {showAddWaitlist ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
-                      {showAddWaitlist ? 'Cancel' : 'Add Existing Customer to Waitlist'}
-                    </Button>
-                  )}
+          </div>
+        </DialogHeader>
+
+        <div className="mt-3 grid grid-cols-1 gap-6">
+          {/* Session Details Card */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center">
+                <Calendar className="h-4 w-4 mr-2 text-indigo-600" />
+                Session Details
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-3">
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <Calendar className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Date</div>
+                    <div className="text-sm font-medium">{formattedDate}</div>
+                  </div>
                 </div>
                 
-                {showAddWaitlist && (
-                  <div className="mb-6">
-                    <AddParticipantForm 
-                      onAdd={handleAddToWaitlist} 
-                      existingCustomers={existingCustomers} 
-                    />
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <ClockIcon className="h-4 w-4 text-indigo-600" />
                   </div>
-                )}
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Time</div>
+                    <div className="text-sm font-medium">{formatTimeRange(session.startTime, session.duration)}</div>
+                  </div>
+                </div>
                 
-                {session.waitlist.length === 0 ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    No one is on the waiting list for this session.
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <MapPin className="h-4 w-4 text-indigo-600" />
                   </div>
-                ) : (
-                  <div className="border rounded-md">
-                    <table className="w-full">
-                      <thead>
-                        <tr className="border-b bg-muted/50">
-                          <th className="py-2 px-4 text-left font-medium">Name</th>
-                          <th className="py-2 px-4 text-left font-medium">Email</th>
-                          <th className="py-2 px-4 text-left font-medium">Actions</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {session.waitlist.map((participant, index) => (
-                          <tr key={participant.id} className={index % 2 === 0 ? '' : 'bg-muted/30'}>
-                            <td className="py-2 px-4">{participant.name}</td>
-                            <td className="py-2 px-4">{participant.email}</td>
-                            <td className="py-2 px-4">
-                              <Button 
-                                variant="ghost" 
-                                size="sm"
-                                onClick={() => handleRemoveFromWaitingList(participant)}
-                                className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
-                              >
-                                <X className="h-4 w-4 mr-1" />
-                                Remove
-                              </Button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Location</div>
+                    <div className="text-sm font-medium">{session.room}</div>
                   </div>
-                )}
-              </>
-            )}
-          </TabsContent>
-        </Tabs>
-
-        <Separator className="my-4" />
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          <div>
-            <h4 className="text-sm font-medium mb-2">Equipment Bookings</h4>
-            {!session.equipmentBookings || Object.keys(session.equipmentBookings).length === 0 ? (
-              <div className="text-xs text-muted-foreground">No equipment bookings for this session.</div>
-            ) : (
-              <div className="space-y-1 text-sm">
-                {Object.entries(session.equipmentBookings).map(([type, bookings]) => {
-                  if (!bookings || (Array.isArray(bookings) && bookings.length === 0)) return null;
-                  
-                  // Handle both array and legacy formats
-                  const bookingsList = Array.isArray(bookings) ? bookings : [bookings];
-                  
-                  return (
-                    <div key={type} className="flex items-center">
-                      <Badge variant="outline" className="mr-2 capitalize">{type}</Badge>
-                      <span className="text-xs">
-                        {bookingsList.map((booking, idx) => (
-                          <span key={idx} className="ml-1">
-                            {booking.startMinute}-{booking.endMinute} min
-                            {idx < bookingsList.length - 1 ? ", " : ""}
-                          </span>
-                        ))}
-                      </span>
-                    </div>
-                  );
-                })}
+                </div>
               </div>
-            )}
-          </div>
-          <div>
-            {/* Additional info could go here */}
-          </div>
-        </div>
+              
+              <div className="space-y-3">
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <Users className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Trainer</div>
+                    <div className="text-sm font-medium">{session.trainer}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <CheckCircle className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Availability</div>
+                    <div className="text-sm">
+                      <span className="font-medium">{session.participants.length}</span>/{session.maxSpots} spots filled
+                      <div className="w-full bg-slate-100 rounded-full h-1.5 mt-1">
+                        <div 
+                          className="bg-indigo-600 h-1.5 rounded-full" 
+                          style={{ width: `${(session.participants.length / session.maxSpots) * 100}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <ChevronsDown className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Waiting List</div>
+                    <div className="text-sm">
+                      {session.enableWaitlist 
+                        ? <span><span className="font-medium">{session.waitlist.length}</span> {session.waitlist.length === 1 ? 'person' : 'people'} waiting</span> 
+                        : <span className="text-slate-400">Not enabled</span>}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
 
-        <DialogFooter className="flex justify-between items-center mt-6">
-          <div className="flex space-x-2">
-            <Button 
-              variant="destructive" 
-              onClick={handleCancelSession}
-              disabled={session.status === 'cancelled'}
-            >
-              Cancel Session
-            </Button>
-            <Button 
-              variant="outline" 
-              className="text-red-500 hover:text-red-700 border-red-200 hover:border-red-300 hover:bg-red-50" 
-              onClick={handleDeleteSession}
-            >
-              Delete Session
-            </Button>
-          </div>
-          <div className="flex space-x-2">
-            {onEdit && (
+          {/* Equipment Bookings Card */}
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center">
+                <Dumbbell className="h-4 w-4 mr-2 text-indigo-600" />
+                Equipment Bookings
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {!session.equipmentBookings || Object.keys(session.equipmentBookings).length === 0 ? (
+                <div className="text-center py-4 text-muted-foreground text-sm">
+                  No equipment has been booked for this session.
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {Object.entries(session.equipmentBookings).map(([type, bookings]) => {
+                    if (!bookings || (Array.isArray(bookings) && bookings.length === 0)) return null;
+                    
+                    // Handle both array and legacy formats
+                    const bookingsList = Array.isArray(bookings) ? bookings : [bookings];
+                    const icon = () => {
+                      switch(type) {
+                        case 'laser': return '⚡';
+                        case 'reformer': return '🔄';
+                        case 'cadillac': return '🛏️';
+                        case 'barrel': return '🛢️';
+                        case 'chair': return '🪑';
+                        default: return '📋';
+                      }
+                    };
+                    
+                    return (
+                      <div key={type} className="bg-slate-50 rounded-lg p-3 border">
+                        <div className="flex items-center mb-1.5">
+                          <span className="text-lg mr-1.5">{icon()}</span>
+                          <span className="font-medium capitalize">{type}</span>
+                        </div>
+                        <div className="text-sm text-slate-600">
+                          <div className="flex flex-wrap gap-1.5">
+                            {bookingsList.map((booking, idx) => (
+                              <Badge key={idx} variant="outline" className="bg-white">
+                                {booking.startMinute}-{booking.endMinute} min
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {/* Participants Tabs */}
+          <Card>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base flex items-center">
+                <Users className="h-4 w-4 mr-2 text-indigo-600" />
+                Participant Management
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-2">
+              <Tabs defaultValue="participants" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 mb-4">
+                  <TabsTrigger value="participants" className="flex items-center">
+                    <Users className="h-4 w-4 mr-2" />
+                    Participants ({session.participants.length}/{session.maxSpots})
+                  </TabsTrigger>
+                  <TabsTrigger value="waitlist" className="flex items-center">
+                    <AlertCircle className="h-4 w-4 mr-2" />
+                    Waiting List ({session.waitlist.length})
+                  </TabsTrigger>
+                </TabsList>
+                
+                <TabsContent value="participants">
+                  <div className="flex justify-between items-center mb-4">
+                    {session.status !== 'cancelled' && session.participants.length < session.maxSpots && (
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        onClick={() => setShowAddParticipant(!showAddParticipant)}
+                        className={`flex items-center text-sm w-full justify-center ${showAddParticipant ? 'text-red-500 border-red-200 hover:bg-red-50' : 'text-indigo-600 border-indigo-200 hover:bg-indigo-50'}`}
+                      >
+                        {showAddParticipant 
+                          ? <><X className="h-4 w-4 mr-1.5" />Cancel</>
+                          : <><UserPlus className="h-4 w-4 mr-1.5" />Add Participant</>
+                        }
+                      </Button>
+                    )}
+                  </div>
+                  
+                  {showAddParticipant && (
+                    <div className="mb-6 bg-slate-50 p-4 rounded-lg border">
+                      <h3 className="text-sm font-medium mb-3">Add Existing Customer</h3>
+                      <AddParticipantForm 
+                        onAdd={handleAddParticipant} 
+                        existingCustomers={existingCustomers} 
+                      />
+                    </div>
+                  )}
+                  
+                  {session.participants.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      No participants have signed up for this session yet.
+                    </div>
+                  ) : (
+                    <div className="border rounded-md">
+                      <table className="w-full">
+                        <thead>
+                          <tr className="border-b bg-slate-50">
+                            <th className="py-2 px-4 text-left font-medium text-slate-700">Name</th>
+                            <th className="py-2 px-4 text-left font-medium text-slate-700">Email</th>
+                            <th className="py-2 px-4 text-left font-medium text-slate-700">Actions</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {session.participants.map((participant, index) => (
+                            <tr key={participant.id} className={`${index % 2 === 0 ? '' : 'bg-slate-50'} hover:bg-slate-100`}>
+                              <td className="py-2 px-4 font-medium">{participant.name}</td>
+                              <td className="py-2 px-4 text-slate-600">{participant.email}</td>
+                              <td className="py-2 px-4">
+                                <Button 
+                                  variant="ghost" 
+                                  size="sm"
+                                  onClick={() => handleRemoveParticipant(participant)}
+                                  className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                >
+                                  <X className="h-4 w-4 mr-1.5" />
+                                  Remove
+                                </Button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </TabsContent>
+                
+                <TabsContent value="waitlist">
+                  {!session.enableWaitlist ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      Waiting list is not enabled for this session.
+                    </div>
+                  ) : (
+                    <>
+                      <div className="flex justify-between items-center mb-4">
+                        {session.status !== 'cancelled' && session.enableWaitlist && (
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            onClick={() => setShowAddWaitlist(!showAddWaitlist)}
+                            className={`flex items-center text-sm w-full justify-center ${showAddWaitlist ? 'text-red-500 border-red-200 hover:bg-red-50' : 'text-indigo-600 border-indigo-200 hover:bg-indigo-50'}`}
+                          >
+                            {showAddWaitlist 
+                              ? <><X className="h-4 w-4 mr-1.5" />Cancel</>
+                              : <><UserPlus className="h-4 w-4 mr-1.5" />Add to Waiting List</>
+                            }
+                          </Button>
+                        )}
+                      </div>
+                      
+                      {showAddWaitlist && (
+                        <div className="mb-6 bg-slate-50 p-4 rounded-lg border">
+                          <h3 className="text-sm font-medium mb-3">Add Customer to Waiting List</h3>
+                          <AddParticipantForm 
+                            onAdd={handleAddToWaitlist} 
+                            existingCustomers={existingCustomers} 
+                          />
+                        </div>
+                      )}
+                      
+                      {session.waitlist.length === 0 ? (
+                        <div className="text-center py-8 text-muted-foreground">
+                          No one is on the waiting list for this session.
+                        </div>
+                      ) : (
+                        <div className="border rounded-md">
+                          <table className="w-full">
+                            <thead>
+                              <tr className="border-b bg-slate-50">
+                                <th className="py-2 px-4 text-left font-medium text-slate-700">Name</th>
+                                <th className="py-2 px-4 text-left font-medium text-slate-700">Email</th>
+                                <th className="py-2 px-4 text-left font-medium text-slate-700">Actions</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {session.waitlist.map((participant, index) => (
+                                <tr key={participant.id} className={`${index % 2 === 0 ? '' : 'bg-slate-50'} hover:bg-slate-100`}>
+                                  <td className="py-2 px-4 font-medium">{participant.name}</td>
+                                  <td className="py-2 px-4 text-slate-600">{participant.email}</td>
+                                  <td className="py-2 px-4">
+                                    <Button 
+                                      variant="ghost" 
+                                      size="sm"
+                                      onClick={() => handleRemoveFromWaitingList(participant)}
+                                      className="h-8 text-red-500 hover:text-red-700 hover:bg-red-50"
+                                    >
+                                      <X className="h-4 w-4 mr-1.5" />
+                                      Remove
+                                    </Button>
+                                  </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </TabsContent>
+              </Tabs>
+            </CardContent>
+          </Card>
+                    
+          {/* Session Actions Footer */}
+          <div className="flex flex-col md:flex-row justify-between items-center gap-3 mt-2">
+            <div className="flex gap-2 w-full md:w-auto">
               <Button 
-                variant="default"
-                onClick={() => {
-                  onClose();
-                  onEdit(session);
-                }}
-                className="bg-indigo-600 hover:bg-indigo-700"
+                variant="destructive" 
+                size="sm"
+                onClick={handleDeleteSession}
+                className="flex items-center"
               >
-                Edit Session
+                <Trash2 className="h-4 w-4 mr-1.5" />
+                Delete Session
               </Button>
-            )}
-            <Button variant="outline" onClick={onClose}>
+            </div>
+            
+            <Button variant="outline" onClick={onClose} size="sm" className="w-full md:w-auto">
               Close
             </Button>
           </div>
-        </DialogFooter>
+        </div>
       </DialogContent>
     </Dialog>
   );

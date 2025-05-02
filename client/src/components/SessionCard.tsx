@@ -11,6 +11,25 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
   const cardClasses = getSessionColor(session.name);
   const availableSpots = session.maxSpots - session.participants.length;
   
+  // Check if session has laser equipment booked
+  const hasLaserBooked = session.equipmentBookings?.laser !== undefined;
+  
+  // Format laser time slot if available
+  const formatLaserTimeSlot = () => {
+    if (!hasLaserBooked) return null;
+    
+    const { startMinute, endMinute } = session.equipmentBookings!.laser!;
+    let timeLabel = '';
+    
+    if (startMinute === 0 && endMinute === 15) timeLabel = '1st 15min';
+    else if (startMinute === 15 && endMinute === 30) timeLabel = '2nd 15min';
+    else if (startMinute === 30 && endMinute === 45) timeLabel = '3rd 15min';
+    else if (startMinute === 45 && endMinute === 60) timeLabel = 'Last 15min';
+    else timeLabel = `${startMinute}-${endMinute}min`;
+    
+    return `⚡ Laser: ${timeLabel}`;
+  };
+  
   return (
     <div 
       className={`p-1 text-xs rounded cursor-pointer ${cardClasses}`} 
@@ -23,6 +42,11 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
           ? `${availableSpots} spot${availableSpots === 1 ? '' : 's'} left` 
           : 'Full'}
       </div>
+      {hasLaserBooked && (
+        <div className="mt-1 text-[10px] font-semibold">
+          {formatLaserTimeSlot()}
+        </div>
+      )}
     </div>
   );
 };

@@ -109,22 +109,41 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
                   
                   return (
                     <div key={type}>
-                      {bookings.map((booking, idx) => {
-                        // Format time slot
-                        let timeLabel = '';
-                        const { startMinute, endMinute } = booking;
-                        if (startMinute === 0 && endMinute === 15) timeLabel = 'First 15 minutes';
-                        else if (startMinute === 15 && endMinute === 30) timeLabel = 'Second 15 minutes';
-                        else if (startMinute === 30 && endMinute === 45) timeLabel = 'Third 15 minutes';
-                        else if (startMinute === 45 && endMinute === 60) timeLabel = 'Last 15 minutes';
-                        else timeLabel = `Minutes ${startMinute}-${endMinute}`;
-                        
-                        return (
-                          <div key={`${type}-${idx}`} className="text-sm text-amber-600">
-                            {icon} {type.charAt(0).toUpperCase() + type.slice(1)}: {timeLabel}
-                          </div>
-                        );
-                      })}
+                      {Array.isArray(bookings) ? (
+                        // Handle array of time slots (new format)
+                        bookings.map((booking, idx) => {
+                          // Format time slot
+                          let timeLabel = '';
+                          const { startMinute, endMinute } = booking;
+                          if (startMinute === 0 && endMinute === 15) timeLabel = 'First 15 minutes';
+                          else if (startMinute === 15 && endMinute === 30) timeLabel = 'Second 15 minutes';
+                          else if (startMinute === 30 && endMinute === 45) timeLabel = 'Third 15 minutes';
+                          else if (startMinute === 45 && endMinute === 60) timeLabel = 'Last 15 minutes';
+                          else timeLabel = `Minutes ${startMinute}-${endMinute}`;
+                          
+                          return (
+                            <div key={`${type}-${idx}`} className="text-sm text-amber-600">
+                              {icon} {type.charAt(0).toUpperCase() + type.slice(1)}: {timeLabel}
+                            </div>
+                          );
+                        })
+                      ) : (
+                        // Handle single time slot (legacy format)
+                        <div className="text-sm text-amber-600">
+                          {icon} {type.charAt(0).toUpperCase() + type.slice(1)}: {
+                            (() => {
+                              const booking = bookings as any;
+                              let timeLabel = '';
+                              if (booking.startMinute === 0 && booking.endMinute === 15) timeLabel = 'First 15 minutes';
+                              else if (booking.startMinute === 15 && booking.endMinute === 30) timeLabel = 'Second 15 minutes';
+                              else if (booking.startMinute === 30 && booking.endMinute === 45) timeLabel = 'Third 15 minutes';
+                              else if (booking.startMinute === 45 && booking.endMinute === 60) timeLabel = 'Last 15 minutes';
+                              else timeLabel = `Minutes ${booking.startMinute}-${booking.endMinute}`;
+                              return timeLabel;
+                            })()
+                          }
+                        </div>
+                      )}
                     </div>
                   );
                 })}

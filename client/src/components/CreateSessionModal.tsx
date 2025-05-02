@@ -215,20 +215,17 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
       
       <Select
         onValueChange={(value) => {
-          if (value === "") {
-            setUseEquipment(false);
+          setUseEquipment(value === "use");
+          if (value !== "use") {
             setSelectedTimeSlots([]);
-          } else {
-            setUseEquipment(true);
           }
         }}
-        value={useEquipment ? "use" : ""}
+        value={useEquipment ? "use" : undefined}
       >
         <SelectTrigger className="h-8 text-xs">
-          <SelectValue placeholder="Select option" />
+          <SelectValue placeholder="I'm not using this equipment" />
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="">Don't use</SelectItem>
           <SelectItem value="use">Use this equipment</SelectItem>
         </SelectContent>
       </Select>

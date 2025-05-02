@@ -1,25 +1,10 @@
 import React, { useState } from 'react';
-import { z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
 import { Participant } from '@shared/schema';
-import { generateUniqueId } from '@/lib/utils';
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Check, ChevronsUpDown, User } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const formSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Please enter a valid email address'),
-  phone: z.string().optional(),
-  notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 interface AddParticipantFormProps {
   onAdd: (participant: Participant) => void;
@@ -32,42 +17,24 @@ const AddParticipantForm: React.FC<AddParticipantFormProps> = ({
 }) => {
   const [open, setOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<Participant | null>(null);
-
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: {
-      name: '',
-      email: '',
-      phone: '',
-      notes: '',
-    },
-  });
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleSelectCustomer = (customer: Participant) => {
     setSelectedCustomer(customer);
-    form.setValue('name', customer.name);
-    form.setValue('email', customer.email);
-    form.setValue('phone', customer.phone || '');
-    form.setValue('notes', customer.notes || '');
     setOpen(false);
   };
 
-  const onSubmit = (data: FormValues) => {
-    const participant: Participant = {
-      id: selectedCustomer?.id || generateUniqueId(),
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      notes: data.notes,
-    };
-    onAdd(participant);
-    form.reset();
-    setSelectedCustomer(null);
+  const handleSubmit = () => {
+    if (selectedCustomer) {
+      onAdd(selectedCustomer);
+      setSelectedCustomer(null);
+      setSearchQuery('');
+    }
   };
 
   return (
     <div className="p-4 border rounded-md bg-slate-50">
-      <h3 className="text-sm font-medium mb-4">Add Participant</h3>
+      <h3 className="text-sm font-medium mb-4">Select Existing Customer</h3>
       
       <div className="mb-4">
         <Popover open={open} onOpenChange={setOpen}>
@@ -78,13 +45,18 @@ const AddParticipantForm: React.FC<AddParticipantFormProps> = ({
               aria-expanded={open}
               className="w-full justify-between"
             >
-              {selectedCustomer ? selectedCustomer.name : "Select existing customer..."}
+              {selectedCustomer ? selectedCustomer.name : "Select customer..."}
               <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-full p-0" align="start">
             <Command>
-              <CommandInput placeholder="Search customers..." className="h-9" />
+              <CommandInput 
+                placeholder="Search customers..." 
+                className="h-9"
+                value={searchQuery}
+                onValueChange={setSearchQuery}
+              />
               <CommandEmpty>No customer found.</CommandEmpty>
               <CommandGroup>
                 <CommandList>
@@ -113,73 +85,28 @@ const AddParticipantForm: React.FC<AddParticipantFormProps> = ({
         </Popover>
       </div>
 
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+      {selectedCustomer && (
+        <div className="mb-4 p-3 bg-white border rounded-md">
+          <h4 className="text-sm font-medium mb-2">Selected Customer</h4>
+          <div className="text-sm">
+            <div><span className="font-medium">Name:</span> {selectedCustomer.name}</div>
+            <div><span className="font-medium">Email:</span> {selectedCustomer.email}</div>
+            {selectedCustomer.phone && (
+              <div><span className="font-medium">Phone:</span> {selectedCustomer.phone}</div>
             )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input {...field} type="email" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="phone"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Phone (optional)</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <FormField
-            control={form.control}
-            name="notes"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Notes (optional)</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          
-          <Button 
-            type="submit"
-            className="w-full"
-          >
-            <User className="h-4 w-4 mr-2" />
-            Add Participant
-          </Button>
-        </form>
-      </Form>
+          </div>
+        </div>
+      )}
+      
+      <Button 
+        type="button"
+        className="w-full"
+        onClick={handleSubmit}
+        disabled={!selectedCustomer}
+      >
+        <User className="h-4 w-4 mr-2" />
+        Add Selected Customer
+      </Button>
     </div>
   );
 };

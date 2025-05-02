@@ -262,7 +262,7 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                   className="flex items-center text-sm"
                 >
                   {showAddParticipant ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
-                  {showAddParticipant ? 'Cancel' : 'Add Participant'}
+                  {showAddParticipant ? 'Cancel' : 'Add Existing Customer'}
                 </Button>
               )}
             </div>
@@ -331,7 +331,7 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                       className="flex items-center text-sm"
                     >
                       {showAddWaitlist ? <X className="h-4 w-4 mr-1" /> : <PlusCircle className="h-4 w-4 mr-1" />}
-                      {showAddWaitlist ? 'Cancel' : 'Add to Waitlist'}
+                      {showAddWaitlist ? 'Cancel' : 'Add Existing Customer to Waitlist'}
                     </Button>
                   )}
                 </div>

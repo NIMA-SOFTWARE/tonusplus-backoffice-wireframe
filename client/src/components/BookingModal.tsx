@@ -89,7 +89,24 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
           <DialogDescription>
             {formatDate(session.date)} · {formatTimeRange(session.startTime, session.duration)}<br />
             Instructor: {session.trainer}<br />
+            Room: {session.room}<br />
             {spotText}
+            {session.equipmentBookings?.laser && (
+              <>
+                <div className="mt-2 text-sm font-medium text-amber-600">
+                  ⚡ Laser equipment booked: {
+                    (() => {
+                      const { startMinute, endMinute } = session.equipmentBookings.laser;
+                      if (startMinute === 0 && endMinute === 15) return 'First 15 minutes';
+                      if (startMinute === 15 && endMinute === 30) return 'Second 15 minutes';
+                      if (startMinute === 30 && endMinute === 45) return 'Third 15 minutes';
+                      if (startMinute === 45 && endMinute === 60) return 'Last 15 minutes';
+                      return `Minutes ${startMinute}-${endMinute}`;
+                    })()
+                  }
+                </div>
+              </>
+            )}
           </DialogDescription>
         </DialogHeader>
         

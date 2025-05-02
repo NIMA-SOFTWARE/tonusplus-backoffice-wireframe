@@ -21,7 +21,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
   const [weekDates, setWeekDates] = useState<Date[]>([]);
-  const [selectedEquipment, setSelectedEquipment] = useState<'laser' | 'reformer' | 'cadillac' | 'barrel' | 'chair'>('laser');
+  // We no longer need to track selected equipment since we show all types
   
   // Create session modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -339,22 +339,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     </DragDropContext>
   );
 
-  // Equipment selection tabs for admin view
-  const renderEquipmentTabs = () => (
-    <Tabs 
-      defaultValue="laser" 
-      className="w-full"
-      onValueChange={(value) => setSelectedEquipment(value as any)}
-    >
-      <TabsList className="grid grid-cols-5 w-full mb-2">
-        <TabsTrigger value="laser" className="text-xs sm:text-sm">Laser</TabsTrigger>
-        <TabsTrigger value="reformer" className="text-xs sm:text-sm">Reformer</TabsTrigger>
-        <TabsTrigger value="cadillac" className="text-xs sm:text-sm">Cadillac</TabsTrigger>
-        <TabsTrigger value="barrel" className="text-xs sm:text-sm">Barrel</TabsTrigger>
-        <TabsTrigger value="chair" className="text-xs sm:text-sm">Chair</TabsTrigger>
-      </TabsList>
-    </Tabs>
-  );
+  // Equipment tabs removed as requested
 
   return (
     <div className="bg-white shadow rounded-lg overflow-hidden">
@@ -411,11 +396,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
         </div>
       </div>
 
-      {isAdminView && (
-        <div className="px-4 py-2 border-b border-slate-200 bg-white">
-          {renderEquipmentTabs()}
-        </div>
-      )}
+      {/* Equipment tabs removed as requested */}
 
       <div className="flex flex-col lg:flex-row">
         <div className="flex-grow overflow-auto">
@@ -424,11 +405,10 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
         
         {/* Equipment Schedule (visible only in admin view) */}
         {isAdminView && viewMode === 'day' && (
-          <div className="w-full lg:w-72 p-4 border-t lg:border-t-0 lg:border-l border-slate-200">
+          <div className="w-full lg:w-80 p-4 border-t lg:border-t-0 lg:border-l border-slate-200">
             <EquipmentSchedule 
               sessions={filteredSessions} 
               date={format(currentDate, 'yyyy-MM-dd')}
-              selectedEquipment={selectedEquipment}
             />
           </div>
         )}

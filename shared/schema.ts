@@ -1,9 +1,9 @@
-import { pgTable, text, serial, integer, boolean } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { pgTable, text, integer, timestamp } from 'drizzle-orm/pg-core';
+import { createInsertSchema } from 'drizzle-zod';
+import { z } from 'zod';
 
 export const users = pgTable("users", {
-  id: serial("id").primaryKey(),
+  id: integer("id").primaryKey(),
   username: text("username").notNull().unique(),
   password: text("password").notNull(),
 });
@@ -16,7 +16,6 @@ export const insertUserSchema = createInsertSchema(users).pick({
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 
-// Custom types for pilates application
 export type SessionStatus = 'pending' | 'open' | 'closed' | 'ongoing' | 'finished' | 'cancelled';
 
 export interface Participant {
@@ -27,7 +26,6 @@ export interface Participant {
   notes?: string;
 }
 
-// Equipment time slot definition
 export interface EquipmentTimeSlot {
   startMinute: number; // Minutes from the session start time (0-45 for a 1-hour session)
   endMinute: number;   // End minute (startMinute + 15 usually, max is session duration)
@@ -42,7 +40,7 @@ export interface PilatesSession {
   startTime: string;
   duration: number;
   maxSpots: number;
-  maxWaitlist: number;
+  enableWaitlist: boolean;
   status: SessionStatus;
   participants: Participant[];
   waitlist: Participant[];
@@ -64,7 +62,7 @@ export interface CreateSessionInput {
   startTime: string;
   duration: number;
   maxSpots: number;
-  maxWaitlist: number;
+  enableWaitlist: boolean;
   status: SessionStatus;
   equipmentBookings?: {
     laser?: EquipmentTimeSlot;
@@ -89,7 +87,7 @@ export const createSessionSchema = z.object({
   startTime: z.string().regex(/^\d{2}:\d{2}$/, "Start time must be in HH:MM format"),
   duration: z.number().int().min(15, "Duration must be at least 15 minutes"),
   maxSpots: z.number().int().min(1, "Maximum spots must be at least 1"),
-  maxWaitlist: z.number().int().min(0, "Maximum waitlist must be at least 0"),
+  enableWaitlist: z.boolean().default(true),
   status: z.enum(['pending', 'open', 'closed', 'ongoing', 'finished', 'cancelled']),
   equipmentBookings: z.object({
     laser: equipmentTimeSlotSchema.optional(),

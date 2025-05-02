@@ -403,7 +403,9 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       <DialogContent className="sm:max-w-[480px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {editSession ? 'Edit Session' : 'Create New Session'}
+            {editSession 
+              ? `Edit Session: ${editSession.name} - ${formatDate(editSession.date)} ${formatTime(editSession.startTime)}`
+              : 'Create New Session'}
           </DialogTitle>
           <DialogDescription className="text-xs">
             Fill out the form below

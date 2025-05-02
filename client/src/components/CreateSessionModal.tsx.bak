@@ -11,12 +11,13 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Checkbox } from '@/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { isLaserAvailable, isReformerAvailable, isCadillacAvailable, isBarrelAvailable, isChairAvailable } from '@/lib/localStorage';
 
-// Component for booking equipment
+// Component for booking laser equipment
 interface EquipmentBookingSectionProps {
   form: any;
   date: string;
@@ -100,33 +101,41 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
       return;
     }
     
-    // Check availability for each time slot
-    const availability: {[key: string]: boolean} = {};
-    
-    for (const slot of timeSlots) {
-      const [start, end] = slot.id.split('-').map(Number);
+    // Only check if we have valid data
+    if (date.match(/^\d{4}-\d{2}-\d{2}$/) && startTime.match(/^\d{2}:\d{2}$/)) {
+      const slots = ['0-15', '15-30', '30-45', '45-60'];
+      const availability: {[key: string]: boolean} = {};
       
-      // Skip slots that don't fit within the duration
-      if (end > duration) continue;
+      // Skip checking for time slots beyond session duration
+      const maxMinutes = Math.min(60, duration);
       
-      // If editing, consider the current booking as available
-      if (editSession?.equipmentBookings?.[equipmentType]) {
-        if (editSession.equipmentBookings[equipmentType]!.startMinute === start) {
-          availability[slot.id] = true;
-          continue;
+      slots.forEach(slot => {
+        const [start, end] = slot.split('-').map(Number);
+        if (end <= maxMinutes) {
+          // If editing, consider the current session's booking as available
+          if (editSession && editSession.equipmentBookings?.[equipmentType]) {
+            const currentStart = editSession.equipmentBookings[equipmentType]!.startMinute;
+            const currentEnd = editSession.equipmentBookings[equipmentType]!.endMinute;
+            
+            if (start === currentStart && end === currentEnd) {
+              availability[slot] = true;
+              return;
+            }
+          }
+          
+          availability[slot] = checkAvailability(date, startTime, start, end);
+        } else {
+          availability[slot] = false; // Not available if beyond session duration
         }
-      }
+      });
       
-      // Check if this time slot is available
-      availability[slot.id] = checkAvailability(date, startTime, start, end);
-    }
-    
-    setTimeSlotAvailability(availability);
-    setAvailabilityChecked(true);
-    
-    // If previously selected time slot is now unavailable, clear it
-    if (selectedTimeSlot && !availability[selectedTimeSlot]) {
-      setSelectedTimeSlot(null);
+      setTimeSlotAvailability(availability);
+      setAvailabilityChecked(true);
+      
+      // If previously selected time slot is now unavailable, clear it
+      if (selectedTimeSlot && !availability[selectedTimeSlot]) {
+        setSelectedTimeSlot(null);
+      }
     }
   }, [date, startTime, duration, useEquipment, editSession, equipmentType]);
   
@@ -158,45 +167,53 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="none">Not using this equipment</SelectItem>
+              
+              {timeSlots.map(slot => {
+                // Only show slots that fit within the session duration
+                const [start, end] = slot.id.split('-').map(Number);
+                if (end > duration) return null;
+                
+                const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
+                const isDisabled = !isAvailable && (!editSession || 
+                  !editSession.equipmentBookings?.[equipmentType] || 
+                  editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
+                
+                // Format the time slot as HH:MM based on session start time
+                let slotLabel = slot.id;
+                if (startTime) {
+                  const [hours, minutes] = startTime.split(':').map(Number);
+                  const startTimeDate = new Date();
+                  startTimeDate.setHours(hours, minutes + start, 0);
+                  const endTimeDate = new Date();
+                  endTimeDate.setHours(hours, minutes + end, 0);
+                  
+                  const formatTimeValue = (date: Date) => {
+                    return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+                  };
+                  
+                  slotLabel = `${formatTimeValue(startTimeDate)} - ${formatTimeValue(endTimeDate)}`;
+                }
+                
+                return (
+                  <SelectItem 
+                    key={slot.id} 
+                    value={slot.id}
+                    disabled={isDisabled}
+                  >
+                    {slotLabel}
+                    {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
+                  </SelectItem>
+                );
+              })}
+            </SelectContent>
+          </Select>
           
-          {timeSlots.map(slot => {
-            // Only show slots that fit within the session duration
-            const [start, end] = slot.id.split('-').map(Number);
-            if (end > duration) return null;
-            
-            const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
-            const isDisabled = !isAvailable && (!editSession || 
-              !editSession.equipmentBookings?.[equipmentType] || 
-              editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
-            
-            // Format the time slot as HH:MM based on session start time
-            let slotLabel = slot.id;
-            if (startTime) {
-              const [hours, minutes] = startTime.split(':').map(Number);
-              const startTimeDate = new Date();
-              startTimeDate.setHours(hours, minutes + start, 0);
-              const endTimeDate = new Date();
-              endTimeDate.setHours(hours, minutes + end, 0);
-              
-              const formatTimeValue = (date: Date) => {
-                return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-              };
-              
-              slotLabel = `${formatTimeValue(startTimeDate)} - ${formatTimeValue(endTimeDate)}`;
-            }
-            
-            return (
-              <SelectItem 
-                key={slot.id} 
-                value={slot.id}
-                disabled={isDisabled}
-              >
-                {slotLabel}
-                {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
-              </SelectItem>
-            );
-          })}
-        </SelectContent>
+          {!availabilityChecked && (
+            <p className="text-[10px] text-amber-600 mt-1">
+              Enter valid date and time to check equipment availability
+            </p>
+          )}
+        </div>
       </Select>
       
       {!availabilityChecked && (
@@ -519,20 +536,14 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                       <FormItem>
                         <FormLabel className="text-xs">Duration (min)</FormLabel>
                         <FormControl>
-                          <Select 
-                            onValueChange={(value) => field.onChange(parseInt(value))} 
-                            value={field.value.toString()}
-                          >
-                            <SelectTrigger className="h-8 text-xs">
-                              <SelectValue placeholder="Duration" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="30">30 minutes</SelectItem>
-                              <SelectItem value="45">45 minutes</SelectItem>
-                              <SelectItem value="60">60 minutes</SelectItem>
-                              <SelectItem value="90">90 minutes</SelectItem>
-                            </SelectContent>
-                          </Select>
+                          <Input 
+                            type="number" 
+                            min="15" 
+                            step="15"
+                            className="h-8 text-xs"
+                            {...field}
+                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          />
                         </FormControl>
                         <FormMessage className="text-xs" />
                       </FormItem>
@@ -540,8 +551,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   />
                 </div>
                 
-                {/* Third row - Capacity & Waitlist */}
-                <div className="grid grid-cols-2 gap-3">
+                {/* Third row - Spots, Waitlist, Status */}
+                <div className="grid grid-cols-3 gap-3">
                   <FormField
                     control={form.control}
                     name="maxSpots"
@@ -551,6 +562,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                         <FormControl>
                           <Input 
                             type="number" 
+                            min="1"
                             className="h-8 text-xs" 
                             {...field}
                             onChange={e => field.onChange(parseInt(e.target.value))}
@@ -565,148 +577,146 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                     control={form.control}
                     name="enableWaitlist"
                     render={({ field }) => (
-                      <FormItem className="flex flex-row items-center justify-start space-x-3 space-y-0 pt-4 ml-1">
+                      <FormItem className="flex flex-row items-center space-x-2 space-y-0 h-8">
                         <FormControl>
-                          <Checkbox
-                            checked={field.value}
+                          <Checkbox 
+                            checked={field.value} 
                             onCheckedChange={field.onChange}
                           />
                         </FormControl>
-                        <div className="space-y-1 leading-none">
-                          <FormLabel className="text-xs">
-                            Enable Waitlist
-                          </FormLabel>
-                        </div>
+                        <FormLabel className="text-xs font-normal">
+                          Enable waitlist
+                        </FormLabel>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Status</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="open">Open</SelectItem>
+                            <SelectItem value="closed">Closed</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
                       </FormItem>
                     )}
                   />
                 </div>
-                
-                {/* Fourth row - Status */}
-                <FormField
-                  control={form.control}
-                  name="status"
-                  render={({ field }) => (
-                    <FormItem className="space-y-1">
-                      <FormLabel className="text-xs">Session Status</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          className="flex space-x-4"
-                        >
-                          <FormItem className="flex items-center space-x-1 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="pending" />
-                            </FormControl>
-                            <FormLabel className="text-xs font-normal">
-                              Pending
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-1 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="open" />
-                            </FormControl>
-                            <FormLabel className="text-xs font-normal">
-                              Open
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-1 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="closed" />
-                            </FormControl>
-                            <FormLabel className="text-xs font-normal">
-                              Closed
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage className="text-xs" />
-                    </FormItem>
-                  )}
-                />
               </TabsContent>
               
-              <TabsContent value="equipment" className="pt-2 space-y-3">
-                <div className="text-sm text-muted-foreground mb-4">
-                  Select equipment needed for this session
-                </div>
-                
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    <div className="font-medium text-sm">Laser Equipment</div>
-                    <EquipmentBookingSection 
-                      form={form} 
-                      date={form.watch('date')} 
-                      startTime={form.watch('startTime')} 
-                      duration={form.watch('duration')}
-                      editSession={editSession}
-                      equipmentType="laser"
-                      label="laser equipment"
-                    />
-                  </div>
+              <TabsContent value="equipment">
+                <Accordion type="single" collapsible defaultValue="laser" className="w-full">
+                  <AccordionItem value="laser">
+                    <AccordionTrigger className="text-sm py-2">
+                      Laser Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="laser"
+                        label="laser equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
                   
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    <div className="font-medium text-sm">Reformer Equipment</div>
-                    <EquipmentBookingSection 
-                      form={form} 
-                      date={form.watch('date')} 
-                      startTime={form.watch('startTime')} 
-                      duration={form.watch('duration')}
-                      editSession={editSession}
-                      equipmentType="reformer"
-                      label="reformer equipment"
-                    />
-                  </div>
+                  <AccordionItem value="reformer">
+                    <AccordionTrigger className="text-sm py-2">
+                      Reformer Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="reformer"
+                        label="reformer equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
                   
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    <div className="font-medium text-sm">Cadillac Equipment</div>
-                    <EquipmentBookingSection 
-                      form={form} 
-                      date={form.watch('date')} 
-                      startTime={form.watch('startTime')} 
-                      duration={form.watch('duration')}
-                      editSession={editSession}
-                      equipmentType="cadillac"
-                      label="cadillac equipment"
-                    />
-                  </div>
+                  <AccordionItem value="cadillac">
+                    <AccordionTrigger className="text-sm py-2">
+                      Cadillac Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="cadillac"
+                        label="cadillac equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
                   
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    <div className="font-medium text-sm">Barrel Equipment</div>
-                    <EquipmentBookingSection 
-                      form={form} 
-                      date={form.watch('date')} 
-                      startTime={form.watch('startTime')} 
-                      duration={form.watch('duration')}
-                      editSession={editSession}
-                      equipmentType="barrel"
-                      label="barrel equipment"
-                    />
-                  </div>
+                  <AccordionItem value="barrel">
+                    <AccordionTrigger className="text-sm py-2">
+                      Barrel Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="barrel"
+                        label="barrel equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
                   
-                  <div className="grid grid-cols-2 gap-3 items-center">
-                    <div className="font-medium text-sm">Chair Equipment</div>
-                    <EquipmentBookingSection 
-                      form={form} 
-                      date={form.watch('date')} 
-                      startTime={form.watch('startTime')} 
-                      duration={form.watch('duration')}
-                      editSession={editSession}
-                      equipmentType="chair"
-                      label="chair equipment"
-                    />
-                  </div>
-                </div>
+                  <AccordionItem value="chair">
+                    <AccordionTrigger className="text-sm py-2">
+                      Chair Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="chair"
+                        label="chair equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </TabsContent>
             </Tabs>
             
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose} disabled={isSubmitting}>
+            <DialogFooter className="mt-2">
+              <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs">
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : editSession ? 'Update Session' : 'Create Session'}
+              <Button type="submit" disabled={isSubmitting} className="h-8 text-xs">
+                {isSubmitting ? 'Processing...' : (editSession ? 'Update' : 'Create')}
               </Button>
             </DialogFooter>
           </form>

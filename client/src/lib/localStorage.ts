@@ -292,7 +292,11 @@ const getSampleSessions = (): PilatesSession[] => {
       waitlist: [],
       createdAt: new Date().toISOString(),
       equipmentBookings: {
-        laser: [{ startMinute: 0, endMinute: 15 }] // Using laser for first 15 minutes
+        laser: [
+          { startMinute: 0, endMinute: 15 }, // Using laser for first 15 minutes
+          { startMinute: 30, endMinute: 45 }  // Using laser again for third 15 minutes
+        ],
+        reformer: [{ startMinute: 15, endMinute: 30 }] // Using reformer for second 15 minutes
       }
     },
     {

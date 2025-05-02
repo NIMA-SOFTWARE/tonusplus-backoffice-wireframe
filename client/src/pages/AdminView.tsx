@@ -11,7 +11,6 @@ import StatusBadge from '@/components/StatusBadge';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-import TestEquipmentSession from '@/components/TestEquipmentSession';
 
 const AdminView: React.FC = () => {
   const { filteredSessions, changeSessionStatus } = usePilates();
@@ -86,20 +85,15 @@ const AdminView: React.FC = () => {
         <FilterSection />
       </div>
       
-      <div className="flex flex-col md:flex-row gap-4">
-        <Button 
-          className="w-full md:w-auto"
-          onClick={handleCreateSession}
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-          </svg>
-          Create New Session
-        </Button>
-        
-        {/* Test component to visualize equipment icons */}
-        <TestEquipmentSession />
-      </div>
+      <Button 
+        className="w-full md:w-auto"
+        onClick={handleCreateSession}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+        </svg>
+        Create New Session
+      </Button>
       
       <CalendarView 
         onSessionClick={(session) => handleEditSession(session)} 

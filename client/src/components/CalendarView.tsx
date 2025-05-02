@@ -6,7 +6,7 @@ import { formatTimeRange } from '@/lib/utils';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import CreateSessionModal from './CreateSessionModal';
 import EquipmentSchedule from './EquipmentSchedule';
-import SessionCard from './SessionCard';
+import EquipmentTooltip from './EquipmentTooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 
@@ -157,6 +157,50 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     setNewSessionData(null);
   };
   
+  // Format time slot for equipment booking display
+  const formatTimeSlot = (startMinute: number, endMinute: number): string => {
+    const startMinutes = Math.floor(startMinute % 60);
+    const endMinutes = Math.floor(endMinute % 60);
+    
+    const timeLabel = `${startMinutes}-${endMinutes}min`;
+    
+    return timeLabel;
+  };
+  
+  // Get equipment icons
+  const getEquipmentIcon = (type: string) => {
+    switch (type) {
+      case 'laser': return '⚡';
+      case 'reformer': return '🔄';
+      case 'cadillac': return '🛏️';
+      case 'barrel': return '🛢️';
+      case 'chair': return '🪑';
+      default: return '📊';
+    }
+  };
+  
+  // Get booked equipment from a session
+  const getBookedEquipment = (session: PilatesSession) => {
+    if (!session.equipmentBookings) return [];
+    
+    const equipment = [];
+    
+    for (const [type, bookings] of Object.entries(session.equipmentBookings)) {
+      if (bookings && bookings.length > 0) {
+        // Handle each booking time slot
+        for (const booking of bookings) {
+          equipment.push({
+            type,
+            icon: getEquipmentIcon(type),
+            timeSlot: formatTimeSlot(booking.startMinute, booking.endMinute)
+          });
+        }
+      }
+    }
+    
+    return equipment;
+  };
+
   // Render a draggable session cell
   const renderSessionCell = (sessions: PilatesSession[]) => {
     if (sessions.length === 0) {
@@ -175,24 +219,45 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
+            onClick={() => onSessionClick && onSessionClick(session)}
+            className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
+            style={{
+              ...provided.draggableProps.style,
+              borderLeftColor: getActivityColor(session.name)
+            }}
           >
-            {/* Use SessionCard component for unified look and equipment icons */}
-            <div 
-              className="mb-1"
-              onClick={(e) => {
-                e.stopPropagation();
-                onSessionClick && onSessionClick(session);
-              }}
-              style={{
-                ...provided.draggableProps.style,
-                borderLeftColor: getActivityColor(session.name)
-              }}
-            >
-              <SessionCard 
-                session={session} 
-                onClick={() => onSessionClick && onSessionClick(session)}
-              />
+            <div className="font-semibold">{session.name}</div>
+            <div>{formatTimeRange(session.startTime, session.duration)}</div>
+            <div className="text-xs text-slate-500">{session.trainer}</div>
+            <div className="text-xs mt-1">
+              <span className="font-medium">{session.participants.length}</span>
+              <span className="text-slate-500">/{session.maxSpots}</span>
+              {session.waitlist.length > 0 && 
+                <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
+              }
             </div>
+            
+            {/* Equipment icons in bottom right corner */}
+            {session.equipmentBookings && (
+              <div className="absolute bottom-0.5 right-0.5 flex space-x-1 bg-white/30 px-1 rounded-sm">
+                {Array.from(new Set(
+                  getBookedEquipment(session).map(item => item.type)
+                )).map((type, index) => (
+                  <EquipmentTooltip 
+                    key={index} 
+                    type={type}
+                    timeSlot={getBookedEquipment(session)
+                      .filter(item => item.type === type)
+                      .map(item => item.timeSlot)
+                      .join(', ')}
+                  >
+                    <div className="cursor-help text-sm">
+                      {getEquipmentIcon(type)}
+                    </div>
+                  </EquipmentTooltip>
+                ))}
+              </div>
+            )}
           </div>
         )}
       </Draggable>

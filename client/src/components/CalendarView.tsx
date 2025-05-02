@@ -37,10 +37,17 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     setTimeSlots(slots);
   }, []);
 
-  // Extract unique rooms from sessions
+  // Always use a fixed list of rooms to ensure all columns are visible
   useEffect(() => {
-    const uniqueRooms = Array.from(new Set(filteredSessions.map(session => session.room)));
-    setRooms(uniqueRooms.length > 0 ? uniqueRooms : ['Studio A', 'Studio B', 'Reformer Room', 'Private Room']);
+    // Define standard rooms that are always displayed
+    const standardRooms = ['Studio A', 'Studio B', 'Reformer Room', 'Private Room'];
+    
+    // Extract any additional unique rooms from sessions that aren't in our standard list
+    const sessionRooms = Array.from(new Set(filteredSessions.map(session => session.room)));
+    const additionalRooms = sessionRooms.filter(room => !standardRooms.includes(room));
+    
+    // Combine standard rooms with any additional unique rooms
+    setRooms([...standardRooms, ...additionalRooms]);
   }, [filteredSessions]);
 
   // Generate week days whenever current date changes

@@ -5,6 +5,8 @@ import { format, addDays, subDays, isSameDay, parseISO, isToday } from 'date-fns
 import { formatTimeRange } from '@/lib/utils';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import CreateSessionModal from './CreateSessionModal';
+import EquipmentSchedule from './EquipmentSchedule';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
 
 interface CalendarViewProps {
@@ -19,6 +21,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day');
   const [weekDates, setWeekDates] = useState<Date[]>([]);
+  const [selectedEquipment, setSelectedEquipment] = useState<'laser' | 'reformer' | 'cadillac' | 'barrel' | 'chair'>('laser');
   
   // Create session modal state
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -312,38 +315,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
                           onClick={isAdminView && sessionsForDay.length === 0 ? 
                             () => handleCreateSessionClick('09:00', room, day) : undefined}
                         >
-                          <div className="space-y-1">
-                            {sessionsForDay.map((session, index) => (
-                              <Draggable 
-                                key={session.id} 
-                                draggableId={session.id}
-                                index={index}
-                                isDragDisabled={!isAdminView}
-                              >
-                                {(provided) => (
-                                  <div
-                                    ref={provided.innerRef}
-                                    {...provided.draggableProps}
-                                    {...provided.dragHandleProps}
-                                    onClick={() => onSessionClick && onSessionClick(session)}
-                                    className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
-                                    style={{
-                                      ...provided.draggableProps.style,
-                                      borderLeftColor: getActivityColor(session.name)
-                                    }}
-                                  >
-                                    <div className="font-semibold">{session.name}</div>
-                                    <div>{formatTimeRange(session.startTime, session.duration)}</div>
-                                    <div className="text-xs text-slate-500">{session.trainer}</div>
-                                  </div>
-                                )}
-                              </Draggable>
-                            ))}
+                          <div className="h-full">
+                            {renderSessionCell(sessionsForDay)}
                             {provided.placeholder}
                             
                             {/* Empty cell placeholder with + sign for admin mode */}
                             {isAdminView && sessionsForDay.length === 0 && (
-                              <div className="h-full min-h-[80px] border border-dashed border-slate-200 rounded flex items-center justify-center">
+                              <div className="h-full border border-dashed border-slate-200 rounded flex items-center justify-center">
                                 <span className="text-slate-400 text-xl">+</span>
                               </div>
                             )}
@@ -359,6 +337,23 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
         </table>
       </div>
     </DragDropContext>
+  );
+
+  // Equipment selection tabs for admin view
+  const renderEquipmentTabs = () => (
+    <Tabs 
+      defaultValue="laser" 
+      className="w-full"
+      onValueChange={(value) => setSelectedEquipment(value as any)}
+    >
+      <TabsList className="grid grid-cols-5 w-full mb-2">
+        <TabsTrigger value="laser" className="text-xs sm:text-sm">Laser</TabsTrigger>
+        <TabsTrigger value="reformer" className="text-xs sm:text-sm">Reformer</TabsTrigger>
+        <TabsTrigger value="cadillac" className="text-xs sm:text-sm">Cadillac</TabsTrigger>
+        <TabsTrigger value="barrel" className="text-xs sm:text-sm">Barrel</TabsTrigger>
+        <TabsTrigger value="chair" className="text-xs sm:text-sm">Chair</TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 
   return (
@@ -416,7 +411,28 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
         </div>
       </div>
 
-      {viewMode === 'day' ? renderDayView() : renderWeekView()}
+      {isAdminView && (
+        <div className="px-4 py-2 border-b border-slate-200 bg-white">
+          {renderEquipmentTabs()}
+        </div>
+      )}
+
+      <div className="flex flex-col lg:flex-row">
+        <div className="flex-grow overflow-auto">
+          {viewMode === 'day' ? renderDayView() : renderWeekView()}
+        </div>
+        
+        {/* Equipment Schedule (visible only in admin view) */}
+        {isAdminView && viewMode === 'day' && (
+          <div className="w-full lg:w-72 p-4 border-t lg:border-t-0 lg:border-l border-slate-200">
+            <EquipmentSchedule 
+              sessions={filteredSessions} 
+              date={format(currentDate, 'yyyy-MM-dd')}
+              selectedEquipment={selectedEquipment}
+            />
+          </div>
+        )}
+      </div>
       
       {/* Create session modal */}
       {isCreateModalOpen && newSessionData && (

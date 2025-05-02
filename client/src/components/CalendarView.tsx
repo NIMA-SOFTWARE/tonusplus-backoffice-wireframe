@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { PilatesSession, CreateSessionInput } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
-import { format, addDays, subDays, isSameDay, parseISO, isToday } from 'date-fns';
-import { formatTimeRange } from '@/lib/utils';
+import { format, addDays, subDays, isSameDay, parseISO, isToday, 
+  startOfWeek, endOfWeek, eachDayOfInterval, addWeeks, subWeeks } from 'date-fns';
+import { formatTimeRange, cn } from '@/lib/utils';
 import { DragDropContext, Draggable, Droppable, DropResult } from 'react-beautiful-dnd';
 import CreateSessionModal from './CreateSessionModal';
 import EquipmentSchedule from './EquipmentSchedule';
 import EquipmentTooltip from './EquipmentTooltip';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useToast } from '@/hooks/use-toast';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { CalendarIcon } from 'lucide-react';
 
 interface CalendarViewProps {
   onSessionClick?: (session: PilatesSession) => void;
@@ -421,12 +426,39 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
               <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
             </svg>
           </button>
-          <h3 className="text-base font-medium text-slate-800">
-            {viewMode === 'day' 
-              ? format(currentDate, 'EEEE, MMMM d, yyyy')
-              : `${format(weekDates[0], 'MMM d')} - ${format(weekDates[6], 'MMM d, yyyy')}`
-            }
-          </h3>
+          
+          {/* Date display with calendar popover */}
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button 
+                variant="ghost" 
+                className={cn(
+                  "justify-start font-medium text-left text-slate-800 hover:bg-slate-100",
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                <span>
+                  {viewMode === 'day' 
+                    ? format(currentDate, 'EEEE, MMMM d, yyyy')
+                    : `${format(weekDates[0], 'MMM d')} - ${format(weekDates[6], 'MMM d, yyyy')}`
+                  }
+                </span>
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0" align="start">
+              <Calendar
+                mode="single"
+                selected={currentDate}
+                onSelect={(date) => {
+                  if (date) {
+                    setCurrentDate(date);
+                  }
+                }}
+                initialFocus
+              />
+            </PopoverContent>
+          </Popover>
+          
           <button 
             className="p-1 rounded hover:bg-slate-100"
             onClick={viewMode === 'day' ? goToNextDay : goToNextWeek}

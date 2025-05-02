@@ -9,6 +9,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -37,7 +38,7 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
   label
 }) => {
   const [useEquipment, setUseEquipment] = useState<boolean>(false);
-  const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
+  const [selectedTimeSlots, setSelectedTimeSlots] = useState<string[]>([]);
   const [availabilityChecked, setAvailabilityChecked] = useState<boolean>(false);
   const [timeSlotAvailability, setTimeSlotAvailability] = useState<{[key: string]: boolean}>({});
   
@@ -57,16 +58,21 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
   useEffect(() => {
     // Reset state
     setUseEquipment(false);
-    setSelectedTimeSlot(null);
+    setSelectedTimeSlots([]);
     
     // Set values if edit session has this equipment
-    if (editSession?.equipmentBookings?.[equipmentType]) {
+    if (editSession?.equipmentBookings?.[equipmentType]?.length) {
       setUseEquipment(true);
-      const startMin = editSession.equipmentBookings[equipmentType]!.startMinute;
-      if (startMin === 0) setSelectedTimeSlot('0-15');
-      else if (startMin === 15) setSelectedTimeSlot('15-30');
-      else if (startMin === 30) setSelectedTimeSlot('30-45');
-      else if (startMin === 45) setSelectedTimeSlot('45-60');
+      const slots = editSession.equipmentBookings[equipmentType]!.map(slot => {
+        const startMin = slot.startMinute;
+        if (startMin === 0) return '0-15';
+        else if (startMin === 15) return '15-30';
+        else if (startMin === 30) return '30-45';
+        else if (startMin === 45) return '45-60';
+        return '';
+      }).filter(slot => slot !== '');
+      
+      setSelectedTimeSlots(slots);
     }
   }, [editSession, equipmentType]);
   
@@ -74,24 +80,27 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
   useEffect(() => {
     const currentBookings = form.getValues('equipmentBookings') || {};
     
-    if (!useEquipment) {
+    if (!useEquipment || selectedTimeSlots.length === 0) {
       // Remove this equipment from bookings
       const { [equipmentType]: removed, ...rest } = currentBookings;
       form.setValue('equipmentBookings', Object.keys(rest).length ? rest : undefined);
       return;
     }
     
-    if (selectedTimeSlot) {
-      const [start, end] = selectedTimeSlot.split('-').map(Number);
-      form.setValue('equipmentBookings', {
-        ...currentBookings,
-        [equipmentType]: {
-          startMinute: start,
-          endMinute: end
-        }
-      });
-    }
-  }, [useEquipment, selectedTimeSlot, form, equipmentType]);
+    // Convert selected time slots to equipment time slot objects
+    const timeSlotObjects = selectedTimeSlots.map(slot => {
+      const [start, end] = slot.split('-').map(Number);
+      return {
+        startMinute: start,
+        endMinute: end
+      };
+    });
+    
+    form.setValue('equipmentBookings', {
+      ...currentBookings,
+      [equipmentType]: timeSlotObjects
+    });
+  }, [useEquipment, selectedTimeSlots, form, equipmentType]);
   
   // Check availability when date or time changes
   useEffect(() => {
@@ -110,8 +119,12 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
       if (end > duration) continue;
       
       // If editing, consider the current booking as available
-      if (editSession?.equipmentBookings?.[equipmentType]) {
-        if (editSession.equipmentBookings[equipmentType]!.startMinute === start) {
+      if (editSession?.equipmentBookings?.[equipmentType]?.length) {
+        const isCurrentlyBooked = editSession.equipmentBookings[equipmentType]!.some(
+          booking => booking.startMinute === start
+        );
+        
+        if (isCurrentlyBooked) {
           availability[slot.id] = true;
           continue;
         }
@@ -124,20 +137,30 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
     setTimeSlotAvailability(availability);
     setAvailabilityChecked(true);
     
-    // If previously selected time slot is now unavailable, clear it
-    if (selectedTimeSlot && !availability[selectedTimeSlot]) {
-      setSelectedTimeSlot(null);
-    }
+    // Filter out any selected time slots that are now unavailable
+    setSelectedTimeSlots(prev => 
+      prev.filter(slotId => availability[slotId])
+    );
   }, [date, startTime, duration, useEquipment, editSession, equipmentType]);
   
-  const handleTimeSlotChange = (value: string) => {
-    if (value === 'none') {
+  const handleTimeSlotToggle = (slotId: string) => {
+    if (slotId === 'none') {
+      // Clear all selections
       setUseEquipment(false);
-      setSelectedTimeSlot(null);
-    } else {
-      setUseEquipment(true);
-      setSelectedTimeSlot(value);
+      setSelectedTimeSlots([]);
+      return;
     }
+    
+    setUseEquipment(true);
+    
+    // Toggle the selection
+    setSelectedTimeSlots(prev => {
+      if (prev.includes(slotId)) {
+        return prev.filter(id => id !== slotId);
+      } else {
+        return [...prev, slotId];
+      }
+    });
   };
   
   const timeSlots = [
@@ -148,16 +171,27 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
   ];
   
   return (
-    <div>
-      <Select
-        value={selectedTimeSlot || 'none'}
-        onValueChange={handleTimeSlotChange}
-      >
-        <SelectTrigger className="h-8 text-xs w-full">
-          <SelectValue placeholder="Not using this equipment" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="none">Not using this equipment</SelectItem>
+    <div className="space-y-2">
+      <div className="flex items-center mb-2">
+        <Checkbox 
+          id={`use-${equipmentType}`}
+          checked={useEquipment}
+          onCheckedChange={(checked) => {
+            setUseEquipment(!!checked);
+            if (!checked) setSelectedTimeSlots([]);
+          }}
+        />
+        <Label 
+          htmlFor={`use-${equipmentType}`} 
+          className="ml-2 text-sm font-medium"
+        >
+          Use this equipment
+        </Label>
+      </div>
+      
+      {useEquipment && (
+        <div className="pl-6 space-y-1">
+          <p className="text-xs text-slate-500 mb-1">Select time slots:</p>
           
           {timeSlots.map(slot => {
             // Only show slots that fit within the session duration
@@ -167,7 +201,7 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
             const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
             const isDisabled = !isAvailable && (!editSession || 
               !editSession.equipmentBookings?.[equipmentType] || 
-              editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
+              !editSession.equipmentBookings[equipmentType]!.some(booking => booking.startMinute === parseInt(slot.id.split('-')[0], 10)));
             
             // Format the time slot as HH:MM based on session start time
             let slotLabel = slot.id;
@@ -186,21 +220,28 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
             }
             
             return (
-              <SelectItem 
-                key={slot.id} 
-                value={slot.id}
-                disabled={isDisabled}
-              >
-                {slotLabel}
-                {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
-              </SelectItem>
+              <div key={slot.id} className="flex items-center">
+                <Checkbox 
+                  id={`${equipmentType}-${slot.id}`}
+                  checked={selectedTimeSlots.includes(slot.id)}
+                  disabled={isDisabled}
+                  onCheckedChange={() => !isDisabled && handleTimeSlotToggle(slot.id)}
+                />
+                <Label 
+                  htmlFor={`${equipmentType}-${slot.id}`} 
+                  className={`ml-2 text-xs ${isDisabled ? 'text-slate-400' : ''}`}
+                >
+                  {slotLabel}
+                  {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
+                </Label>
+              </div>
             );
           })}
-        </SelectContent>
-      </Select>
+        </div>
+      )}
       
-      {!availabilityChecked && (
-        <p className="text-[10px] text-amber-600 mt-1">
+      {useEquipment && !availabilityChecked && (
+        <p className="text-[10px] text-amber-600 mt-1 pl-6">
           Enter valid date and time to check equipment availability
         </p>
       )}

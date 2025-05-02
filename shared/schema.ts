@@ -90,11 +90,11 @@ export const createSessionSchema = z.object({
   enableWaitlist: z.boolean().default(true),
   status: z.enum(['draft', 'open', 'closed', 'on going', 'finished', 'cancelled']),
   equipmentBookings: z.object({
-    laser: equipmentTimeSlotSchema.optional(),
-    reformer: equipmentTimeSlotSchema.optional(),
-    cadillac: equipmentTimeSlotSchema.optional(),
-    barrel: equipmentTimeSlotSchema.optional(),
-    chair: equipmentTimeSlotSchema.optional()
+    laser: z.array(equipmentTimeSlotSchema).optional(),
+    reformer: z.array(equipmentTimeSlotSchema).optional(),
+    cadillac: z.array(equipmentTimeSlotSchema).optional(),
+    barrel: z.array(equipmentTimeSlotSchema).optional(),
+    chair: z.array(equipmentTimeSlotSchema).optional()
   }).optional()
 });
 

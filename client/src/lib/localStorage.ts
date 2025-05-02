@@ -28,6 +28,42 @@ export const getSessions = (): PilatesSession[] => {
   return JSON.parse(data).sessions;
 };
 
+// Check if laser equipment is available for booking
+export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  const sessions = getSessions();
+  
+  // Filter sessions on the same date and with laser equipment booked
+  const conflictingSessions = sessions.filter(session => {
+    if (session.date !== date) return false;
+    if (!session.equipmentBookings?.laser) return false;
+    
+    // Convert time to minutes for comparison
+    const sessionHour = parseInt(session.startTime.split(':')[0], 10);
+    const sessionMinute = parseInt(session.startTime.split(':')[1], 10);
+    const sessionTotalStartMinutes = sessionHour * 60 + sessionMinute;
+    
+    const requestHour = parseInt(startTime.split(':')[0], 10);
+    const requestMinute = parseInt(startTime.split(':')[1], 10);
+    const requestTotalStartMinutes = requestHour * 60 + requestMinute;
+    
+    // Calculate the absolute start and end times
+    const sessionLaserStartTime = sessionTotalStartMinutes + session.equipmentBookings.laser.startMinute;
+    const sessionLaserEndTime = sessionTotalStartMinutes + session.equipmentBookings.laser.endMinute;
+    
+    const requestLaserStartTime = requestTotalStartMinutes + startMinute;
+    const requestLaserEndTime = requestTotalStartMinutes + endMinute;
+    
+    // Check for overlap
+    return (
+      (requestLaserStartTime >= sessionLaserStartTime && requestLaserStartTime < sessionLaserEndTime) ||
+      (requestLaserEndTime > sessionLaserStartTime && requestLaserEndTime <= sessionLaserEndTime) ||
+      (requestLaserStartTime <= sessionLaserStartTime && requestLaserEndTime >= sessionLaserEndTime)
+    );
+  });
+  
+  return conflictingSessions.length === 0;
+};
+
 // Add a new session
 export const createSession = (sessionData: CreateSessionInput): PilatesSession => {
   const sessions = getSessions();
@@ -210,7 +246,10 @@ const getSampleSessions = (): PilatesSession[] => {
         { id: "p5", name: "Sarah Davis", email: "sarah@example.com", phone: "555-789-0123" }
       ],
       waitlist: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      equipmentBookings: {
+        laser: { startMinute: 0, endMinute: 15 } // Using laser for first 15 minutes
+      }
     },
     {
       id: "session2",
@@ -294,7 +333,10 @@ const getSampleSessions = (): PilatesSession[] => {
         phone: `555-555-${1000+i}`
       })),
       waitlist: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      equipmentBookings: {
+        laser: { startMinute: 30, endMinute: 45 } // Using laser in the middle of the session
+      }
     },
     {
       id: "session6",
@@ -314,7 +356,10 @@ const getSampleSessions = (): PilatesSession[] => {
         phone: `555-666-${1000+i}`
       })),
       waitlist: [],
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      equipmentBookings: {
+        laser: { startMinute: 45, endMinute: 60 } // Using laser for the last 15 minutes
+      }
     },
     // Add sessions for the rest of the week
     {

@@ -27,6 +27,12 @@ export interface Participant {
   notes?: string;
 }
 
+// Equipment time slot definition
+export interface EquipmentTimeSlot {
+  startMinute: number; // Minutes from the session start time (0-45 for a 1-hour session)
+  endMinute: number;   // End minute (startMinute + 15 usually, max is session duration)
+}
+
 export interface PilatesSession {
   id: string;
   name: string;
@@ -41,6 +47,10 @@ export interface PilatesSession {
   participants: Participant[];
   waitlist: Participant[];
   createdAt: string;
+  equipmentBookings?: {
+    laser?: EquipmentTimeSlot;
+    // Can add more equipment types in the future
+  };
 }
 
 export interface CreateSessionInput {
@@ -53,7 +63,16 @@ export interface CreateSessionInput {
   maxSpots: number;
   maxWaitlist: number;
   status: SessionStatus;
+  equipmentBookings?: {
+    laser?: EquipmentTimeSlot;
+  };
 }
+
+// Schema for equipment time slot
+const equipmentTimeSlotSchema = z.object({
+  startMinute: z.number().int().min(0, "Start minute must be positive"),
+  endMinute: z.number().int().min(0, "End minute must be positive")
+});
 
 export const createSessionSchema = z.object({
   name: z.string().min(1, "Activity name is required"),
@@ -64,7 +83,10 @@ export const createSessionSchema = z.object({
   duration: z.number().int().min(15, "Duration must be at least 15 minutes"),
   maxSpots: z.number().int().min(1, "Maximum spots must be at least 1"),
   maxWaitlist: z.number().int().min(0, "Maximum waitlist must be at least 0"),
-  status: z.enum(['pending', 'open', 'closed', 'ongoing', 'finished', 'cancelled'])
+  status: z.enum(['pending', 'open', 'closed', 'ongoing', 'finished', 'cancelled']),
+  equipmentBookings: z.object({
+    laser: equipmentTimeSlotSchema.optional()
+  }).optional()
 });
 
 export const bookSessionSchema = z.object({

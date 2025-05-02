@@ -20,9 +20,7 @@ const FilterSection: React.FC<FilterSectionProps> = ({ className }) => {
     setActivities(uniqueActivities);
   }, [sessions]);
 
-  const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFilters({ date: e.target.value || null });
-  };
+  // Date filter has been removed as it's now in the calendar view
 
   const handleTrainerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFilters({ trainer: e.target.value || null });
@@ -34,14 +32,6 @@ const FilterSection: React.FC<FilterSectionProps> = ({ className }) => {
 
   return (
     <div className={`flex flex-col sm:flex-row gap-2 sm:gap-4 ${className}`}>
-      <div className="relative">
-        <input 
-          type="date" 
-          className="pl-3 pr-10 py-2 border border-slate-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full"
-          value={filters.date || ''}
-          onChange={handleDateChange}
-        />
-      </div>
       <select 
         className="pl-3 pr-10 py-2 border border-slate-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
         value={filters.trainer || ''}

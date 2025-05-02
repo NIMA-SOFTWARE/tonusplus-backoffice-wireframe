@@ -1,6 +1,12 @@
 import React from 'react';
 import { SessionStatus } from '@shared/schema';
 import { getStatusColor } from '@/lib/utils';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface StatusBadgeProps {
   status: SessionStatus;
@@ -21,10 +27,38 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
     }
   };
   
+  const getStatusDescription = (status: string): string => {
+    switch(status) {
+      case 'pending': 
+        return 'This session is scheduled but not yet open for bookings.';
+      case 'open': 
+        return 'This session is accepting bookings. Register now to secure your spot!';
+      case 'closed': 
+        return 'All spots have been filled. You may join the waitlist if enabled.';
+      case 'ongoing': 
+        return 'This session is currently in progress.';
+      case 'finished': 
+        return 'This session has been completed.';
+      case 'cancelled': 
+        return 'This session has been cancelled and is no longer available.';
+      default: 
+        return 'Status information unavailable.';
+    }
+  };
+
   return (
-    <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses}`}>
-      {getDisplayText(status)}
-    </span>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusClasses}`}>
+            {getDisplayText(status)}
+          </span>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          <p className="text-xs">{getStatusDescription(status)}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 };
 

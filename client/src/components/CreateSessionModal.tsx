@@ -184,7 +184,7 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
               <SelectValue placeholder="I'm not using this equipment" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">I'm not using this equipment</SelectItem>
+              <SelectItem value="none">I'm not using this equipment</SelectItem>
               
               {timeSlots.map(slot => {
                 // Only show slots that fit within the session duration

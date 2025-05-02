@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { usePilates } from '@/context/PilatesContext';
 import { PilatesSession } from '@shared/schema';
 import FilterSection from '@/components/FilterSection';
-import CalendarView from '@/components/CalendarView';
+import CustomerCalendarView from '@/components/CustomerCalendarView';
 import UpcomingSessionsList from '@/components/UpcomingSessionsList';
 import BookingModal from '@/components/BookingModal';
 
@@ -27,7 +27,7 @@ const CustomerView: React.FC = () => {
         <FilterSection />
       </div>
 
-      <CalendarView onSessionClick={handleSessionClick} />
+      <CustomerCalendarView onSessionClick={handleSessionClick} />
       
       <UpcomingSessionsList onBookSession={handleSessionClick} />
       

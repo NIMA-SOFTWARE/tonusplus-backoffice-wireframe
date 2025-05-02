@@ -47,12 +47,15 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
   
   // Helper function to check availability based on equipment type
   const checkAvailability = (date: string, startTime: string, startMinute: number, endMinute: number) => {
+    // If editing, pass the session ID to exclude it from availability checks
+    const sessionId = editSession?.id;
+    
     switch (equipmentType) {
-      case 'laser': return isLaserAvailable(date, startTime, startMinute, endMinute);
-      case 'reformer': return isReformerAvailable(date, startTime, startMinute, endMinute);
-      case 'cadillac': return isCadillacAvailable(date, startTime, startMinute, endMinute);
-      case 'barrel': return isBarrelAvailable(date, startTime, startMinute, endMinute);
-      case 'chair': return isChairAvailable(date, startTime, startMinute, endMinute);
+      case 'laser': return isLaserAvailable(date, startTime, startMinute, endMinute, sessionId);
+      case 'reformer': return isReformerAvailable(date, startTime, startMinute, endMinute, sessionId);
+      case 'cadillac': return isCadillacAvailable(date, startTime, startMinute, endMinute, sessionId);
+      case 'barrel': return isBarrelAvailable(date, startTime, startMinute, endMinute, sessionId);
+      case 'chair': return isChairAvailable(date, startTime, startMinute, endMinute, sessionId);
       default: return false;
     }
   };

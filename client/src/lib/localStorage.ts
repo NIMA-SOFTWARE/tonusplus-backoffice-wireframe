@@ -53,7 +53,7 @@ export const isEquipmentAvailable = (
   // Check each session for equipment booking conflicts
   for (const session of sessionsOnDate) {
     // Skip if session doesn't have equipment bookings
-    if (!session.equipmentBookings || !session.equipmentBookings[equipmentType] || !session.equipmentBookings[equipmentType].length) {
+    if (!session.equipmentBookings || !session.equipmentBookings[equipmentType]) {
       continue;
     }
     
@@ -70,9 +70,27 @@ export const isEquipmentAvailable = (
     const requestedStartTotalMinutes = requestedStartMinutes + startMinute;
     const requestedEndTotalMinutes = requestedStartMinutes + endMinute;
     
-    // Check each booking slot for conflicts
-    for (const booking of session.equipmentBookings[equipmentType]) {
-      // Calculate actual start and end minutes for each booking
+    const bookings = session.equipmentBookings[equipmentType];
+    
+    // Check for conflicts based on booking format (array or single object)
+    if (Array.isArray(bookings)) {
+      // New format - array of time slots
+      for (const booking of bookings) {
+        // Calculate actual start and end minutes for each booking
+        const bookingStartMinutes = sessionStartMinutes + booking.startMinute;
+        const bookingEndMinutes = sessionStartMinutes + booking.endMinute;
+        
+        // Check for time overlap
+        if (
+          (requestedStartTotalMinutes < bookingEndMinutes && requestedEndTotalMinutes > bookingStartMinutes) ||
+          (bookingStartMinutes < requestedEndTotalMinutes && bookingEndMinutes > requestedStartTotalMinutes)
+        ) {
+          return false; // There's an overlap
+        }
+      }
+    } else if (bookings) {
+      // Legacy format - single time slot object
+      const booking = bookings as any;
       const bookingStartMinutes = sessionStartMinutes + booking.startMinute;
       const bookingEndMinutes = sessionStartMinutes + booking.endMinute;
       
@@ -90,24 +108,24 @@ export const isEquipmentAvailable = (
 };
 
 // Specific equipment availability checks
-export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable(getSessions(), 'laser', date, startTime, startMinute, endMinute);
+export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number, excludeSessionId?: string): boolean => {
+  return isEquipmentAvailable(getSessions(), 'laser', date, startTime, startMinute, endMinute, excludeSessionId);
 };
 
-export const isReformerAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable(getSessions(), 'reformer', date, startTime, startMinute, endMinute);
+export const isReformerAvailable = (date: string, startTime: string, startMinute: number, endMinute: number, excludeSessionId?: string): boolean => {
+  return isEquipmentAvailable(getSessions(), 'reformer', date, startTime, startMinute, endMinute, excludeSessionId);
 };
 
-export const isCadillacAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable(getSessions(), 'cadillac', date, startTime, startMinute, endMinute);
+export const isCadillacAvailable = (date: string, startTime: string, startMinute: number, endMinute: number, excludeSessionId?: string): boolean => {
+  return isEquipmentAvailable(getSessions(), 'cadillac', date, startTime, startMinute, endMinute, excludeSessionId);
 };
 
-export const isBarrelAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable(getSessions(), 'barrel', date, startTime, startMinute, endMinute);
+export const isBarrelAvailable = (date: string, startTime: string, startMinute: number, endMinute: number, excludeSessionId?: string): boolean => {
+  return isEquipmentAvailable(getSessions(), 'barrel', date, startTime, startMinute, endMinute, excludeSessionId);
 };
 
-export const isChairAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
-  return isEquipmentAvailable(getSessions(), 'chair', date, startTime, startMinute, endMinute);
+export const isChairAvailable = (date: string, startTime: string, startMinute: number, endMinute: number, excludeSessionId?: string): boolean => {
+  return isEquipmentAvailable(getSessions(), 'chair', date, startTime, startMinute, endMinute, excludeSessionId);
 };
 
 // Create a new session

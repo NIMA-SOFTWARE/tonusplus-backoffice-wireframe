@@ -34,12 +34,12 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
   // Get equipment icons
   const getEquipmentIcon = (type: string) => {
     switch (type) {
-      case 'laser': return '⚡';
-      case 'reformer': return '🔄';
-      case 'cadillac': return '🛏️';
-      case 'barrel': return '🛢️';
-      case 'chair': return '🪑';
-      default: return '📊';
+      case 'laser': return '🔆'; // Light/laser icon
+      case 'reformer': return '🏋️'; // Exercise/fitness equipment
+      case 'cadillac': return '🛌'; // Bed/platform
+      case 'barrel': return '🔄'; // Circular/rotation motion
+      case 'chair': return '🪑'; // Chair
+      default: return '⚙️'; // Generic equipment
     }
   };
   
@@ -132,7 +132,7 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
       <Tooltip>
         <TooltipTrigger asChild>
           <div 
-            className={`p-1 text-xs rounded cursor-pointer ${cardClasses}`} 
+            className={`p-1 text-xs rounded cursor-pointer ${cardClasses} relative`} 
             onClick={onClick}
           >
             <div className="font-medium">{session.name}</div>
@@ -143,21 +143,28 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
                 : 'Full'}
             </div>
             
+            {/* Equipment icons in bottom right corner */}
             {bookedEquipment.length > 0 && (
-              <div className="mt-1 text-[10px] font-semibold space-y-0.5">
-                {bookedEquipment.map((item, index) => (
-                  <EquipmentTooltip 
-                    key={index} 
-                    type={item.type} 
-                    timeSlot={item.timeSlot}
-                  >
-                    <div className="cursor-help">
-                      {item.icon} {item.type.charAt(0).toUpperCase() + item.type.slice(1)}: {item.timeSlot}
-                    </div>
-                  </EquipmentTooltip>
-                ))}
+              <div className="absolute bottom-0.5 right-0.5 flex space-x-1 bg-white/30 px-1 rounded-sm">
+                {Array.from(new Set(bookedEquipment.map(item => item.type))).map((type, index) => {
+                  // Get all equipment of this type
+                  const typeEquipment = bookedEquipment.filter(item => item.type === type);
+                  
+                  return (
+                    <EquipmentTooltip 
+                      key={index} 
+                      type={type}
+                      timeSlot={typeEquipment.map(item => item.timeSlot).join(', ')}
+                    >
+                      <div className="cursor-help text-sm">
+                        {getEquipmentIcon(type)}
+                      </div>
+                    </EquipmentTooltip>
+                  );
+                })}
               </div>
             )}
+            {/* We've removed the detailed equipment list and only showing icons in the corner */}
           </div>
         </TooltipTrigger>
         <TooltipContent className="w-64 p-2" side="top">

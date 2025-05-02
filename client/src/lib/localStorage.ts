@@ -53,12 +53,11 @@ export const isEquipmentAvailable = (
   // Check each session for equipment booking conflicts
   for (const session of sessionsOnDate) {
     // Skip if session doesn't have equipment bookings
-    if (!session.equipmentBookings || !session.equipmentBookings[equipmentType]) {
+    if (!session.equipmentBookings || !session.equipmentBookings[equipmentType] || !session.equipmentBookings[equipmentType].length) {
       continue;
     }
     
     const sessionStartTime = session.startTime;
-    const booking = session.equipmentBookings[equipmentType]!;
     
     // Convert session start time to minutes for easier comparison
     const [sessionHours, sessionMinutes] = sessionStartTime.split(':').map(Number);
@@ -68,19 +67,22 @@ export const isEquipmentAvailable = (
     const [requestedHours, requestedMinutes] = startTime.split(':').map(Number);
     const requestedStartMinutes = requestedHours * 60 + requestedMinutes;
     
-    // Calculate actual start and end minutes for each booking
-    const bookingStartMinutes = sessionStartMinutes + booking.startMinute;
-    const bookingEndMinutes = sessionStartMinutes + booking.endMinute;
-    
     const requestedStartTotalMinutes = requestedStartMinutes + startMinute;
     const requestedEndTotalMinutes = requestedStartMinutes + endMinute;
     
-    // Check for time overlap
-    if (
-      (requestedStartTotalMinutes < bookingEndMinutes && requestedEndTotalMinutes > bookingStartMinutes) ||
-      (bookingStartMinutes < requestedEndTotalMinutes && bookingEndMinutes > requestedStartTotalMinutes)
-    ) {
-      return false; // There's an overlap
+    // Check each booking slot for conflicts
+    for (const booking of session.equipmentBookings[equipmentType]) {
+      // Calculate actual start and end minutes for each booking
+      const bookingStartMinutes = sessionStartMinutes + booking.startMinute;
+      const bookingEndMinutes = sessionStartMinutes + booking.endMinute;
+      
+      // Check for time overlap
+      if (
+        (requestedStartTotalMinutes < bookingEndMinutes && requestedEndTotalMinutes > bookingStartMinutes) ||
+        (bookingStartMinutes < requestedEndTotalMinutes && bookingEndMinutes > requestedStartTotalMinutes)
+      ) {
+        return false; // There's an overlap
+      }
     }
   }
   
@@ -290,7 +292,7 @@ const getSampleSessions = (): PilatesSession[] => {
       waitlist: [],
       createdAt: new Date().toISOString(),
       equipmentBookings: {
-        laser: { startMinute: 0, endMinute: 15 } // Using laser for first 15 minutes
+        laser: [{ startMinute: 0, endMinute: 15 }] // Using laser for first 15 minutes
       }
     },
     {
@@ -377,7 +379,7 @@ const getSampleSessions = (): PilatesSession[] => {
       waitlist: [],
       createdAt: new Date().toISOString(),
       equipmentBookings: {
-        laser: { startMinute: 30, endMinute: 45 } // Using laser in the middle of the session
+        laser: [{ startMinute: 30, endMinute: 45 }] // Using laser in the middle of the session
       }
     },
     {
@@ -400,7 +402,7 @@ const getSampleSessions = (): PilatesSession[] => {
       waitlist: [],
       createdAt: new Date().toISOString(),
       equipmentBookings: {
-        laser: { startMinute: 45, endMinute: 60 } // Using laser for the last 15 minutes
+        laser: [{ startMinute: 45, endMinute: 60 }] // Using laser for the last 15 minutes
       }
     },
     // Add sessions for the rest of the week

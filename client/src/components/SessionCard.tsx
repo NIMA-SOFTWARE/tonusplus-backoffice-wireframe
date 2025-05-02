@@ -49,13 +49,16 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
     
     const equipment = [];
     
-    for (const [type, booking] of Object.entries(session.equipmentBookings)) {
-      if (booking) {
-        equipment.push({
-          type,
-          icon: getEquipmentIcon(type),
-          timeSlot: formatTimeSlot(booking.startMinute, booking.endMinute)
-        });
+    for (const [type, bookings] of Object.entries(session.equipmentBookings)) {
+      if (bookings && bookings.length > 0) {
+        // Handle each booking time slot
+        for (const booking of bookings) {
+          equipment.push({
+            type,
+            icon: getEquipmentIcon(type),
+            timeSlot: formatTimeSlot(booking.startMinute, booking.endMinute)
+          });
+        }
       }
     }
     

@@ -49,7 +49,10 @@ export interface PilatesSession {
   createdAt: string;
   equipmentBookings?: {
     laser?: EquipmentTimeSlot;
-    // Can add more equipment types in the future
+    reformer?: EquipmentTimeSlot;
+    cadillac?: EquipmentTimeSlot;
+    barrel?: EquipmentTimeSlot;
+    chair?: EquipmentTimeSlot;
   };
 }
 
@@ -65,6 +68,10 @@ export interface CreateSessionInput {
   status: SessionStatus;
   equipmentBookings?: {
     laser?: EquipmentTimeSlot;
+    reformer?: EquipmentTimeSlot;
+    cadillac?: EquipmentTimeSlot;
+    barrel?: EquipmentTimeSlot;
+    chair?: EquipmentTimeSlot;
   };
 }
 
@@ -85,7 +92,11 @@ export const createSessionSchema = z.object({
   maxWaitlist: z.number().int().min(0, "Maximum waitlist must be at least 0"),
   status: z.enum(['pending', 'open', 'closed', 'ongoing', 'finished', 'cancelled']),
   equipmentBookings: z.object({
-    laser: equipmentTimeSlotSchema.optional()
+    laser: equipmentTimeSlotSchema.optional(),
+    reformer: equipmentTimeSlotSchema.optional(),
+    cadillac: equipmentTimeSlotSchema.optional(),
+    barrel: equipmentTimeSlotSchema.optional(),
+    chair: equipmentTimeSlotSchema.optional()
   }).optional()
 });
 

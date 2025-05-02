@@ -28,14 +28,23 @@ export const getSessions = (): PilatesSession[] => {
   return JSON.parse(data).sessions;
 };
 
-// Check if laser equipment is available for booking
-export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+// Generic function to check if a specific equipment is available for booking
+export const isEquipmentAvailable = (
+  equipmentType: 'laser' | 'reformer' | 'cadillac' | 'barrel' | 'chair',
+  date: string, 
+  startTime: string, 
+  startMinute: number, 
+  endMinute: number
+): boolean => {
   const sessions = getSessions();
   
-  // Filter sessions on the same date and with laser equipment booked
+  // Filter sessions on the same date and with the specified equipment booked
   const conflictingSessions = sessions.filter(session => {
     if (session.date !== date) return false;
-    if (!session.equipmentBookings?.laser) return false;
+    
+    // Check if the session has this equipment booked
+    const equipment = session.equipmentBookings?.[equipmentType];
+    if (!equipment) return false;
     
     // Convert time to minutes for comparison
     const sessionHour = parseInt(session.startTime.split(':')[0], 10);
@@ -47,21 +56,42 @@ export const isLaserAvailable = (date: string, startTime: string, startMinute: n
     const requestTotalStartMinutes = requestHour * 60 + requestMinute;
     
     // Calculate the absolute start and end times
-    const sessionLaserStartTime = sessionTotalStartMinutes + session.equipmentBookings.laser.startMinute;
-    const sessionLaserEndTime = sessionTotalStartMinutes + session.equipmentBookings.laser.endMinute;
+    const sessionEquipStartTime = sessionTotalStartMinutes + equipment.startMinute;
+    const sessionEquipEndTime = sessionTotalStartMinutes + equipment.endMinute;
     
-    const requestLaserStartTime = requestTotalStartMinutes + startMinute;
-    const requestLaserEndTime = requestTotalStartMinutes + endMinute;
+    const requestEquipStartTime = requestTotalStartMinutes + startMinute;
+    const requestEquipEndTime = requestTotalStartMinutes + endMinute;
     
     // Check for overlap
     return (
-      (requestLaserStartTime >= sessionLaserStartTime && requestLaserStartTime < sessionLaserEndTime) ||
-      (requestLaserEndTime > sessionLaserStartTime && requestLaserEndTime <= sessionLaserEndTime) ||
-      (requestLaserStartTime <= sessionLaserStartTime && requestLaserEndTime >= sessionLaserEndTime)
+      (requestEquipStartTime >= sessionEquipStartTime && requestEquipStartTime < sessionEquipEndTime) ||
+      (requestEquipEndTime > sessionEquipStartTime && requestEquipEndTime <= sessionEquipEndTime) ||
+      (requestEquipStartTime <= sessionEquipStartTime && requestEquipEndTime >= sessionEquipEndTime)
     );
   });
   
   return conflictingSessions.length === 0;
+};
+
+// Equipment-specific availability checker functions
+export const isLaserAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  return isEquipmentAvailable('laser', date, startTime, startMinute, endMinute);
+};
+
+export const isReformerAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  return isEquipmentAvailable('reformer', date, startTime, startMinute, endMinute);
+};
+
+export const isCadillacAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  return isEquipmentAvailable('cadillac', date, startTime, startMinute, endMinute);
+};
+
+export const isBarrelAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  return isEquipmentAvailable('barrel', date, startTime, startMinute, endMinute);
+};
+
+export const isChairAvailable = (date: string, startTime: string, startMinute: number, endMinute: number): boolean => {
+  return isEquipmentAvailable('chair', date, startTime, startMinute, endMinute);
 };
 
 // Add a new session

@@ -91,21 +91,38 @@ const BookingModal: React.FC<BookingModalProps> = ({ session, isOpen, onClose })
             Instructor: {session.trainer}<br />
             Room: {session.room}<br />
             {spotText}
-            {session.equipmentBookings?.laser && (
-              <>
-                <div className="mt-2 text-sm font-medium text-amber-600">
-                  ⚡ Laser equipment booked: {
-                    (() => {
-                      const { startMinute, endMinute } = session.equipmentBookings.laser;
-                      if (startMinute === 0 && endMinute === 15) return 'First 15 minutes';
-                      if (startMinute === 15 && endMinute === 30) return 'Second 15 minutes';
-                      if (startMinute === 30 && endMinute === 45) return 'Third 15 minutes';
-                      if (startMinute === 45 && endMinute === 60) return 'Last 15 minutes';
-                      return `Minutes ${startMinute}-${endMinute}`;
-                    })()
-                  }
-                </div>
-              </>
+            
+            {/* Display all booked equipment types */}
+            {session.equipmentBookings && Object.entries(session.equipmentBookings).length > 0 && (
+              <div className="mt-2 space-y-1">
+                <div className="text-sm font-medium">Equipment booked:</div>
+                {Object.entries(session.equipmentBookings).map(([type, booking]) => {
+                  if (!booking) return null;
+                  
+                  // Get equipment icon
+                  let icon = '📊';
+                  if (type === 'laser') icon = '⚡';
+                  else if (type === 'reformer') icon = '🔄';
+                  else if (type === 'cadillac') icon = '🛏️';
+                  else if (type === 'barrel') icon = '🛢️';
+                  else if (type === 'chair') icon = '🪑';
+                  
+                  // Format time slot
+                  let timeLabel = '';
+                  const { startMinute, endMinute } = booking;
+                  if (startMinute === 0 && endMinute === 15) timeLabel = 'First 15 minutes';
+                  else if (startMinute === 15 && endMinute === 30) timeLabel = 'Second 15 minutes';
+                  else if (startMinute === 30 && endMinute === 45) timeLabel = 'Third 15 minutes';
+                  else if (startMinute === 45 && endMinute === 60) timeLabel = 'Last 15 minutes';
+                  else timeLabel = `Minutes ${startMinute}-${endMinute}`;
+                  
+                  return (
+                    <div key={type} className="text-sm text-amber-600">
+                      {icon} {type.charAt(0).toUpperCase() + type.slice(1)}: {timeLabel}
+                    </div>
+                  );
+                })}
+              </div>
             )}
           </DialogDescription>
         </DialogHeader>

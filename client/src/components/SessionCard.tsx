@@ -11,14 +11,8 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
   const cardClasses = getSessionColor(session.name);
   const availableSpots = session.maxSpots - session.participants.length;
   
-  // Check if session has laser equipment booked
-  const hasLaserBooked = session.equipmentBookings?.laser !== undefined;
-  
-  // Format laser time slot if available
-  const formatLaserTimeSlot = () => {
-    if (!hasLaserBooked) return null;
-    
-    const { startMinute, endMinute } = session.equipmentBookings!.laser!;
+  // Format equipment time slot helper
+  const formatTimeSlot = (startMinute: number, endMinute: number) => {
     let timeLabel = '';
     
     if (startMinute === 0 && endMinute === 15) timeLabel = '1st 15min';
@@ -27,8 +21,41 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
     else if (startMinute === 45 && endMinute === 60) timeLabel = 'Last 15min';
     else timeLabel = `${startMinute}-${endMinute}min`;
     
-    return `⚡ Laser: ${timeLabel}`;
+    return timeLabel;
   };
+  
+  // Get equipment icons
+  const getEquipmentIcon = (type: string) => {
+    switch (type) {
+      case 'laser': return '⚡';
+      case 'reformer': return '🔄';
+      case 'cadillac': return '🛏️';
+      case 'barrel': return '🛢️';
+      case 'chair': return '🪑';
+      default: return '📊';
+    }
+  };
+  
+  // Get booked equipment
+  const getBookedEquipment = () => {
+    if (!session.equipmentBookings) return [];
+    
+    const equipment = [];
+    
+    for (const [type, booking] of Object.entries(session.equipmentBookings)) {
+      if (booking) {
+        equipment.push({
+          type,
+          icon: getEquipmentIcon(type),
+          timeSlot: formatTimeSlot(booking.startMinute, booking.endMinute)
+        });
+      }
+    }
+    
+    return equipment;
+  };
+  
+  const bookedEquipment = getBookedEquipment();
   
   return (
     <div 
@@ -42,9 +69,14 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
           ? `${availableSpots} spot${availableSpots === 1 ? '' : 's'} left` 
           : 'Full'}
       </div>
-      {hasLaserBooked && (
-        <div className="mt-1 text-[10px] font-semibold">
-          {formatLaserTimeSlot()}
+      
+      {bookedEquipment.length > 0 && (
+        <div className="mt-1 text-[10px] font-semibold space-y-0.5">
+          {bookedEquipment.map((item, index) => (
+            <div key={index}>
+              {item.icon} {item.type.charAt(0).toUpperCase() + item.type.slice(1)}: {item.timeSlot}
+            </div>
+          ))}
         </div>
       )}
     </div>

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { PilatesSession, createSessionSchema, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
 import { useToast } from '@/hooks/use-toast';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from '@/components/ui/form';
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -17,53 +17,80 @@ import { z } from 'zod';
 import { isLaserAvailable, isReformerAvailable, isCadillacAvailable, isBarrelAvailable, isChairAvailable } from '@/lib/localStorage';
 
 // Component for booking laser equipment
-interface LaserBookingSectionProps {
+interface EquipmentBookingSectionProps {
   form: any;
   date: string;
   startTime: string;
   duration: number;
   editSession?: PilatesSession;
+  equipmentType: 'laser' | 'reformer' | 'cadillac' | 'barrel' | 'chair';
+  label: string;
 }
 
-const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, startTime, duration, editSession }) => {
-  const [useLaser, setUseLaser] = useState<boolean>(false);
+const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({ 
+  form, 
+  date, 
+  startTime, 
+  duration, 
+  editSession,
+  equipmentType,
+  label
+}) => {
+  const [useEquipment, setUseEquipment] = useState<boolean>(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<string | null>(null);
   const [availabilityChecked, setAvailabilityChecked] = useState<boolean>(false);
   const [timeSlotAvailability, setTimeSlotAvailability] = useState<{[key: string]: boolean}>({});
   
+  // Helper function to check availability based on equipment type
+  const checkAvailability = (date: string, startTime: string, startMinute: number, endMinute: number) => {
+    switch (equipmentType) {
+      case 'laser': return isLaserAvailable(date, startTime, startMinute, endMinute);
+      case 'reformer': return isReformerAvailable(date, startTime, startMinute, endMinute);
+      case 'cadillac': return isCadillacAvailable(date, startTime, startMinute, endMinute);
+      case 'barrel': return isBarrelAvailable(date, startTime, startMinute, endMinute);
+      case 'chair': return isChairAvailable(date, startTime, startMinute, endMinute);
+      default: return false;
+    }
+  };
+  
   // Initialize with edit session data if available
   useEffect(() => {
-    if (editSession?.equipmentBookings?.laser) {
-      setUseLaser(true);
-      const startMin = editSession.equipmentBookings.laser.startMinute;
+    if (editSession?.equipmentBookings?.[equipmentType]) {
+      setUseEquipment(true);
+      const startMin = editSession.equipmentBookings[equipmentType]!.startMinute;
       if (startMin === 0) setSelectedTimeSlot('0-15');
       else if (startMin === 15) setSelectedTimeSlot('15-30');
       else if (startMin === 30) setSelectedTimeSlot('30-45');
       else if (startMin === 45) setSelectedTimeSlot('45-60');
     }
-  }, [editSession]);
+  }, [editSession, equipmentType]);
   
   // Update form when selections change
   useEffect(() => {
-    if (!useLaser) {
-      form.setValue('equipmentBookings', undefined);
+    const currentBookings = form.getValues('equipmentBookings') || {};
+    
+    if (!useEquipment) {
+      // Remove this equipment from bookings
+      const { [equipmentType]: removed, ...rest } = currentBookings;
+      form.setValue('equipmentBookings', Object.keys(rest).length ? rest : undefined);
       return;
     }
     
     if (selectedTimeSlot) {
       const [start, end] = selectedTimeSlot.split('-').map(Number);
       form.setValue('equipmentBookings', {
-        laser: {
+        ...currentBookings,
+        [equipmentType]: {
           startMinute: start,
           endMinute: end
         }
       });
     }
-  }, [useLaser, selectedTimeSlot, form]);
+  }, [useEquipment, selectedTimeSlot, form, equipmentType]);
   
   // Check availability when date or time changes
   useEffect(() => {
-    if (!date || !startTime || !duration || !useLaser) {
+    if (!date || !startTime || !duration || !useEquipment) {
       setAvailabilityChecked(false);
       return;
     }
@@ -80,9 +107,9 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
         const [start, end] = slot.split('-').map(Number);
         if (end <= maxMinutes) {
           // If editing, consider the current session's booking as available
-          if (editSession && editSession.equipmentBookings?.laser) {
-            const currentStart = editSession.equipmentBookings.laser.startMinute;
-            const currentEnd = editSession.equipmentBookings.laser.endMinute;
+          if (editSession && editSession.equipmentBookings?.[equipmentType]) {
+            const currentStart = editSession.equipmentBookings[equipmentType]!.startMinute;
+            const currentEnd = editSession.equipmentBookings[equipmentType]!.endMinute;
             
             if (start === currentStart && end === currentEnd) {
               availability[slot] = true;
@@ -90,7 +117,7 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
             }
           }
           
-          availability[slot] = isLaserAvailable(date, startTime, start, end);
+          availability[slot] = checkAvailability(date, startTime, start, end);
         } else {
           availability[slot] = false; // Not available if beyond session duration
         }
@@ -104,10 +131,10 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
         setSelectedTimeSlot(null);
       }
     }
-  }, [date, startTime, duration, useLaser, editSession]);
+  }, [date, startTime, duration, useEquipment, editSession, equipmentType]);
   
   const handleCheckboxChange = (checked: boolean) => {
-    setUseLaser(checked);
+    setUseEquipment(checked);
     if (!checked) {
       setSelectedTimeSlot(null);
     }
@@ -126,27 +153,27 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
   
   return (
     <div>
-      <div className="flex items-center space-x-2 mb-4">
+      <div className="flex items-center space-x-2 mb-2">
         <Checkbox 
-          id="use-laser" 
-          checked={useLaser}
+          id={`use-${equipmentType}`} 
+          checked={useEquipment}
           onCheckedChange={handleCheckboxChange}
         />
         <label
-          htmlFor="use-laser"
+          htmlFor={`use-${equipmentType}`}
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
-          Book laser equipment for this session
+          Book {label} for this session
         </label>
       </div>
       
-      {useLaser && (
+      {useEquipment && (
         <div className="mt-2">
-          <FormLabel className="block mb-2">Select 15-minute time slot:</FormLabel>
+          <FormLabel className="block mb-2 text-xs">Select 15-minute time slot:</FormLabel>
           <RadioGroup 
             value={selectedTimeSlot || ''}
             onValueChange={handleTimeSlotChange}
-            className="space-y-2"
+            className="space-y-1"
           >
             {timeSlots.map(slot => {
               // Only show slots that fit within the session duration
@@ -154,8 +181,9 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
               if (end > duration) return null;
               
               const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
-              const isDisabled = !isAvailable && (!editSession || !editSession.equipmentBookings?.laser || 
-                  editSession.equipmentBookings.laser.startMinute !== parseInt(slot.id.split('-')[0], 10));
+              const isDisabled = !isAvailable && (!editSession || 
+                !editSession.equipmentBookings?.[equipmentType] || 
+                editSession.equipmentBookings[equipmentType]!.startMinute !== parseInt(slot.id.split('-')[0], 10));
               
               return (
                 <div 
@@ -164,16 +192,17 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
                 >
                   <RadioGroupItem 
                     value={slot.id} 
-                    id={`laser-time-${slot.id}`} 
+                    id={`${equipmentType}-time-${slot.id}`} 
                     disabled={isDisabled}
+                    className="mt-0.5"
                   />
                   <label
-                    htmlFor={`laser-time-${slot.id}`}
-                    className="text-sm leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col"
+                    htmlFor={`${equipmentType}-time-${slot.id}`}
+                    className="text-xs leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 flex flex-col"
                   >
                     <span>{slot.label}</span>
                     {!isAvailable && availabilityChecked && (
-                      <span className="text-xs text-red-500 mt-1">
+                      <span className="text-[10px] text-red-500 mt-1">
                         {isDisabled ? 'Not available - already booked' : 'Currently booked by this session'}
                       </span>
                     )}
@@ -184,13 +213,13 @@ const LaserBookingSection: React.FC<LaserBookingSectionProps> = ({ form, date, s
           </RadioGroup>
           
           {!availabilityChecked && (
-            <p className="text-xs text-amber-600 mt-2">
+            <p className="text-[10px] text-amber-600 mt-1">
               Enter valid date and time to check equipment availability
             </p>
           )}
           
           {availabilityChecked && !selectedTimeSlot && (
-            <p className="text-xs text-amber-600 mt-2">
+            <p className="text-[10px] text-amber-600 mt-1">
               Please select an available time slot
             </p>
           )}
@@ -321,239 +350,328 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[480px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {editSession ? 'Edit Session' : 'Create New Session'}
           </DialogTitle>
-          <DialogDescription>
-            Fill out the form to {editSession ? 'update' : 'create'} a session.
-          </DialogDescription>
         </DialogHeader>
         
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Activity</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select an activity" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {activities.map(activity => (
-                        <SelectItem key={activity} value={activity}>
-                          {activity}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="trainer"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Trainer</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a trainer" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {trainers.map(trainer => (
-                        <SelectItem key={trainer} value={trainer}>
-                          {trainer}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="room"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Room</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a room" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {rooms.map(room => (
-                        <SelectItem key={room} value={room}>
-                          {room}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <div className="grid grid-cols-2 gap-4">
-              <FormField
-                control={form.control}
-                name="startTime"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Start Time</FormLabel>
-                    <FormControl>
-                      <Input type="time" {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-3">
+            <Tabs defaultValue="basic" className="w-full">
+              <TabsList className="grid grid-cols-2 mb-2">
+                <TabsTrigger value="basic">Basic Info</TabsTrigger>
+                <TabsTrigger value="equipment">Equipment</TabsTrigger>
+              </TabsList>
               
-              <FormField
-                control={form.control}
-                name="duration"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Duration (min)</FormLabel>
-                    <FormControl>
-                      <Input 
-                        type="number" 
-                        min="15" 
-                        step="15" 
-                        {...field}
-                        onChange={e => field.onChange(parseInt(e.target.value))}
+              <TabsContent value="basic" className="space-y-3 pt-2">
+                {/* First row - Activity, Trainer, Room */}
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="name"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Activity</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Activity" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {activities.map(activity => (
+                              <SelectItem key={activity} value={activity}>
+                                {activity}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="trainer"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Trainer</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Trainer" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {trainers.map(trainer => (
+                              <SelectItem key={trainer} value={trainer}>
+                                {trainer}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="room"
+                    render={({ field }) => (
+                      <FormItem className="col-span-2 md:col-span-1">
+                        <FormLabel className="text-xs">Room</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Room" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {rooms.map(room => (
+                              <SelectItem key={room} value={room}>
+                                {room}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {/* Second row - Date, Time, Duration */}
+                <div className="grid grid-cols-3 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="date"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Date</FormLabel>
+                        <FormControl>
+                          <Input type="date" className="h-8 text-xs" {...field} />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="startTime"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Start Time</FormLabel>
+                        <FormControl>
+                          <Input type="time" className="h-8 text-xs" {...field} />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="duration"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Duration (min)</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="15" 
+                            step="15"
+                            className="h-8 text-xs"
+                            {...field}
+                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+                
+                {/* Third row - Spots, Waitlist, Status */}
+                <div className="grid grid-cols-3 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="maxSpots"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Max Spots</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="1"
+                            className="h-8 text-xs" 
+                            {...field}
+                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="maxWaitlist"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Waitlist</FormLabel>
+                        <FormControl>
+                          <Input 
+                            type="number" 
+                            min="0"
+                            className="h-8 text-xs" 
+                            {...field}
+                            onChange={e => field.onChange(parseInt(e.target.value))}
+                          />
+                        </FormControl>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                  
+                  <FormField
+                    control={form.control}
+                    name="status"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Status</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          defaultValue={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="open">Open</SelectItem>
+                            <SelectItem value="closed">Closed</SelectItem>
+                            <SelectItem value="cancelled">Cancelled</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="equipment">
+                <Accordion type="single" collapsible defaultValue="laser" className="w-full">
+                  <AccordionItem value="laser">
+                    <AccordionTrigger className="text-sm py-2">
+                      Laser Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="laser"
+                        label="laser equipment"
                       />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="reformer">
+                    <AccordionTrigger className="text-sm py-2">
+                      Reformer Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="reformer"
+                        label="reformer equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="cadillac">
+                    <AccordionTrigger className="text-sm py-2">
+                      Cadillac Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="cadillac"
+                        label="cadillac equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="barrel">
+                    <AccordionTrigger className="text-sm py-2">
+                      Barrel Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="barrel"
+                        label="barrel equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                  
+                  <AccordionItem value="chair">
+                    <AccordionTrigger className="text-sm py-2">
+                      Chair Equipment
+                    </AccordionTrigger>
+                    <AccordionContent>
+                      <EquipmentBookingSection 
+                        form={form} 
+                        date={form.watch('date')} 
+                        startTime={form.watch('startTime')} 
+                        duration={form.watch('duration')}
+                        editSession={editSession}
+                        equipmentType="chair"
+                        label="chair equipment"
+                      />
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </TabsContent>
+            </Tabs>
             
-            <FormField
-              control={form.control}
-              name="maxSpots"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Maximum Spots</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="number" 
-                      min="1" 
-                      {...field}
-                      onChange={e => field.onChange(parseInt(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="maxWaitlist"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Maximum Waitlist</FormLabel>
-                  <FormControl>
-                    <Input 
-                      type="number" 
-                      min="0" 
-                      {...field}
-                      onChange={e => field.onChange(parseInt(e.target.value))}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            <FormField
-              control={form.control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Status</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="pending">Pending</SelectItem>
-                      <SelectItem value="open">Open</SelectItem>
-                      <SelectItem value="closed">Closed</SelectItem>
-                      <SelectItem value="ongoing">Ongoing</SelectItem>
-                      <SelectItem value="finished">Finished</SelectItem>
-                      <SelectItem value="cancelled">Cancelled</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
-            {/* Equipment Booking Section */}
-            <div className="border rounded-md p-4 bg-slate-50">
-              <h3 className="font-medium mb-2">Equipment Booking</h3>
-              <p className="text-sm text-slate-500 mb-3">Book the studio's laser equipment for this session.</p>
-              
-              <LaserBookingSection 
-                form={form} 
-                date={form.watch('date')} 
-                startTime={form.watch('startTime')} 
-                duration={form.watch('duration')}
-                editSession={editSession}
-              />
-            </div>
-            
-            <DialogFooter>
-              <Button type="button" variant="outline" onClick={onClose}>
+            <DialogFooter className="mt-2">
+              <Button type="button" variant="outline" onClick={onClose} className="h-8 text-xs">
                 Cancel
               </Button>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Processing...' : editSession ? 'Update Session' : 'Create Session'}
+              <Button type="submit" disabled={isSubmitting} className="h-8 text-xs">
+                {isSubmitting ? 'Processing...' : (editSession ? 'Update' : 'Create')}
               </Button>
             </DialogFooter>
           </form>

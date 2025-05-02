@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PilatesSession, createSessionSchema, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
 import { usePilates } from '@/context/PilatesContext';
 import { useToast } from '@/hooks/use-toast';
-import { formatDate, formatTime } from '@/lib/utils';
+import { formatDate, formatTime, cn } from '@/lib/utils';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -10,8 +10,11 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Badge } from '@/components/ui/badge';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from '@/components/ui/command';
+import { Check, ChevronDown, X } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -143,24 +146,16 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
     );
   }, [date, startTime, duration, useEquipment, editSession, equipmentType]);
   
-  const handleTimeSlotToggle = (slotId: string) => {
-    if (slotId === 'none') {
-      // Clear all selections
+  const handleTimeSlotSelect = (selectedSlots: string[]) => {
+    // If no slots selected, set useEquipment to false
+    if (selectedSlots.length === 0) {
       setUseEquipment(false);
       setSelectedTimeSlots([]);
       return;
     }
     
     setUseEquipment(true);
-    
-    // Toggle the selection
-    setSelectedTimeSlots(prev => {
-      if (prev.includes(slotId)) {
-        return prev.filter(id => id !== slotId);
-      } else {
-        return [...prev, slotId];
-      }
-    });
+    setSelectedTimeSlots(selectedSlots);
   };
   
   const timeSlots = [
@@ -170,80 +165,163 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
     { id: '45-60', label: 'Last 15 minutes (45-60 min)' }
   ];
   
+  // Filter available time slots based on duration and availability
+  const availableTimeSlots = timeSlots
+    .filter(slot => {
+      // Only show slots that fit within the session duration
+      const [start, end] = slot.id.split('-').map(Number);
+      if (end > duration) return false;
+      
+      // Check if slot is available or already selected in edit mode
+      const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
+      const isInEditSession = editSession?.equipmentBookings?.[equipmentType]?.some(
+        booking => booking.startMinute === parseInt(slot.id.split('-')[0], 10)
+      );
+      
+      return isAvailable || isInEditSession;
+    })
+    .map(slot => {
+      // Format the time slot as HH:MM based on session start time
+      let label = slot.label;
+      
+      if (startTime) {
+        const [start, end] = slot.id.split('-').map(Number);
+        const [hours, minutes] = startTime.split(':').map(Number);
+        
+        const startTimeDate = new Date();
+        startTimeDate.setHours(hours, minutes + start, 0);
+        
+        const endTimeDate = new Date();
+        endTimeDate.setHours(hours, minutes + end, 0);
+        
+        const formatTimeValue = (date: Date) => {
+          return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
+        };
+        
+        label = `${formatTimeValue(startTimeDate)} - ${formatTimeValue(endTimeDate)}`;
+      }
+      
+      return {
+        value: slot.id,
+        label: label
+      };
+    });
+
   return (
     <div className="space-y-2">
-      <div className="flex items-center mb-2">
-        <Checkbox 
-          id={`use-${equipmentType}`}
-          checked={useEquipment}
-          onCheckedChange={(checked) => {
-            setUseEquipment(!!checked);
-            if (!checked) setSelectedTimeSlots([]);
-          }}
-        />
-        <Label 
-          htmlFor={`use-${equipmentType}`} 
-          className="ml-2 text-sm font-medium"
-        >
-          Use this equipment
-        </Label>
-      </div>
+      <Label className="text-sm font-medium">
+        {label.charAt(0).toUpperCase() + label.slice(1)} Time Slots
+      </Label>
+      
+      <Select
+        onValueChange={(value) => {
+          if (value === "") {
+            setUseEquipment(false);
+            setSelectedTimeSlots([]);
+          } else {
+            setUseEquipment(true);
+          }
+        }}
+        value={useEquipment ? "use" : ""}
+      >
+        <SelectTrigger className="h-8 text-xs">
+          <SelectValue placeholder="Select option" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="">Don't use</SelectItem>
+          <SelectItem value="use">Use this equipment</SelectItem>
+        </SelectContent>
+      </Select>
       
       {useEquipment && (
-        <div className="pl-6 space-y-1">
-          <p className="text-xs text-slate-500 mb-1">Select time slots:</p>
+        <>
+          {availableTimeSlots.length > 0 ? (
+            <div className="mt-2">
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start h-8 text-xs"
+                  >
+                    {selectedTimeSlots.length > 0
+                      ? `${selectedTimeSlots.length} time slot${selectedTimeSlots.length > 1 ? 's' : ''} selected`
+                      : "Select time slots"}
+                    <ChevronDown className="ml-auto h-4 w-4 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-full p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder="Search time slots..." className="h-9 text-xs" />
+                    <CommandList>
+                      <CommandEmpty>No time slots available</CommandEmpty>
+                      <CommandGroup>
+                        {availableTimeSlots.map((slot) => (
+                          <CommandItem
+                            key={slot.value}
+                            onSelect={() => {
+                              if (selectedTimeSlots.includes(slot.value)) {
+                                setSelectedTimeSlots(prev => 
+                                  prev.filter(x => x !== slot.value)
+                                );
+                              } else {
+                                setSelectedTimeSlots(prev => [...prev, slot.value]);
+                              }
+                            }}
+                          >
+                            <Check
+                              className={cn(
+                                "mr-2 h-4 w-4",
+                                selectedTimeSlots.includes(slot.value)
+                                  ? "opacity-100"
+                                  : "opacity-0"
+                              )}
+                            />
+                            {slot.label}
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              
+              {selectedTimeSlots.length > 0 && (
+                <div className="flex flex-wrap gap-1 mt-2">
+                  {selectedTimeSlots.map(slotId => {
+                    const slot = availableTimeSlots.find(s => s.value === slotId);
+                    return (
+                      <Badge 
+                        key={slotId} 
+                        variant="secondary"
+                        className="text-xs py-0 h-5"
+                      >
+                        {slot?.label}
+                        <X 
+                          className="ml-1 h-3 w-3 cursor-pointer" 
+                          onClick={() => {
+                            setSelectedTimeSlots(prev => 
+                              prev.filter(x => x !== slotId)
+                            );
+                          }}
+                        />
+                      </Badge>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-amber-600 mt-1">
+              No available time slots for this equipment
+            </p>
+          )}
           
-          {timeSlots.map(slot => {
-            // Only show slots that fit within the session duration
-            const [start, end] = slot.id.split('-').map(Number);
-            if (end > duration) return null;
-            
-            const isAvailable = availabilityChecked ? timeSlotAvailability[slot.id] : true;
-            const isDisabled = !isAvailable && (!editSession || 
-              !editSession.equipmentBookings?.[equipmentType] || 
-              !editSession.equipmentBookings[equipmentType]!.some(booking => booking.startMinute === parseInt(slot.id.split('-')[0], 10)));
-            
-            // Format the time slot as HH:MM based on session start time
-            let slotLabel = slot.id;
-            if (startTime) {
-              const [hours, minutes] = startTime.split(':').map(Number);
-              const startTimeDate = new Date();
-              startTimeDate.setHours(hours, minutes + start, 0);
-              const endTimeDate = new Date();
-              endTimeDate.setHours(hours, minutes + end, 0);
-              
-              const formatTimeValue = (date: Date) => {
-                return `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
-              };
-              
-              slotLabel = `${formatTimeValue(startTimeDate)} - ${formatTimeValue(endTimeDate)}`;
-            }
-            
-            return (
-              <div key={slot.id} className="flex items-center">
-                <Checkbox 
-                  id={`${equipmentType}-${slot.id}`}
-                  checked={selectedTimeSlots.includes(slot.id)}
-                  disabled={isDisabled}
-                  onCheckedChange={() => !isDisabled && handleTimeSlotToggle(slot.id)}
-                />
-                <Label 
-                  htmlFor={`${equipmentType}-${slot.id}`} 
-                  className={`ml-2 text-xs ${isDisabled ? 'text-slate-400' : ''}`}
-                >
-                  {slotLabel}
-                  {!isAvailable && availabilityChecked && isDisabled && " (Not available)"}
-                </Label>
-              </div>
-            );
-          })}
-        </div>
-      )}
-      
-      {useEquipment && !availabilityChecked && (
-        <p className="text-[10px] text-amber-600 mt-1 pl-6">
-          Enter valid date and time to check equipment availability
-        </p>
+          {!availabilityChecked && (
+            <p className="text-[10px] text-amber-600 mt-1">
+              Enter valid date and time to check equipment availability
+            </p>
+          )}
+        </>
       )}
     </div>
   );

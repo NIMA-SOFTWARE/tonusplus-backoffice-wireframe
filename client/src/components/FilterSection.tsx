@@ -17,17 +17,17 @@ const FilterSection: React.FC<FilterSectionProps> = ({ className }) => {
   useEffect(() => {
     const uniqueTrainers = Array.from(new Set(sessions.map(session => session.trainer)));
     const uniqueActivities = Array.from(new Set(sessions.map(session => session.name)));
-    
-    // Extract locations from room names (format: "Room - Location")
-    const uniqueLocations = Array.from(new Set(sessions.map(session => {
-      const roomParts = session.room.split(' - ');
-      return roomParts.length > 1 ? roomParts[1].trim() : session.room;
-    })));
+    const uniqueLocations = Array.from(new Set(sessions.map(session => session.location)));
     
     setTrainers(uniqueTrainers);
     setActivities(uniqueActivities);
     setLocations(uniqueLocations);
-  }, [sessions]);
+    
+    // If no location is selected, set the first location as default
+    if (!filters.location && uniqueLocations.length > 0) {
+      setFilters({ location: uniqueLocations[0] });
+    }
+  }, [sessions, filters.location, setFilters]);
 
   // Date filter has been removed as it's now in the calendar view
 
@@ -70,10 +70,11 @@ const FilterSection: React.FC<FilterSectionProps> = ({ className }) => {
       <div className="relative">
         <select 
           className="pl-10 pr-10 py-2 border border-slate-300 rounded-md text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 w-full"
-          value={filters.location || ''}
+          value={filters.location || (locations.length > 0 ? locations[0] : '')}
           onChange={handleLocationChange}
+          required
         >
-          <option value="">All Locations</option>
+          {/* Location filter cannot be empty, a location must always be active */}
           {locations.map((location, index) => (
             <option key={index} value={location}>{location}</option>
           ))}

@@ -101,15 +101,9 @@ export const PilatesProvider: React.FC<{ children: ReactNode }> = ({ children })
       filtered = filtered.filter(session => session.name === filters.activity);
     }
     
-    // Apply location filter (using room)
+    // Apply location filter - a location must always be active
     if (filters.location) {
-      filtered = filtered.filter(session => {
-        // Extract location from room (assuming format like "Studio A - Downtown", "Private Room - Westside")
-        // If room has a hyphen, use the part after the hyphen as location, otherwise use the whole room as location
-        const roomParts = session.room.split(' - ');
-        const sessionLocation = roomParts.length > 1 ? roomParts[1].trim() : session.room;
-        return sessionLocation === filters.location;
-      });
+      filtered = filtered.filter(session => session.location === filters.location);
     }
     
     setFilteredSessions(filtered);

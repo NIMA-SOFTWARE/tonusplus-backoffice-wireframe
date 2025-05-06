@@ -320,6 +320,7 @@ interface CreateSessionModalProps {
     date: string;
     startTime: string;
     room: string;
+    location: string | null;
   };
   onCreateSession?: (sessionData: any) => void;
   onViewDetails?: (session: PilatesSession) => void;
@@ -362,7 +363,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     defaultValues = {
       name: 'Mat Pilates',
       trainer: 'Sarah Johnson',
-      location: 'Downtown',
+      location: initialData.location || 'Downtown',
       room: initialData.room || 'Studio A',
       date: initialData.date || new Date().toISOString().split('T')[0],
       startTime: initialData.startTime || '10:00',
@@ -411,7 +412,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       form.reset({
         name: 'Mat Pilates',
         trainer: 'Sarah Johnson',
-        location: 'Downtown',
+        location: initialData.location || 'Downtown',
         room: initialData.room || 'Studio A',
         date: initialData.date || new Date().toISOString().split('T')[0],
         startTime: initialData.startTime || '10:00',

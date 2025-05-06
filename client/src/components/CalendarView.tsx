@@ -21,7 +21,7 @@ interface CalendarViewProps {
 }
 
 const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView = false }) => {
-  const { filteredSessions, addSession, editSession } = usePilates();
+  const { filteredSessions, addSession, editSession, filters } = usePilates();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [rooms, setRooms] = useState<string[]>([]);
   const [timeSlots, setTimeSlots] = useState<string[]>([]);
@@ -35,6 +35,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     date: string;
     startTime: string;
     room: string;
+    location: string | null;
   } | null>(null);
 
   // Time slots from 6:00 to 22:00 with hourly increments
@@ -129,7 +130,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     setNewSessionData({
       date: format(date, 'yyyy-MM-dd'),
       startTime: timeSlot,
-      room: room
+      room: room,
+      location: filters.location
     });
     setIsCreateModalOpen(true);
   };

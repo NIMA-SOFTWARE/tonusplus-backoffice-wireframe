@@ -76,6 +76,14 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
         else if (startMin === 15) return '15-30';
         else if (startMin === 30) return '30-45';
         else if (startMin === 45) return '45-60';
+        else if (startMin === 60) return '60-75';
+        else if (startMin === 75) return '75-90';
+        else if (startMin === 90) return '90-105';
+        else if (startMin === 105) return '105-120';
+        else if (startMin === 120) return '120-135';
+        else if (startMin === 135) return '135-150';
+        else if (startMin === 150) return '150-165';
+        else if (startMin === 165) return '165-180';
         return '';
       };
       
@@ -187,7 +195,16 @@ const EquipmentBookingSection: React.FC<EquipmentBookingSectionProps> = ({
     { id: '0-15', label: 'First 15 minutes (0-15 min)' },
     { id: '15-30', label: 'Second 15 minutes (15-30 min)' },
     { id: '30-45', label: 'Third 15 minutes (30-45 min)' },
-    { id: '45-60', label: 'Last 15 minutes (45-60 min)' }
+    { id: '45-60', label: 'Fourth 15 minutes (45-60 min)' },
+    // Additional slots for longer sessions
+    { id: '60-75', label: 'Fifth 15 minutes (60-75 min)' },
+    { id: '75-90', label: 'Sixth 15 minutes (75-90 min)' },
+    { id: '90-105', label: 'Seventh 15 minutes (90-105 min)' },
+    { id: '105-120', label: 'Eighth 15 minutes (105-120 min)' },
+    { id: '120-135', label: 'Ninth 15 minutes (120-135 min)' },
+    { id: '135-150', label: 'Tenth 15 minutes (135-150 min)' },
+    { id: '150-165', label: 'Eleventh 15 minutes (150-165 min)' },
+    { id: '165-180', label: 'Twelfth 15 minutes (165-180 min)' }
   ];
   
   // Filter available time slots based on duration and availability
@@ -674,8 +691,10 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                             <SelectContent>
                               <SelectItem value="30">30 minutes</SelectItem>
                               <SelectItem value="45">45 minutes</SelectItem>
-                              <SelectItem value="60">60 minutes</SelectItem>
-                              <SelectItem value="90">90 minutes</SelectItem>
+                              <SelectItem value="60">60 minutes (1 hour)</SelectItem>
+                              <SelectItem value="90">90 minutes (1.5 hours)</SelectItem>
+                              <SelectItem value="120">120 minutes (2 hours)</SelectItem>
+                              <SelectItem value="180">180 minutes (3 hours)</SelectItem>
                             </SelectContent>
                           </Select>
                         </FormControl>

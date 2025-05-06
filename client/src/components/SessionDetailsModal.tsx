@@ -10,7 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { usePilates } from '@/context/PilatesContext';
 import { formatTimeRange } from '@/lib/utils';
 import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle, 
-  UserPlus, ChevronsDown, FileEdit, Trash2, ExternalLink, ArrowUpRight, Dumbbell } from 'lucide-react';
+  UserPlus, ChevronsDown, FileEdit, Trash2, ExternalLink, ArrowUpRight, Dumbbell, Home } from 'lucide-react';
 import AddParticipantForm from '@/components/AddParticipantForm';
 
 interface SessionDetailsModalProps {
@@ -284,6 +284,16 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                   </div>
                   <div className="ml-3">
                     <div className="text-xs text-muted-foreground">Location</div>
+                    <div className="text-sm font-medium">{session.location}</div>
+                  </div>
+                </div>
+                
+                <div className="flex items-start">
+                  <div className="mt-0.5 bg-indigo-100 p-1.5 rounded-md">
+                    <Home className="h-4 w-4 text-indigo-600" />
+                  </div>
+                  <div className="ml-3">
+                    <div className="text-xs text-muted-foreground">Room</div>
                     <div className="text-sm font-medium">{session.room}</div>
                   </div>
                 </div>

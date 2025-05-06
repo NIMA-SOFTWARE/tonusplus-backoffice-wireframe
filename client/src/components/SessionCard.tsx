@@ -93,6 +93,9 @@ const SessionCard: React.FC<SessionCardProps> = ({ session, onClick }) => {
         <div className="text-muted-foreground">Trainer:</div>
         <div>{session.trainer}</div>
         
+        <div className="text-muted-foreground">Location:</div>
+        <div>{session.location}</div>
+        
         <div className="text-muted-foreground">Room:</div>
         <div>{session.room}</div>
         

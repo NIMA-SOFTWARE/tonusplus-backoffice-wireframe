@@ -129,30 +129,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
   
   // Calculate the row span for a session based on its duration
   const calculateRowSpan = (session: PilatesSession): number => {
-    // Calculate how many time slots this session spans
+    // For rowSpan to work correctly, we need to use a full hour-based calculation
+    // 30min → 1 row, 60min → 1 row, 90min → 2 rows, 120min → 2 rows, 180min → 3 rows
     return Math.ceil(session.duration / 60);
-  };
-  
-  // Calculate the height percentage for a session within its cell(s)
-  const calculateHeightPercentage = (session: PilatesSession): number => {
-    // For sessions that span multiple rows, we need special handling
-    const rowSpan = calculateRowSpan(session);
-    
-    if (rowSpan === 1) {
-      // For sessions that fit in one row, calculate percentage of the hour
-      return (session.duration / 60) * 100;
-    } else {
-      // For multi-row sessions, the percentage depends on the remainder
-      const remainder = session.duration % 60;
-      
-      // If the session is exactly multiple hours (no remainder), return 100%
-      if (remainder === 0) {
-        return 100;
-      }
-      
-      // For the last partial row, calculate percentage of that hour
-      return (remainder / 60) * 100;
-    }
   };
 
   // Get sessions for a specific day in week view
@@ -280,7 +259,9 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
               style={{
                 ...provided.draggableProps.style,
                 borderLeftColor: getActivityColor(session.name),
-                height: isMultiHourSession ? '100%' : `${(session.duration / 60) * 100}%`
+                height: isMultiHourSession ? '100%' : `${(session.duration / 60) * 100}%`,
+                boxShadow: isMultiHourSession ? '0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24)' : '',
+                margin: isMultiHourSession ? '0 0 2px 0' : ''
               }}
             >
               <div className="flex items-center justify-between mb-1">
@@ -411,12 +392,13 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
                                 {...provided.droppableProps}
                                 key={`${room}-${timeSlot}-${roomIdx}`}
                                 rowSpan={rowSpan}
-                                className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
+                                className={`p-1 border-b border-slate-200 align-top ${
                                   snapshot.isDraggingOver ? 'bg-indigo-50' : ''
                                 } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                                style={{ height: `${60 * rowSpan}px` }}
                               >
                                 {/* Only render at the start slot, but with increased height proportionate to duration */}
-                                <div className="h-full relative" style={{ minHeight: rowSpan > 1 ? `${rowSpan * 60}px` : '60px' }}>
+                                <div className="h-full relative" style={{ height: '100%' }}>
                                   {renderSessionCell(sessions, timeSlot)}
                                   {provided.placeholder}
                                 </div>

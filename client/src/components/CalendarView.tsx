@@ -525,7 +525,8 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
           initialData={{
             date: newSessionData.date,
             startTime: newSessionData.startTime,
-            room: newSessionData.room
+            room: newSessionData.room,
+            location: newSessionData.location
           }}
           onCreateSession={handleCreateSession}
         />

@@ -339,6 +339,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   
   const activities = ['Mat Pilates', 'Reformer Pilates', 'Barre Fusion', 'Prenatal Pilates'];
   const trainers = ['Sarah Johnson', 'Mike Davis', 'Emma Wilson'];
+  const locations = ['Downtown', 'Westside', 'Northside'];
   const rooms = ['Studio A', 'Studio B', 'Reformer Room', 'Private Room'];
   
   // Determine default values based on provided data
@@ -347,6 +348,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     defaultValues = {
       name: editSession.name,
       trainer: editSession.trainer,
+      location: editSession.location,
       room: editSession.room,
       date: editSession.date,
       startTime: editSession.startTime,
@@ -393,6 +395,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       form.reset({
         name: editSession.name,
         trainer: editSession.trainer,
+        location: editSession.location,
         room: editSession.room,
         date: editSession.date,
         startTime: editSession.startTime,
@@ -406,6 +409,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       form.reset({
         name: 'Mat Pilates',
         trainer: 'Sarah Johnson',
+        location: 'Downtown',
         room: initialData.room || 'Studio A',
         date: initialData.date || new Date().toISOString().split('T')[0],
         startTime: initialData.startTime || '10:00',
@@ -419,6 +423,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
       form.reset({
         name: 'Mat Pilates',
         trainer: 'Sarah Johnson',
+        location: 'Downtown',
         room: 'Studio A',
         date: new Date().toISOString().split('T')[0],
         startTime: '10:00',

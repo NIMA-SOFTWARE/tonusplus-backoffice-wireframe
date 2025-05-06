@@ -60,6 +60,20 @@ export const PilatesProvider: React.FC<{ children: ReactNode }> = ({ children })
   useEffect(() => {
     initLocalStorage();
     refreshSessions();
+    
+    // Initialize location filter if it's not set already
+    const sessionsData = getSessions();
+    if (sessionsData.length > 0 && !filters.location) {
+      // Get unique locations
+      const uniqueLocations = Array.from(new Set(sessionsData.map(session => session.location)));
+      if (uniqueLocations.length > 0) {
+        // Set the first location as default
+        setFilters(prevFilters => ({
+          ...prevFilters,
+          location: uniqueLocations[0]
+        }));
+      }
+    }
   }, []);
 
   // Apply filters whenever sessions or filters change

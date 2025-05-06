@@ -222,71 +222,93 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
 
   // FINALIZED VERSION - Render a draggable session cell with equipment icons
   // This is the locked design for session cards with equipment icons in bottom right
-  const renderSessionCell = (sessions: PilatesSession[]) => {
+  const renderSessionCell = (sessions: PilatesSession[], timeSlot?: string) => {
     if (sessions.length === 0) {
       return null;
     }
     
-    return sessions.map((session, index) => (
-      <Draggable 
-        key={session.id} 
-        draggableId={session.id}
-        index={index}
-        isDragDisabled={!isAdminView}
-      >
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            onClick={() => onSessionClick && onSessionClick(session)}
-            className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm`}
-            style={{
-              ...provided.draggableProps.style,
-              borderLeftColor: getActivityColor(session.name)
-            }}
-          >
-            <div className="font-semibold">{session.name}</div>
-            <div>{formatTimeRange(session.startTime, session.duration)}</div>
-            {session.duration > 60 && (
-              <div className="text-xs text-indigo-600 italic">
-                {Math.floor(session.duration / 60)} hour {session.duration % 60 > 0 ? `${session.duration % 60} min` : ''}
+    return sessions.map((session, index) => {
+      // Calculate if this is the first occurrence of this session (at its starting time slot)
+      const isStartTimeSlot = !timeSlot || (
+        timeSlot.split(':')[0] === session.startTime.split(':')[0]
+      );
+      
+      // For sessions spanning multiple hours, add special styling
+      const isMultiHourSession = session.duration > 60;
+      
+      return (
+        <Draggable 
+          key={session.id} 
+          draggableId={session.id}
+          index={index}
+          isDragDisabled={!isAdminView}
+        >
+          {(provided) => (
+            <div
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+              {...provided.dragHandleProps}
+              onClick={() => onSessionClick && onSessionClick(session)}
+              className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm ${
+                isMultiHourSession ? 'border border-indigo-200' : ''
+              } ${!isStartTimeSlot ? 'bg-indigo-50/60' : ''}`}
+              style={{
+                ...provided.draggableProps.style,
+                borderLeftColor: getActivityColor(session.name)
+              }}
+            >
+              <div className="font-semibold">{session.name}</div>
+              <div className="flex items-center">
+                {formatTimeRange(session.startTime, session.duration)}
+                {isMultiHourSession && (
+                  <span className="ml-1 bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium">
+                    {Math.floor(session.duration / 60)}h{session.duration % 60 > 0 ? `${session.duration % 60}m` : ''}
+                  </span>
+                )}
               </div>
-            )}
-            <div className="text-xs text-slate-500">{session.trainer}</div>
-            <div className="text-xs mt-1">
-              <span className="font-medium">{session.participants.length}</span>
-              <span className="text-slate-500">/{session.maxSpots}</span>
-              {session.waitlist.length > 0 && 
-                <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
-              }
+
+              {/* Show "Continued" badge for sessions in their non-starting time slots */}
+              {!isStartTimeSlot && (
+                <div className="inline-block bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium">
+                  Continued
+                </div>
+              )}
+              
+              <div className="text-xs text-slate-500">{session.trainer}</div>
+              <div className="text-xs mt-1">
+                <span className="font-medium">{session.participants.length}</span>
+                <span className="text-slate-500">/{session.maxSpots}</span>
+                {session.waitlist.length > 0 && 
+                  <span className="ml-1 text-amber-600">+{session.waitlist.length} waiting</span>
+                }
+              </div>
+              
+              {/* Equipment icons in bottom right corner */}
+              {session.equipmentBookings && (
+                <div className="absolute bottom-0.5 right-0.5 flex space-x-1 bg-white/30 px-1 rounded-sm">
+                  {Array.from(new Set(
+                    getBookedEquipment(session).map(item => item.type)
+                  )).map((type, index) => (
+                    <EquipmentTooltip 
+                      key={index} 
+                      type={type}
+                      timeSlot={getBookedEquipment(session)
+                        .filter(item => item.type === type)
+                        .map(item => item.timeSlot)
+                        .join(', ')}
+                    >
+                      <div className="cursor-help text-sm">
+                        {getEquipmentIcon(type)}
+                      </div>
+                    </EquipmentTooltip>
+                  ))}
+                </div>
+              )}
             </div>
-            
-            {/* Equipment icons in bottom right corner */}
-            {session.equipmentBookings && (
-              <div className="absolute bottom-0.5 right-0.5 flex space-x-1 bg-white/30 px-1 rounded-sm">
-                {Array.from(new Set(
-                  getBookedEquipment(session).map(item => item.type)
-                )).map((type, index) => (
-                  <EquipmentTooltip 
-                    key={index} 
-                    type={type}
-                    timeSlot={getBookedEquipment(session)
-                      .filter(item => item.type === type)
-                      .map(item => item.timeSlot)
-                      .join(', ')}
-                  >
-                    <div className="cursor-help text-sm">
-                      {getEquipmentIcon(type)}
-                    </div>
-                  </EquipmentTooltip>
-                ))}
-              </div>
-            )}
-          </div>
-        )}
-      </Draggable>
-    ));
+          )}
+        </Draggable>
+      );
+    });
   };
 
   const getActivityColor = (activity: string): string => {
@@ -342,7 +364,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
                           onClick={isAdminView && sessions.length === 0 ? 
                             () => handleCreateSessionClick(timeSlot, room, currentDate) : undefined}
                         >
-                          {renderSessionCell(sessions)}
+                          {renderSessionCell(sessions, timeSlot)}
                           {provided.placeholder}
                           
                           {/* Empty cell placeholder with + sign for admin mode */}

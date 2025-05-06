@@ -362,6 +362,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     defaultValues = {
       name: 'Mat Pilates',
       trainer: 'Sarah Johnson',
+      location: 'Downtown',
       room: initialData.room || 'Studio A',
       date: initialData.date || new Date().toISOString().split('T')[0],
       startTime: initialData.startTime || '10:00',
@@ -374,6 +375,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     defaultValues = {
       name: 'Mat Pilates',
       trainer: 'Sarah Johnson',
+      location: 'Downtown',
       room: 'Studio A',
       date: new Date().toISOString().split('T')[0],
       startTime: '10:00',

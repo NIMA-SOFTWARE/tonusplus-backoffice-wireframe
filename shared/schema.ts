@@ -35,7 +35,8 @@ export interface PilatesSession {
   id: string;
   name: string;
   trainer: string;
-  room: string;
+  location: string; // The studio location (e.g., Downtown, Westside, Northside)
+  room: string; // The specific room within the location
   date: string;
   startTime: string;
   duration: number;
@@ -57,7 +58,8 @@ export interface PilatesSession {
 export interface CreateSessionInput {
   name: string;
   trainer: string;
-  room: string;
+  location: string; // The studio location
+  room: string; // The specific room within the location
   date: string;
   startTime: string;
   duration: number;
@@ -82,6 +84,7 @@ const equipmentTimeSlotSchema = z.object({
 export const createSessionSchema = z.object({
   name: z.string().min(1, "Activity name is required"),
   trainer: z.string().min(1, "Trainer name is required"),
+  location: z.string().min(1, "Location is required"),
   room: z.string().min(1, "Room is required"),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Date must be in YYYY-MM-DD format"),
   startTime: z.string().regex(/^\d{2}:\d{2}$/, "Start time must be in HH:MM format"),

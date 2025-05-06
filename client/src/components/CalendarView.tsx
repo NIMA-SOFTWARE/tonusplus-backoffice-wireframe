@@ -102,7 +102,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
   const getSessionsForTimeAndRoom = (timeSlot: string, room: string): PilatesSession[] => {
     const formattedDate = format(currentDate, 'yyyy-MM-dd');
     
-    // Filter sessions for the current date, room, and time slot
+    // For spanning multiple rows, we only want sessions that START in this time slot
     return filteredSessions.filter(session => {
       // Match date and room
       const matchesDate = session.date === formattedDate;
@@ -110,23 +110,27 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
       
       if (!matchesDate || !matchesRoom) return false;
       
-      // Calculate session time range
-      const [sessionStartHourStr, sessionStartMinStr] = session.startTime.split(':');
+      // Calculate session time
+      const [sessionStartHourStr] = session.startTime.split(':');
       const [timeSlotHourStr] = timeSlot.split(':');
       
       const sessionStartHour = parseInt(sessionStartHourStr, 10);
-      const sessionStartMin = parseInt(sessionStartMinStr, 10);
       const timeSlotHour = parseInt(timeSlotHourStr, 10);
       
-      // Calculate session end time in hours (can span multiple hours)
-      const sessionDurationHours = session.duration / 60;  // Convert minutes to hours
-      const sessionEndHour = sessionStartHour + sessionDurationHours;
-      
-      // Check if this time slot falls within the session's time range
-      // For a session starting at 10:00 with duration 180 minutes (3 hours),
-      // it should appear in the 10:00, 11:00, and 12:00 time slots
-      return timeSlotHour >= sessionStartHour && timeSlotHour < sessionEndHour;
+      // Only return sessions that start exactly at this time slot
+      return timeSlotHour === sessionStartHour;
     });
+  };
+
+  // Helper to check if a session spans multiple hours
+  const isMultiHourSession = (session: PilatesSession): boolean => {
+    return session.duration > 60;
+  };
+  
+  // Calculate the row span for a session based on its duration
+  const calculateRowSpan = (session: PilatesSession): number => {
+    // Calculate how many time slots this session spans
+    return Math.ceil(session.duration / 60);
   };
 
   // Get sessions for a specific day in week view
@@ -220,8 +224,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     return equipment;
   };
 
-  // FINALIZED VERSION - Render a draggable session cell with equipment icons
-  // This is the locked design for session cards with equipment icons in bottom right
+  // Render a session card with visual indicators for multi-hour sessions
   const renderSessionCell = (sessions: PilatesSession[], timeSlot?: string) => {
     if (sessions.length === 0) {
       return null;
@@ -249,30 +252,34 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
               {...provided.draggableProps}
               {...provided.dragHandleProps}
               onClick={() => onSessionClick && onSessionClick(session)}
-              className={`p-2 rounded text-xs mb-1 cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm ${
-                isMultiHourSession ? 'border border-indigo-200' : ''
+              className={`p-2 rounded text-xs cursor-pointer border-l-4 status-${session.status} hover:opacity-90 relative shadow-sm ${
+                isMultiHourSession ? 'border-2 border-indigo-200 bg-white' : ''
               } ${!isStartTimeSlot ? 'bg-indigo-50/60' : ''}`}
               style={{
                 ...provided.draggableProps.style,
-                borderLeftColor: getActivityColor(session.name)
+                borderLeftColor: getActivityColor(session.name),
+                height: isMultiHourSession ? '100%' : 'auto'
               }}
             >
-              <div className="font-semibold">{session.name}</div>
-              <div className="flex items-center">
-                {formatTimeRange(session.startTime, session.duration)}
+              <div className="flex items-center justify-between mb-1">
+                <div className="font-semibold">{session.name}</div>
                 {isMultiHourSession && (
-                  <span className="ml-1 bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium">
+                  <span className="bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium whitespace-nowrap">
                     {Math.floor(session.duration / 60)}h{session.duration % 60 > 0 ? `${session.duration % 60}m` : ''}
                   </span>
                 )}
               </div>
-
-              {/* Show "Continued" badge for sessions in their non-starting time slots */}
-              {!isStartTimeSlot && (
-                <div className="inline-block bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium">
-                  Continued
-                </div>
-              )}
+              
+              <div className="flex items-center justify-between mb-1">
+                <div>{formatTimeRange(session.startTime, session.duration)}</div>
+                
+                {/* Show "Continued" badge for sessions in their non-starting time slots */}
+                {!isStartTimeSlot && (
+                  <span className="inline-block bg-indigo-100 text-indigo-800 px-1 rounded text-[10px] font-medium">
+                    Continued
+                  </span>
+                )}
+              </div>
               
               <div className="text-xs text-slate-500">{session.trainer}</div>
               <div className="text-xs mt-1">
@@ -327,64 +334,113 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
   };
 
   // Render day view (rooms as columns, hours as rows)
-  const renderDayView = () => (
-    <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="overflow-x-auto">
-        <table className="w-full border-collapse">
-          <thead>
-            <tr className="bg-slate-50">
-              <th className="w-20 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Time</th>
-              {rooms.map((room, idx) => (
-                <th key={`room-${idx}`} className="p-2 border-b border-slate-200 text-center min-w-[180px] text-sm font-medium text-slate-700">
-                  {room}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {timeSlots.map((timeSlot, index) => (
-              <tr key={`timeslot-${index}`} className={index % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
-                <td className="p-2 border-r border-b border-slate-200 text-xs font-medium text-slate-500 whitespace-nowrap">
-                  {timeSlot}
-                </td>
-                {rooms.map((room, roomIdx) => {
-                  const sessions = getSessionsForTimeAndRoom(timeSlot, room);
-                  const droppableId = `${room}|${timeSlot}|${format(currentDate, 'yyyy-MM-dd')}`;
-                  
-                  return (
-                    <Droppable droppableId={droppableId} key={droppableId}>
-                      {(provided, snapshot) => (
-                        <td
-                          ref={provided.innerRef}
-                          {...provided.droppableProps}
-                          key={`${room}-${timeSlot}-${roomIdx}`}
-                          className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
-                            snapshot.isDraggingOver ? 'bg-indigo-50' : ''
-                          } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
-                          onClick={isAdminView && sessions.length === 0 ? 
-                            () => handleCreateSessionClick(timeSlot, room, currentDate) : undefined}
-                        >
-                          {renderSessionCell(sessions, timeSlot)}
-                          {provided.placeholder}
-                          
-                          {/* Empty cell placeholder with + sign for admin mode */}
-                          {isAdminView && sessions.length === 0 && (
-                            <div className="h-full min-h-[50px] border border-dashed border-slate-200 rounded flex items-center justify-center">
-                              <span className="text-slate-400 text-xl">+</span>
-                            </div>
-                          )}
-                        </td>
-                      )}
-                    </Droppable>
-                  );
-                })}
+  const renderDayView = () => {
+    // Track cells that should be skipped because they're part of rowspan
+    const cellsToSkip = new Map<string, boolean>();
+    
+    return (
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-slate-50">
+                <th className="w-20 p-2 border-r border-b border-slate-200 text-left text-xs font-medium text-slate-500">Time</th>
+                {rooms.map((room, idx) => (
+                  <th key={`room-${idx}`} className="p-2 border-b border-slate-200 text-center min-w-[180px] text-sm font-medium text-slate-700">
+                    {room}
+                  </th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </DragDropContext>
-  );
+            </thead>
+            <tbody>
+              {timeSlots.map((timeSlot, timeIndex) => (
+                <tr key={`timeslot-${timeIndex}`} className={timeIndex % 2 === 0 ? 'bg-white' : 'bg-slate-50'}>
+                  <td className="p-2 border-r border-b border-slate-200 text-xs font-medium text-slate-500 whitespace-nowrap">
+                    {timeSlot}
+                  </td>
+                  {rooms.map((room, roomIdx) => {
+                    // Check if we should skip this cell due to a rowspan
+                    const cellKey = `${room}-${timeIndex}`;
+                    if (cellsToSkip.has(cellKey)) {
+                      return null; // Skip rendering this cell
+                    }
+                    
+                    const sessions = getSessionsForTimeAndRoom(timeSlot, room);
+                    const droppableId = `${room}|${timeSlot}|${format(currentDate, 'yyyy-MM-dd')}`;
+                    
+                    // If there's a multi-hour session at this slot, calculate rowspan
+                    // and mark future slots to be skipped
+                    if (sessions.length > 0) {
+                      const session = sessions[0]; // Assuming one session per slot for simplicity
+                      if (isMultiHourSession(session)) {
+                        const rowSpan = calculateRowSpan(session);
+                        
+                        // Mark future cells to be skipped due to rowspan
+                        for (let i = 1; i < rowSpan && timeIndex + i < timeSlots.length; i++) {
+                          cellsToSkip.set(`${room}-${timeIndex + i}`, true);
+                        }
+                        
+                        // Return cell with rowSpan
+                        return (
+                          <Droppable droppableId={droppableId} key={droppableId}>
+                            {(provided, snapshot) => (
+                              <td
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                                key={`${room}-${timeSlot}-${roomIdx}`}
+                                rowSpan={rowSpan}
+                                className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
+                                  snapshot.isDraggingOver ? 'bg-indigo-50' : ''
+                                } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                              >
+                                {/* Only render at the start slot, but with increased height proportionate to duration */}
+                                <div className="h-full" style={{ minHeight: rowSpan > 1 ? `${rowSpan * 60}px` : '60px' }}>
+                                  {renderSessionCell(sessions, timeSlot)}
+                                  {provided.placeholder}
+                                </div>
+                              </td>
+                            )}
+                          </Droppable>
+                        );
+                      }
+                    }
+                    
+                    // Regular single-hour cell
+                    return (
+                      <Droppable droppableId={droppableId} key={droppableId}>
+                        {(provided, snapshot) => (
+                          <td
+                            ref={provided.innerRef}
+                            {...provided.droppableProps}
+                            key={`${room}-${timeSlot}-${roomIdx}`}
+                            className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
+                              snapshot.isDraggingOver ? 'bg-indigo-50' : ''
+                            } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                            onClick={isAdminView ? 
+                              () => handleCreateSessionClick(timeSlot, room, currentDate) : undefined}
+                          >
+                            {renderSessionCell(sessions, timeSlot)}
+                            {provided.placeholder}
+                            
+                            {/* Empty cell placeholder with + sign for admin mode */}
+                            {isAdminView && (
+                              <div className="h-full min-h-[50px] border border-dashed border-slate-200 rounded flex items-center justify-center">
+                                <span className="text-slate-400 text-xl">+</span>
+                              </div>
+                            )}
+                          </td>
+                        )}
+                      </Droppable>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </DragDropContext>
+    );
+  };
 
   // Render week view (days as columns, rooms as rows)
   const renderWeekView = () => (

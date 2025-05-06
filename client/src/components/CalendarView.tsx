@@ -108,12 +108,24 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
       const matchesDate = session.date === formattedDate;
       const matchesRoom = session.room === room;
       
-      // Check if this session's time overlaps with the current time slot
-      const sessionStartHour = parseInt(session.startTime.split(':')[0], 10);
-      const timeSlotHour = parseInt(timeSlot.split(':')[0], 10);
+      if (!matchesDate || !matchesRoom) return false;
       
-      // Session starts during this time slot
-      return matchesDate && matchesRoom && sessionStartHour === timeSlotHour;
+      // Calculate session time range
+      const [sessionStartHourStr, sessionStartMinStr] = session.startTime.split(':');
+      const [timeSlotHourStr] = timeSlot.split(':');
+      
+      const sessionStartHour = parseInt(sessionStartHourStr, 10);
+      const sessionStartMin = parseInt(sessionStartMinStr, 10);
+      const timeSlotHour = parseInt(timeSlotHourStr, 10);
+      
+      // Calculate session end time in hours (can span multiple hours)
+      const sessionDurationHours = session.duration / 60;  // Convert minutes to hours
+      const sessionEndHour = sessionStartHour + sessionDurationHours;
+      
+      // Check if this time slot falls within the session's time range
+      // For a session starting at 10:00 with duration 180 minutes (3 hours),
+      // it should appear in the 10:00, 11:00, and 12:00 time slots
+      return timeSlotHour >= sessionStartHour && timeSlotHour < sessionEndHour;
     });
   };
 
@@ -236,6 +248,11 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
           >
             <div className="font-semibold">{session.name}</div>
             <div>{formatTimeRange(session.startTime, session.duration)}</div>
+            {session.duration > 60 && (
+              <div className="text-xs text-indigo-600 italic">
+                {Math.floor(session.duration / 60)} hour {session.duration % 60 > 0 ? `${session.duration % 60} min` : ''}
+              </div>
+            )}
             <div className="text-xs text-slate-500">{session.trainer}</div>
             <div className="text-xs mt-1">
               <span className="font-medium">{session.participants.length}</span>

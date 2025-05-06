@@ -506,8 +506,8 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
               </TabsList>
               
               <TabsContent value="basic" className="space-y-3 pt-2">
-                {/* First row - Activity, Trainer, Room */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {/* First row - Activity, Trainer */}
+                <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
                     name="name"
@@ -563,12 +563,43 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                       </FormItem>
                     )}
                   />
+                </div>
+                
+                {/* Second row - Location, Room */}
+                <div className="grid grid-cols-2 gap-3">
+                  <FormField
+                    control={form.control}
+                    name="location"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="text-xs">Location</FormLabel>
+                        <Select 
+                          onValueChange={field.onChange} 
+                          value={field.value}
+                        >
+                          <FormControl>
+                            <SelectTrigger className="h-8 text-xs">
+                              <SelectValue placeholder="Location" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {locations.map(location => (
+                              <SelectItem key={location} value={location}>
+                                {location}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className="text-xs" />
+                      </FormItem>
+                    )}
+                  />
                   
                   <FormField
                     control={form.control}
                     name="room"
                     render={({ field }) => (
-                      <FormItem className="col-span-2 md:col-span-1">
+                      <FormItem>
                         <FormLabel className="text-xs">Room</FormLabel>
                         <Select 
                           onValueChange={field.onChange} 
@@ -593,7 +624,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   />
                 </div>
                 
-                {/* Second row - Date, Time, Duration */}
+                {/* Third row - Date, Time, Duration */}
                 <div className="grid grid-cols-3 gap-3">
                   <FormField
                     control={form.control}
@@ -651,7 +682,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   />
                 </div>
                 
-                {/* Third row - Capacity & Waitlist */}
+                {/* Fourth row - Capacity & Waitlist */}
                 <div className="grid grid-cols-2 gap-3">
                   <FormField
                     control={form.control}
@@ -693,7 +724,7 @@ const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
                   />
                 </div>
                 
-                {/* Fourth row - Status */}
+                {/* Fifth row - Status */}
                 <FormField
                   control={form.control}
                   name="status"

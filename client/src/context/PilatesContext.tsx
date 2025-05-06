@@ -104,6 +104,16 @@ export const PilatesProvider: React.FC<{ children: ReactNode }> = ({ children })
     // Apply location filter - a location must always be active
     if (filters.location) {
       filtered = filtered.filter(session => session.location === filters.location);
+    } else {
+      // If no location is selected (which shouldn't happen), default to the first available location
+      const uniqueLocations = Array.from(new Set(sessions.map(session => session.location)));
+      if (uniqueLocations.length > 0) {
+        const defaultLocation = uniqueLocations[0];
+        filtered = filtered.filter(session => session.location === defaultLocation);
+        
+        // Update the filter state to reflect this default selection
+        updateFilters({ location: defaultLocation });
+      }
     }
     
     setFilteredSessions(filtered);
@@ -117,7 +127,14 @@ export const PilatesProvider: React.FC<{ children: ReactNode }> = ({ children })
   };
 
   const resetFilters = () => {
-    setFilters(defaultFilters);
+    // When resetting filters, keep the current location or set to default if available
+    const uniqueLocations = Array.from(new Set(sessions.map(session => session.location)));
+    const defaultLocation = uniqueLocations.length > 0 ? uniqueLocations[0] : null;
+    
+    setFilters({
+      ...defaultFilters,
+      location: filters.location || defaultLocation
+    });
   };
 
   const addSession = async (sessionData: CreateSessionInput): Promise<PilatesSession | null> => {

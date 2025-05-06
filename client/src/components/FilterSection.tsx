@@ -40,7 +40,8 @@ const FilterSection: React.FC<FilterSectionProps> = ({ className }) => {
   };
 
   const handleLocationChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFilters({ location: e.target.value || null });
+    // Always use the selected value, never allow null for location
+    setFilters({ location: e.target.value });
   };
 
   return (

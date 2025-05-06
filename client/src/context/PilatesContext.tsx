@@ -18,6 +18,7 @@ interface FilterOptions {
   date: string | null;
   trainer: string | null;
   activity: string | null;
+  location: string | null;
 }
 
 interface PilatesContextType {
@@ -41,7 +42,8 @@ interface PilatesContextType {
 const defaultFilters: FilterOptions = {
   date: null,
   trainer: null,
-  activity: null
+  activity: null,
+  location: null
 };
 
 const PilatesContext = createContext<PilatesContextType | undefined>(undefined);
@@ -97,6 +99,17 @@ export const PilatesProvider: React.FC<{ children: ReactNode }> = ({ children })
     // Apply activity filter
     if (filters.activity) {
       filtered = filtered.filter(session => session.name === filters.activity);
+    }
+    
+    // Apply location filter (using room)
+    if (filters.location) {
+      filtered = filtered.filter(session => {
+        // Extract location from room (assuming format like "Studio A - Downtown", "Private Room - Westside")
+        // If room has a hyphen, use the part after the hyphen as location, otherwise use the whole room as location
+        const roomParts = session.room.split(' - ');
+        const sessionLocation = roomParts.length > 1 ? roomParts[1].trim() : session.room;
+        return sessionLocation === filters.location;
+      });
     }
     
     setFilteredSessions(filtered);

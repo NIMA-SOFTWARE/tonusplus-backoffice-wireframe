@@ -132,6 +132,28 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
     // Calculate how many time slots this session spans
     return Math.ceil(session.duration / 60);
   };
+  
+  // Calculate the height percentage for a session within its cell(s)
+  const calculateHeightPercentage = (session: PilatesSession): number => {
+    // For sessions that span multiple rows, we need special handling
+    const rowSpan = calculateRowSpan(session);
+    
+    if (rowSpan === 1) {
+      // For sessions that fit in one row, calculate percentage of the hour
+      return (session.duration / 60) * 100;
+    } else {
+      // For multi-row sessions, the percentage depends on the remainder
+      const remainder = session.duration % 60;
+      
+      // If the session is exactly multiple hours (no remainder), return 100%
+      if (remainder === 0) {
+        return 100;
+      }
+      
+      // For the last partial row, calculate percentage of that hour
+      return (remainder / 60) * 100;
+    }
+  };
 
   // Get sessions for a specific day in week view
   const getSessionsForDay = (day: Date): PilatesSession[] => {
@@ -258,7 +280,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
               style={{
                 ...provided.draggableProps.style,
                 borderLeftColor: getActivityColor(session.name),
-                height: isMultiHourSession ? '100%' : 'auto'
+                height: isMultiHourSession ? '100%' : `${(session.duration / 60) * 100}%`
               }}
             >
               <div className="flex items-center justify-between mb-1">
@@ -394,7 +416,7 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
                                 } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
                               >
                                 {/* Only render at the start slot, but with increased height proportionate to duration */}
-                                <div className="h-full" style={{ minHeight: rowSpan > 1 ? `${rowSpan * 60}px` : '60px' }}>
+                                <div className="h-full relative" style={{ minHeight: rowSpan > 1 ? `${rowSpan * 60}px` : '60px' }}>
                                   {renderSessionCell(sessions, timeSlot)}
                                   {provided.placeholder}
                                 </div>
@@ -413,21 +435,23 @@ const CalendarView: React.FC<CalendarViewProps> = ({ onSessionClick, isAdminView
                             ref={provided.innerRef}
                             {...provided.droppableProps}
                             key={`${room}-${timeSlot}-${roomIdx}`}
-                            className={`p-1 border-b border-slate-200 align-top min-h-[60px] ${
+                            className={`p-1 border-b border-slate-200 align-top ${
                               snapshot.isDraggingOver ? 'bg-indigo-50' : ''
                             } ${isAdminView ? 'cursor-pointer hover:bg-slate-50' : ''}`}
+                            style={{ height: '60px' }}
                             onClick={isAdminView ? 
                               () => handleCreateSessionClick(timeSlot, room, currentDate) : undefined}
                           >
-                            {renderSessionCell(sessions, timeSlot)}
-                            {provided.placeholder}
-                            
-                            {/* Empty cell placeholder with + sign for admin mode */}
-                            {isAdminView && (
-                              <div className="h-full min-h-[50px] border border-dashed border-slate-200 rounded flex items-center justify-center">
-                                <span className="text-slate-400 text-xl">+</span>
-                              </div>
-                            )}
+                            <div className="h-full relative">
+                              {sessions.length > 0 ? (
+                                renderSessionCell(sessions, timeSlot)
+                              ) : isAdminView ? (
+                                <div className="h-full border border-dashed border-slate-200 rounded flex items-center justify-center">
+                                  <span className="text-slate-400 text-xl">+</span>
+                                </div>
+                              ) : null}
+                              {provided.placeholder}
+                            </div>
                           </td>
                         )}
                       </Droppable>

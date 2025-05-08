@@ -1,11 +1,22 @@
-import { PilatesSession, CreateSessionInput, SessionStatus, EquipmentTimeSlot } from '@shared/schema';
+import { PilatesSession, CreateSessionInput, SessionStatus, EquipmentTimeSlot, MedicalRecordFormData } from '@shared/schema';
 import { format, addDays } from 'date-fns';
 
-// Storage key
+// Storage keys
 const STORAGE_KEY = 'pilates-studio-data';
+const MEDICAL_RECORDS_KEY = 'pilates-medical-records';
 
 export interface PilatesStore {
   sessions: PilatesSession[];
+}
+
+export interface MedicalRecord {
+  id: string;
+  participantId: string;
+  sessionId: string;
+  customerId: string;
+  createdAt: string;
+  updatedAt: string;
+  formData: MedicalRecordFormData;
 }
 
 // Initialize localStorage with sample data if needed
@@ -15,6 +26,11 @@ export const initLocalStorage = (): void => {
       sessions: getSampleSessions()
     };
     localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData));
+  }
+  
+  // Initialize empty medical records storage if needed
+  if (!localStorage.getItem(MEDICAL_RECORDS_KEY)) {
+    localStorage.setItem(MEDICAL_RECORDS_KEY, JSON.stringify({}));
   }
 };
 
@@ -278,6 +294,100 @@ export const updateSessionStatus = (sessionId: string, status: SessionStatus): b
 const saveSessionsToStorage = (sessions: PilatesSession[]): void => {
   const data: PilatesStore = { sessions };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+};
+
+// ==== Medical Records Functions ====
+
+// Get all medical records
+export const getAllMedicalRecords = (): Record<string, MedicalRecord> => {
+  try {
+    const data = localStorage.getItem(MEDICAL_RECORDS_KEY);
+    if (!data) return {};
+    return JSON.parse(data);
+  } catch (error) {
+    console.error('Error parsing medical records from localStorage:', error);
+    return {};
+  }
+};
+
+// Get medical records by customer ID
+export const getMedicalRecordsByCustomerId = (customerId: string): MedicalRecord[] => {
+  const allRecords = getAllMedicalRecords();
+  return Object.values(allRecords).filter(record => record.customerId === customerId);
+};
+
+// Get medical records by participant ID
+export const getMedicalRecordsByParticipantId = (participantId: string): MedicalRecord[] => {
+  const allRecords = getAllMedicalRecords();
+  return Object.values(allRecords).filter(record => record.participantId === participantId);
+};
+
+// Get a specific medical record by ID
+export const getMedicalRecordById = (id: string): MedicalRecord | null => {
+  const allRecords = getAllMedicalRecords();
+  return allRecords[id] || null;
+};
+
+// Create a new medical record
+export const createMedicalRecord = (
+  participantId: string,
+  sessionId: string,
+  customerId: string,
+  formData: MedicalRecordFormData
+): MedicalRecord => {
+  const now = new Date().toISOString();
+  const newRecord: MedicalRecord = {
+    id: Math.random().toString(36).substring(2, 12),
+    participantId,
+    sessionId,
+    customerId,
+    formData,
+    createdAt: now,
+    updatedAt: now
+  };
+  
+  const allRecords = getAllMedicalRecords();
+  allRecords[newRecord.id] = newRecord;
+  localStorage.setItem(MEDICAL_RECORDS_KEY, JSON.stringify(allRecords));
+  
+  return newRecord;
+};
+
+// Update a medical record
+export const updateMedicalRecord = (
+  id: string,
+  formData: Partial<MedicalRecordFormData>
+): MedicalRecord | null => {
+  const allRecords = getAllMedicalRecords();
+  const record = allRecords[id];
+  
+  if (!record) return null;
+  
+  const updatedRecord: MedicalRecord = {
+    ...record,
+    formData: {
+      ...record.formData,
+      ...formData
+    },
+    updatedAt: new Date().toISOString()
+  };
+  
+  allRecords[id] = updatedRecord;
+  localStorage.setItem(MEDICAL_RECORDS_KEY, JSON.stringify(allRecords));
+  
+  return updatedRecord;
+};
+
+// Delete a medical record
+export const deleteMedicalRecord = (id: string): boolean => {
+  const allRecords = getAllMedicalRecords();
+  
+  if (!allRecords[id]) return false;
+  
+  delete allRecords[id];
+  localStorage.setItem(MEDICAL_RECORDS_KEY, JSON.stringify(allRecords));
+  
+  return true;
 };
 
 // Sample sessions for initial data

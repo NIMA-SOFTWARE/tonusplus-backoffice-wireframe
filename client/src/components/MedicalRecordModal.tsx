@@ -4,9 +4,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import MedicalRecordForm from './MedicalRecordForm';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { apiRequest } from '@/lib/queryClient';
+import { useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@/hooks/use-toast';
+import { createMedicalRecord } from '@/lib/localStorage';
 
 interface MedicalRecordModalProps {
   participant: Participant;
@@ -26,38 +26,37 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
   const queryClient = useQueryClient();
   const { toast } = useToast();
   
-  const createMutation = useMutation({
-    mutationFn: async (data: { 
-      participantId: string;
-      sessionId: string;
-      formData: MedicalRecordFormData;
-    }) => {
-      return apiRequest('POST', `/api/medical-records`, data);
-    },
-    onSuccess: () => {
+  const handleSubmit = (formData: MedicalRecordFormData) => {
+    try {
+      // Try creating the medical record in localStorage
+      createMedicalRecord(
+        participant.id,
+        sessionId,
+        participant.email, // Using email as the customerId since it's unique
+        formData
+      );
+      
+      // Refresh any related data
       queryClient.invalidateQueries({ queryKey: ['/api/sessions'] });
-      queryClient.invalidateQueries({ queryKey: ['/api/medical-records'] });
+      
+      // Show success message
       toast({
         title: "Medical record saved",
         description: "The medical record has been successfully saved.",
       });
+      
+      // Close the modal
       onClose();
-    },
-    onError: (error) => {
+    } catch (error) {
+      console.error('Error saving medical record:', error);
+      
+      // Show error message
       toast({
         title: "Error saving medical record",
         description: "There was an error saving the medical record. Please try again.",
         variant: "destructive"
       });
     }
-  });
-  
-  const handleSubmit = (formData: MedicalRecordFormData) => {
-    createMutation.mutate({
-      participantId: participant.id,
-      sessionId,
-      formData
-    });
   };
   
   return (

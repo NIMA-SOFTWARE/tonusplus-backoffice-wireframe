@@ -32,10 +32,7 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
       sessionId: string;
       formData: MedicalRecordFormData;
     }) => {
-      return apiRequest<{ success: boolean; recordId: number }>(`/api/medical-records`, {
-        method: 'POST',
-        body: JSON.stringify(data),
-      });
+      return apiRequest('POST', `/api/medical-records`, data);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/sessions'] });

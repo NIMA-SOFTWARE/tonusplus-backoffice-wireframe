@@ -290,7 +290,7 @@ export class DatabaseStorage implements IStorage {
       medicalRecordId,
       type: trauma.type,
       location: trauma.location,
-      date: trauma.date,
+      date: trauma.date ? new Date(trauma.date) : undefined,
       treatmentReceived: trauma.treatmentReceived,
       currentStatus: trauma.currentStatus,
       additionalNotes: trauma.additionalNotes
@@ -307,7 +307,7 @@ export class DatabaseStorage implements IStorage {
     const values = data.map(surgery => ({
       medicalRecordId,
       type: surgery.type,
-      date: surgery.date,
+      date: surgery.date ? new Date(surgery.date) : undefined,
       hospital: surgery.hospital,
       surgeon: surgery.surgeon,
       outcome: surgery.outcome,
@@ -342,7 +342,7 @@ export class DatabaseStorage implements IStorage {
       const exams = data.clinicalExams.map(exam => ({
         medicalRecordId,
         examType: exam.examType,
-        date: exam.date,
+        date: exam.date ? new Date(exam.date) : undefined,
         results: exam.results,
         additionalNotes: exam.additionalNotes
       }));

@@ -12,9 +12,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Create the medical record
       const medicalRecord = await storage.createMedicalRecord({
         participantId: parseInt(participantId),
-        sessionId: parseInt(sessionId), 
-        createdAt: new Date(),
-        updatedAt: new Date()
+        sessionId: parseInt(sessionId),
+        customerId: 1, // We'll need to get this from the participant later
+        filledBy: "Instructor" // This should come from the authenticated user
       });
       
       // Save the different sections

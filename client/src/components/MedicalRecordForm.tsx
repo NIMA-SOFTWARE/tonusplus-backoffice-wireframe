@@ -561,11 +561,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addPhysicalPain}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Pain
                       </Button>
                     </div>
@@ -708,11 +708,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addTrauma}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Trauma
                       </Button>
                     </div>
@@ -877,11 +877,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addSurgery}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Surgery
                       </Button>
                     </div>

@@ -220,12 +220,15 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                 <DialogTitle className="text-xl font-bold tracking-tight bg-gradient-to-r from-indigo-700 to-blue-500 bg-clip-text text-transparent">
                   {session.name}
                 </DialogTitle>
-                <DialogDescription className="mt-1 flex items-center">
+                <DialogDescription>
+                  Session details and status
+                </DialogDescription>
+                <div className="mt-1 flex items-center">
                   <span className="text-sm text-muted-foreground mr-2">Session Status:</span>
                   <Badge className={`${getStatusColor(session.status)} text-xs font-semibold`}>
                     {session.status}
                   </Badge>
-                </DialogDescription>
+                </div>
               </div>
               
               {/* Session Actions */}

@@ -55,7 +55,7 @@ const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
           </span>
         </TooltipTrigger>
         <TooltipContent side="top">
-          <p className="text-xs">{getStatusDescription(status)}</p>
+          <div className="text-xs">{getStatusDescription(status)}</div>
         </TooltipContent>
       </Tooltip>
     </TooltipProvider>

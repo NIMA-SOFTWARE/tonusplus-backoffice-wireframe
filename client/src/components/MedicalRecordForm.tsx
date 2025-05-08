@@ -1736,7 +1736,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                       <Button
                                         variant={"outline"}
                                         className={cn(
-                                          "pl-3 text-left font-normal",
+                                          "pl-3 sm:py-2 py-6 text-left font-normal",
                                           !field.value && "text-muted-foreground"
                                         )}
                                       >
@@ -1745,7 +1745,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         ) : (
                                           <span>Pick a date</span>
                                         )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        <CalendarIcon className="ml-auto sm:h-4 sm:w-4 h-5 w-5 opacity-50" />
                                       </Button>
                                     </FormControl>
                                   </PopoverTrigger>
@@ -1888,7 +1888,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                       <Button
                                         variant={"outline"}
                                         className={cn(
-                                          "pl-3 text-left font-normal",
+                                          "pl-3 sm:py-2 py-6 text-left font-normal",
                                           !field.value && "text-muted-foreground"
                                         )}
                                       >
@@ -1897,7 +1897,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         ) : (
                                           <span>Pick a date</span>
                                         )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        <CalendarIcon className="ml-auto sm:h-4 sm:w-4 h-5 w-5 opacity-50" />
                                       </Button>
                                     </FormControl>
                                   </PopoverTrigger>
@@ -2040,7 +2040,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                       <Button
                                         variant={"outline"}
                                         className={cn(
-                                          "pl-3 text-left font-normal",
+                                          "pl-3 sm:py-2 py-6 text-left font-normal",
                                           !field.value && "text-muted-foreground"
                                         )}
                                       >
@@ -2049,7 +2049,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         ) : (
                                           <span>Pick a date</span>
                                         )}
-                                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                        <CalendarIcon className="ml-auto sm:h-4 sm:w-4 h-5 w-5 opacity-50" />
                                       </Button>
                                     </FormControl>
                                   </PopoverTrigger>

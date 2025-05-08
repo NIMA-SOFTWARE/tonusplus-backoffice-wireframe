@@ -1232,7 +1232,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('objectiveExamination.clinicalExams') || form.watch('objectiveExamination.clinicalExams').length === 0) && (
+                    {(!form.watch('objectiveExamination.clinicalExams') || form.watch('objectiveExamination.clinicalExams')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No clinical exams recorded. Click "Add Exam" to add one.
                       </div>
@@ -1318,7 +1318,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('objectiveExamination.standingTests') || form.watch('objectiveExamination.standingTests').length === 0) && (
+                    {(!form.watch('objectiveExamination.standingTests') || form.watch('objectiveExamination.standingTests')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No standing tests recorded. Click "Add Test" to add one.
                       </div>
@@ -1404,7 +1404,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('objectiveExamination.shoulderTests') || form.watch('objectiveExamination.shoulderTests').length === 0) && (
+                    {(!form.watch('objectiveExamination.shoulderTests') || form.watch('objectiveExamination.shoulderTests')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No shoulder tests recorded. Click "Add Test" to add one.
                       </div>
@@ -1490,7 +1490,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('objectiveExamination.hipTests') || form.watch('objectiveExamination.hipTests').length === 0) && (
+                    {(!form.watch('objectiveExamination.hipTests') || form.watch('objectiveExamination.hipTests')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No hip tests recorded. Click "Add Test" to add one.
                       </div>
@@ -1578,7 +1578,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('objectiveExamination.anatomicalAnomalies') || form.watch('objectiveExamination.anatomicalAnomalies').length === 0) && (
+                    {(!form.watch('objectiveExamination.anatomicalAnomalies') || form.watch('objectiveExamination.anatomicalAnomalies')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No anatomical anomalies recorded. Click "Add Anomaly" to add one.
                       </div>
@@ -1735,7 +1735,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('specificClinicalHistory.respiratoryIssues') || form.watch('specificClinicalHistory.respiratoryIssues').length === 0) && (
+                    {(!form.watch('specificClinicalHistory.respiratoryIssues') || form.watch('specificClinicalHistory.respiratoryIssues')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No respiratory issues recorded. Click "Add Issue" to add one.
                       </div>
@@ -1881,7 +1881,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('specificClinicalHistory.circulatoryIssues') || form.watch('specificClinicalHistory.circulatoryIssues').length === 0) && (
+                    {(!form.watch('specificClinicalHistory.circulatoryIssues') || form.watch('specificClinicalHistory.circulatoryIssues')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No circulatory issues recorded. Click "Add Issue" to add one.
                       </div>
@@ -2027,7 +2027,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('specificClinicalHistory.digestiveIssues') || form.watch('specificClinicalHistory.digestiveIssues').length === 0) && (
+                    {(!form.watch('specificClinicalHistory.digestiveIssues') || form.watch('specificClinicalHistory.digestiveIssues')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No digestive issues recorded. Click "Add Issue" to add one.
                       </div>

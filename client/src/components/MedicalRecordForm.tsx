@@ -577,10 +577,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            size="md" 
+                            className="p-2" 
                             onClick={() => removePhysicalPain(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         

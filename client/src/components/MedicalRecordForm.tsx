@@ -282,10 +282,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       name="recurrentActivities.sportsActivities"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Sports Activities</FormLabel>
+                          <FormLabel className="text-base font-medium">Sports Activities</FormLabel>
                           <FormControl>
                             <Textarea 
                               placeholder="What kinds of sports does the customer practice?"
+                              className="min-h-[80px] text-base p-4"
                               {...field} 
                             />
                           </FormControl>
@@ -393,10 +394,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         name="recurrentActivities.drivingHoursPerWeek"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Driving Hours Per Week</FormLabel>
+                            <FormLabel className="text-base font-medium">Driving Hours Per Week</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
+                                className="text-base p-6 h-auto"
+                                inputMode="numeric"
                                 {...field}
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
@@ -438,10 +441,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         name="recurrentActivities.computerHoursPerWeek"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Computer Hours Per Week</FormLabel>
+                            <FormLabel className="text-base font-medium">Computer Hours Per Week</FormLabel>
                             <FormControl>
                               <Input 
                                 type="number" 
+                                className="text-base p-6 h-auto"
+                                inputMode="numeric"
                                 {...field}
                                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                               />
@@ -553,8 +558,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   <div>
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-semibold">Physical Pains</h3>
-                      <Button type="button" variant="outline" size="sm" onClick={addPhysicalPain}>
-                        <PlusCircle className="h-4 w-4 mr-2" />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="lg"
+                        className="text-base py-5 px-6" 
+                        onClick={addPhysicalPain}
+                      >
+                        <PlusCircle className="h-5 w-5 mr-2" />
                         Add Pain
                       </Button>
                     </div>
@@ -694,8 +705,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   <div>
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-semibold">Trauma & Musculoskeletal System Issues</h3>
-                      <Button type="button" variant="outline" size="sm" onClick={addTrauma}>
-                        <PlusCircle className="h-4 w-4 mr-2" />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="lg"
+                        className="text-base py-5 px-6" 
+                        onClick={addTrauma}
+                      >
+                        <PlusCircle className="h-5 w-5 mr-2" />
                         Add Trauma
                       </Button>
                     </div>
@@ -857,8 +874,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   <div>
                     <div className="flex justify-between items-center mb-4">
                       <h3 className="text-lg font-semibold">Surgical Interventions</h3>
-                      <Button type="button" variant="outline" size="sm" onClick={addSurgery}>
-                        <PlusCircle className="h-4 w-4 mr-2" />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        size="lg"
+                        className="text-base py-5 px-6" 
+                        onClick={addSurgery}
+                      >
+                        <PlusCircle className="h-5 w-5 mr-2" />
                         Add Surgery
                       </Button>
                     </div>
@@ -2194,10 +2217,22 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </Tabs>
           
           <div className="mt-8 flex justify-end space-x-4">
-            <Button type="button" variant="outline" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button type="submit">Save Medical Record</Button>
+            <div className="flex flex-col sm:flex-row gap-4 w-full">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={onCancel}
+                className="w-full sm:w-auto py-6 sm:py-2 text-lg sm:text-base"
+              >
+                Cancel
+              </Button>
+              <Button 
+                type="submit"
+                className="w-full sm:w-auto py-6 sm:py-2 text-lg sm:text-base"
+              >
+                Save Medical Record
+              </Button>
+            </div>
           </div>
         </form>
       </Form>

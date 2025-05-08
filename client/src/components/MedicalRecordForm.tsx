@@ -577,7 +577,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="md" 
                             className="p-2" 
                             onClick={() => removePhysicalPain(index)}
                           >
@@ -725,10 +724,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            className="p-2" 
                             onClick={() => removeTrauma(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         
@@ -894,10 +893,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            className="p-2" 
                             onClick={() => removeSurgery(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         
@@ -1178,10 +1177,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            className="p-2" 
                             onClick={() => removeClinicalExam(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         
@@ -1319,10 +1318,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            className="p-2" 
                             onClick={() => removeStandingTest(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         
@@ -1411,10 +1410,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <Button 
                             type="button" 
                             variant="ghost" 
-                            size="sm" 
+                            className="p-2" 
                             onClick={() => removeShoulderTest(index)}
                           >
-                            <Trash2 className="h-4 w-4 text-red-500" />
+                            <Trash2 className="h-5 w-5 text-red-500" />
                           </Button>
                         </div>
                         

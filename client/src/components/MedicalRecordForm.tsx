@@ -656,7 +656,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('physicalPains') || form.watch('physicalPains').length === 0) && (
+                    {(!form.watch('physicalPains') || form.watch('physicalPains')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No physical pains recorded. Click "Add Pain" to add one.
                       </div>
@@ -819,7 +819,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('traumaHistory') || form.watch('traumaHistory').length === 0) && (
+                    {(!form.watch('traumaHistory') || form.watch('traumaHistory')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No trauma history recorded. Click "Add Trauma" to add one.
                       </div>
@@ -982,7 +982,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     ))}
                     
-                    {(!form.watch('surgicalInterventions') || form.watch('surgicalInterventions').length === 0) && (
+                    {(!form.watch('surgicalInterventions') || form.watch('surgicalInterventions')?.length === 0) && (
                       <div className="text-center py-4 text-gray-500 italic">
                         No surgical interventions recorded. Click "Add Surgery" to add one.
                       </div>

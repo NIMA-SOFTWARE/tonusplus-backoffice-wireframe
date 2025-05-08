@@ -409,7 +409,7 @@ export class DatabaseStorage implements IStorage {
       const issues = data.respiratoryIssues.map(issue => ({
         medicalRecordId,
         condition: issue.condition,
-        diagnosisDate: issue.diagnosisDate,
+        diagnosisDate: issue.diagnosisDate ? new Date(issue.diagnosisDate) : undefined,
         treatment: issue.treatment,
         currentStatus: issue.currentStatus,
         additionalNotes: issue.additionalNotes
@@ -423,7 +423,7 @@ export class DatabaseStorage implements IStorage {
       const issues = data.circulatoryIssues.map(issue => ({
         medicalRecordId,
         condition: issue.condition,
-        diagnosisDate: issue.diagnosisDate,
+        diagnosisDate: issue.diagnosisDate ? new Date(issue.diagnosisDate) : undefined,
         treatment: issue.treatment,
         currentStatus: issue.currentStatus,
         additionalNotes: issue.additionalNotes
@@ -437,7 +437,7 @@ export class DatabaseStorage implements IStorage {
       const issues = data.digestiveIssues.map(issue => ({
         medicalRecordId,
         condition: issue.condition,
-        diagnosisDate: issue.diagnosisDate,
+        diagnosisDate: issue.diagnosisDate ? new Date(issue.diagnosisDate) : undefined,
         treatment: issue.treatment,
         currentStatus: issue.currentStatus,
         additionalNotes: issue.additionalNotes
@@ -457,7 +457,7 @@ export class DatabaseStorage implements IStorage {
       summary: data.summary,
       recommendations: data.recommendations,
       followUpNeeded: data.followUpNeeded,
-      followUpDate: data.followUpDate,
+      followUpDate: data.followUpDate ? new Date(data.followUpDate) : undefined,
       additionalNotes: data.additionalNotes
     });
     

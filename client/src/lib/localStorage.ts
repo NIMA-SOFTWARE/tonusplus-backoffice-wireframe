@@ -16,7 +16,23 @@ export interface MedicalRecord {
   customerId: string;
   createdAt: string;
   updatedAt: string;
-  formData: MedicalRecordFormData;
+  // Store each section separately rather than as a complete form
+  personalInfo?: {
+    name: string;
+    age: number;
+    gender: string;
+    contactNumber: string;
+    emergencyContact: string;
+  };
+  recurrentActivities?: MedicalRecordFormData['recurrentActivities'];
+  participationReason?: MedicalRecordFormData['participationReason'];
+  physicalPains?: MedicalRecordFormData['physicalPains'];
+  traumaHistory?: MedicalRecordFormData['traumaHistory'];
+  surgicalInterventions?: MedicalRecordFormData['surgicalInterventions'];
+  physiologicalHistory?: MedicalRecordFormData['physiologicalHistory'];
+  objectiveExamination?: MedicalRecordFormData['objectiveExamination'];
+  specificClinicalHistory?: MedicalRecordFormData['specificClinicalHistory'];
+  conclusions?: MedicalRecordFormData['conclusions'];
 }
 
 // Initialize localStorage with sample data if needed
@@ -336,14 +352,27 @@ export const createMedicalRecord = (
   formData: MedicalRecordFormData
 ): MedicalRecord => {
   const now = new Date().toISOString();
+  
+  // Separate each section of the medical record
   const newRecord: MedicalRecord = {
     id: Math.random().toString(36).substring(2, 12),
     participantId,
     sessionId,
     customerId,
-    formData,
     createdAt: now,
-    updatedAt: now
+    updatedAt: now,
+    
+    // Extract each section individually
+    personalInfo: formData.personalInfo,
+    recurrentActivities: formData.recurrentActivities,
+    participationReason: formData.participationReason,
+    physicalPains: formData.physicalPains,
+    traumaHistory: formData.traumaHistory,
+    surgicalInterventions: formData.surgicalInterventions,
+    physiologicalHistory: formData.physiologicalHistory,
+    objectiveExamination: formData.objectiveExamination,
+    specificClinicalHistory: formData.specificClinicalHistory,
+    conclusions: formData.conclusions
   };
   
   const allRecords = getAllMedicalRecords();
@@ -363,14 +392,52 @@ export const updateMedicalRecord = (
   
   if (!record) return null;
   
+  // Update each section individually if provided
   const updatedRecord: MedicalRecord = {
     ...record,
-    formData: {
-      ...record.formData,
-      ...formData
-    },
     updatedAt: new Date().toISOString()
   };
+  
+  // Conditionally update each section if provided in formData
+  if (formData.personalInfo) {
+    updatedRecord.personalInfo = formData.personalInfo;
+  }
+  
+  if (formData.recurrentActivities) {
+    updatedRecord.recurrentActivities = formData.recurrentActivities;
+  }
+  
+  if (formData.participationReason) {
+    updatedRecord.participationReason = formData.participationReason;
+  }
+  
+  if (formData.physicalPains) {
+    updatedRecord.physicalPains = formData.physicalPains;
+  }
+  
+  if (formData.traumaHistory) {
+    updatedRecord.traumaHistory = formData.traumaHistory;
+  }
+  
+  if (formData.surgicalInterventions) {
+    updatedRecord.surgicalInterventions = formData.surgicalInterventions;
+  }
+  
+  if (formData.physiologicalHistory) {
+    updatedRecord.physiologicalHistory = formData.physiologicalHistory;
+  }
+  
+  if (formData.objectiveExamination) {
+    updatedRecord.objectiveExamination = formData.objectiveExamination;
+  }
+  
+  if (formData.specificClinicalHistory) {
+    updatedRecord.specificClinicalHistory = formData.specificClinicalHistory;
+  }
+  
+  if (formData.conclusions) {
+    updatedRecord.conclusions = formData.conclusions;
+  }
   
   allRecords[id] = updatedRecord;
   localStorage.setItem(MEDICAL_RECORDS_KEY, JSON.stringify(allRecords));

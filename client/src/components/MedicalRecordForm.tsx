@@ -232,12 +232,37 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
       <Form {...form}>
         <form onSubmit={form.handleSubmit(handleSubmit)}>
           <Tabs value={currentTab} onValueChange={setCurrentTab} className="w-full">
-            <TabsList className="grid grid-cols-5 mb-8">
-              <TabsTrigger value="activities">Daily Activities</TabsTrigger>
-              <TabsTrigger value="health">Health History</TabsTrigger>
-              <TabsTrigger value="examination">Examination</TabsTrigger>
-              <TabsTrigger value="clinical">Clinical History</TabsTrigger>
-              <TabsTrigger value="conclusions">Conclusions</TabsTrigger>
+            <TabsList className="grid grid-cols-2 md:grid-cols-5 gap-2 mb-8">
+              <TabsTrigger 
+                value="activities"
+                className="text-sm md:text-base py-3 px-2"
+              >
+                Daily Activities
+              </TabsTrigger>
+              <TabsTrigger 
+                value="health"
+                className="text-sm md:text-base py-3 px-2"
+              >
+                Health History
+              </TabsTrigger>
+              <TabsTrigger 
+                value="examination"
+                className="text-sm md:text-base py-3 px-2"
+              >
+                Examination
+              </TabsTrigger>
+              <TabsTrigger 
+                value="clinical"
+                className="text-sm md:text-base py-3 px-2"
+              >
+                Clinical History
+              </TabsTrigger>
+              <TabsTrigger 
+                value="conclusions"
+                className="text-sm md:text-base py-3 px-2"
+              >
+                Conclusions
+              </TabsTrigger>
             </TabsList>
             
             {/* Section 2: Recurrent Activities */}

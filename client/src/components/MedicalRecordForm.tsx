@@ -15,6 +15,14 @@ import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Calendar } from "@/components/ui/calendar";
+import { Check, ChevronsUpDown } from "lucide-react";
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from "@/components/ui/command";
 import {
   Popover,
   PopoverContent,
@@ -486,38 +494,94 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       control={form.control}
                       name="participationReason.mainSymptoms"
                       render={({ field }) => (
-                        <FormItem>
+                        <FormItem className="flex flex-col">
                           <div className="mb-4">
                             <FormLabel className="text-base">Main Symptoms</FormLabel>
                             <FormDescription>
-                              Select the main symptoms or reasons for participating in this session
+                              Select or type the main symptoms or reasons for participating in this session
                             </FormDescription>
                           </div>
-                          <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                            {symptomsOptions.map((option) => (
-                              <FormItem
-                                key={option.id}
-                                className="flex flex-row items-start space-x-3 space-y-0"
-                              >
+                          
+                          {/* Autocomplete Input */}
+                          <div className="mb-4">
+                            <Popover>
+                              <PopoverTrigger asChild>
                                 <FormControl>
-                                  <Checkbox
-                                    checked={field.value?.includes(option.id)}
-                                    onCheckedChange={(checked) => {
-                                      const currentValue = field.value || [];
-                                      return checked
-                                        ? field.onChange([...currentValue, option.id])
-                                        : field.onChange(
-                                            currentValue.filter((value) => value !== option.id)
-                                          );
-                                    }}
-                                  />
+                                  <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    className={cn(
+                                      "w-full justify-between sm:py-2 py-6 text-left font-normal",
+                                      !field.value?.length && "text-muted-foreground"
+                                    )}
+                                  >
+                                    {field.value?.length 
+                                      ? `${field.value.length} symptom(s) selected`
+                                      : "Select or type symptoms"}
+                                    <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                  </Button>
                                 </FormControl>
-                                <FormLabel className="font-normal">
-                                  {option.label}
-                                </FormLabel>
-                              </FormItem>
-                            ))}
+                              </PopoverTrigger>
+                              <PopoverContent className="w-full p-0">
+                                <Command>
+                                  <CommandInput placeholder="Search symptoms..." className="h-9" />
+                                  <CommandEmpty>No symptoms found.</CommandEmpty>
+                                  <CommandGroup>
+                                    {symptomsOptions.map((option) => (
+                                      <CommandItem
+                                        key={option.id}
+                                        value={option.id}
+                                        onSelect={(value) => {
+                                          const currentValue = field.value || [];
+                                          const isSelected = currentValue.includes(value);
+                                          
+                                          if (isSelected) {
+                                            field.onChange(currentValue.filter((v) => v !== value));
+                                          } else {
+                                            field.onChange([...currentValue, value]);
+                                          }
+                                        }}
+                                      >
+                                        <Check
+                                          className={cn(
+                                            "mr-2 h-4 w-4",
+                                            field.value?.includes(option.id) ? "opacity-100" : "opacity-0"
+                                          )}
+                                        />
+                                        {option.label}
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </Command>
+                              </PopoverContent>
+                            </Popover>
                           </div>
+                          
+                          {/* Display selected symptoms as tags */}
+                          {field.value?.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {field.value.map((symptomId) => {
+                                const symptom = symptomsOptions.find(s => s.id === symptomId);
+                                return (
+                                  <div 
+                                    key={symptomId}
+                                    className="flex items-center gap-1 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm"
+                                  >
+                                    <span>{symptom?.label}</span>
+                                    <button
+                                      type="button"
+                                      className="text-blue-500 hover:text-blue-700"
+                                      onClick={() => {
+                                        field.onChange(field.value.filter(id => id !== symptomId));
+                                      }}
+                                    >
+                                      <X className="h-3 w-3" />
+                                    </button>
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          )}
                           <FormMessage />
                         </FormItem>
                       )}

@@ -1161,11 +1161,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addClinicalExam}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Exam
                       </Button>
                     </div>
@@ -1302,11 +1302,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addStandingTest}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Test
                       </Button>
                     </div>
@@ -1394,11 +1394,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addShoulderTest}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Test
                       </Button>
                     </div>
@@ -1486,11 +1486,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addHipTest}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Test
                       </Button>
                     </div>
@@ -1578,11 +1578,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addAnomaly}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Anomaly
                       </Button>
                     </div>
@@ -1683,11 +1683,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addRespiratoryIssue}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Issue
                       </Button>
                     </div>
@@ -1835,11 +1835,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addCirculatoryIssue}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Issue
                       </Button>
                     </div>
@@ -1987,11 +1987,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <Button 
                         type="button" 
                         variant="outline" 
-                        size="lg"
-                        className="text-base py-5 px-6" 
+                        size="default"
+                        className="text-base sm:text-sm sm:py-2 py-5 sm:px-4 px-6" 
                         onClick={addDigestiveIssue}
                       >
-                        <PlusCircle className="h-5 w-5 mr-2" />
+                        <PlusCircle className="h-5 w-5 sm:h-4 sm:w-4 mr-2" />
                         Add Issue
                       </Button>
                     </div>

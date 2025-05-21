@@ -28,7 +28,7 @@ const MedicalRecordModal: React.FC<MedicalRecordModalProps> = ({
   
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-[95vw] max-h-[95vh] overflow-y-auto p-0">
+      <DialogContent className="max-w-[100vw] w-[100vw] max-h-[100vh] h-[100vh] p-0 rounded-none border-none">
         <VisuallyHidden>
           <DialogTitle>Medical Record for {participant.name}</DialogTitle>
         </VisuallyHidden>

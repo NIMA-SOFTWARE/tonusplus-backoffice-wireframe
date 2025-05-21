@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useLocation } from 'wouter';
 import { PilatesSession, Participant } from '@shared/schema';
 import { format } from 'date-fns';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog';
@@ -11,7 +12,7 @@ import { usePilates } from '@/context/PilatesContext';
 import { formatTimeRange } from '@/lib/utils';
 import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle, 
   UserPlus, ChevronsDown, FileEdit, Trash2, ExternalLink, ArrowUpRight, Dumbbell, Home,
-  ClipboardCheck, FileText } from 'lucide-react';
+  ClipboardCheck, FileText, History } from 'lucide-react';
 import AddParticipantForm from '@/components/AddParticipantForm';
 import MedicalRecordModal from '@/components/MedicalRecordModal';
 
@@ -29,6 +30,7 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
   onEdit
 }) => {
   const { removeSession, editSession, cancelUserBooking, sessions } = usePilates();
+  const [, navigate] = useLocation();
   const [showAddParticipant, setShowAddParticipant] = useState(false);
   const [showAddWaitlist, setShowAddWaitlist] = useState(false);
   const [medicalRecordParticipant, setMedicalRecordParticipant] = useState<Participant | null>(null);
@@ -491,6 +493,19 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                                     >
                                       <FileText className="h-4 w-4 mr-1.5" />
                                       Medical Record
+                                    </Button>
+                                    <Button 
+                                      variant="outline" 
+                                      size="sm"
+                                      onClick={() => {
+                                        // Assuming participant.id contains the customer ID
+                                        navigate(`/client-medical-records/${participant.id}`);
+                                        onClose(); // Close the modal after navigation
+                                      }}
+                                      className="h-8 text-indigo-600 hover:text-indigo-800 hover:bg-indigo-50 border-indigo-200"
+                                    >
+                                      <History className="h-4 w-4 mr-1.5" />
+                                      Medical History
                                     </Button>
                                     <Button 
                                       variant="ghost" 

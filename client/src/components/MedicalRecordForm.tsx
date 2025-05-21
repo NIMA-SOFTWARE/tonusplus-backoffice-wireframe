@@ -6664,178 +6664,63 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       Select the exercises performed with the client during this session:
                     </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {/* Breathing Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Breathing Exercises"
-                          placeholder="Select breathing exercises..."
-                          options={[
-                            "Diaphragmatic Breathing",
-                            "Lateral Costal Breathing",
-                            "Alternate Nostril Breathing",
-                            "Box Breathing",
-                            "Pursed Lip Breathing"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["Diaphragmatic Breathing", "Lateral Costal Breathing", "Alternate Nostril Breathing", 
-                             "Box Breathing", "Pursed Lip Breathing"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            // Remove existing breathing exercises and add new ones
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["Diaphragmatic Breathing", "Lateral Costal Breathing", "Alternate Nostril Breathing", 
-                                "Box Breathing", "Pursed Lip Breathing"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
-                      
-                      {/* Mobility Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Mobility Exercises"
-                          placeholder="Select mobility exercises..."
-                          options={[
-                            "Thoracic Spine Mobility",
-                            "Hip Mobility",
-                            "Shoulder Mobility",
-                            "Ankle Mobility",
-                            "Neck Mobility",
-                            "Wrist Mobility"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["Thoracic Spine Mobility", "Hip Mobility", "Shoulder Mobility", 
-                             "Ankle Mobility", "Neck Mobility", "Wrist Mobility"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["Thoracic Spine Mobility", "Hip Mobility", "Shoulder Mobility", 
-                                "Ankle Mobility", "Neck Mobility", "Wrist Mobility"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
-                      
-                      {/* Stability Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Stability Exercises"
-                          placeholder="Select stability exercises..."
-                          options={[
-                            "Core Activation",
-                            "Pelvic Floor Activation",
-                            "Balance Exercises",
-                            "Posture Stability",
-                            "Scapular Stabilization"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["Core Activation", "Pelvic Floor Activation", "Balance Exercises", 
-                             "Posture Stability", "Scapular Stabilization"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["Core Activation", "Pelvic Floor Activation", "Balance Exercises", 
-                                "Posture Stability", "Scapular Stabilization"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
-                      
-                      {/* Equipment Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Pilates Equipment"
-                          placeholder="Select equipment exercises..."
-                          options={[
-                            "Reformer Exercises",
-                            "Cadillac Exercises",
-                            "Chair Exercises",
-                            "Barrel Exercises",
-                            "Tower Exercises"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["Reformer Exercises", "Cadillac Exercises", "Chair Exercises", 
-                             "Barrel Exercises", "Tower Exercises"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["Reformer Exercises", "Cadillac Exercises", "Chair Exercises", 
-                                "Barrel Exercises", "Tower Exercises"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
-                      
-                      {/* Mat Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Mat Exercises"
-                          placeholder="Select mat exercises..."
-                          options={[
-                            "The Hundred",
-                            "Roll-Up",
-                            "Spine Twist",
-                            "Side Kicks",
-                            "Swan Dive",
-                            "The Teaser",
-                            "The Seal"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["The Hundred", "Roll-Up", "Spine Twist", "Side Kicks", 
-                             "Swan Dive", "The Teaser", "The Seal"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["The Hundred", "Roll-Up", "Spine Twist", "Side Kicks", 
-                                "Swan Dive", "The Teaser", "The Seal"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
-                      
-                      {/* Therapeutic Exercises */}
-                      <div>
-                        <TagSelectionInput
-                          label="Therapeutic"
-                          placeholder="Select therapeutic exercises..."
-                          options={[
-                            "Fascial Release",
-                            "Postural Alignment",
-                            "Gait Training",
-                            "Joint Mobilization",
-                            "Myofascial Release"
-                          ]}
-                          selectedTags={selectedExercises.filter(ex => 
-                            ["Fascial Release", "Postural Alignment", "Gait Training", 
-                             "Joint Mobilization", "Myofascial Release"].includes(ex)
-                          )}
-                          onTagsChange={(tags) => {
-                            const filteredExercises = selectedExercises.filter(ex => 
-                              !["Fascial Release", "Postural Alignment", "Gait Training", 
-                                "Joint Mobilization", "Myofascial Release"].includes(ex)
-                            );
-                            setSelectedExercises([...filteredExercises, ...tags]);
-                          }}
-                          allowCustomTags={true}
-                          className="w-full"
-                        />
-                      </div>
+                    {/* Single combined exercises combobox */}
+                    <div>
+                      <TagSelectionInput
+                        label="Exercises"
+                        placeholder="Search and select exercises..."
+                        options={[
+                          // Breathing Exercises
+                          "Diaphragmatic Breathing",
+                          "Lateral Costal Breathing",
+                          "Alternate Nostril Breathing",
+                          "Box Breathing",
+                          "Pursed Lip Breathing",
+                          
+                          // Mobility Exercises
+                          "Thoracic Spine Mobility",
+                          "Hip Mobility",
+                          "Shoulder Mobility",
+                          "Ankle Mobility",
+                          "Neck Mobility",
+                          "Wrist Mobility",
+                          
+                          // Stability Exercises
+                          "Core Activation",
+                          "Pelvic Floor Activation",
+                          "Balance Exercises",
+                          "Posture Stability",
+                          "Scapular Stabilization",
+                          
+                          // Equipment Exercises
+                          "Reformer Exercises",
+                          "Cadillac Exercises",
+                          "Chair Exercises",
+                          "Barrel Exercises",
+                          "Tower Exercises",
+                          
+                          // Mat Exercises
+                          "The Hundred",
+                          "Roll-Up",
+                          "Spine Twist",
+                          "Side Kicks",
+                          "Swan Dive",
+                          "The Teaser",
+                          "The Seal",
+                          
+                          // Therapeutic Exercises
+                          "Fascial Release",
+                          "Postural Alignment",
+                          "Gait Training",
+                          "Joint Mobilization",
+                          "Myofascial Release"
+                        ]}
+                        selectedTags={selectedExercises}
+                        onTagsChange={setSelectedExercises}
+                        allowCustomTags={true}
+                        voiceEnabled={voiceInputEnabled}
+                        className="w-full"
+                      />
                     </div>
                     
                     {/* Selected Exercises Summary */}

@@ -222,6 +222,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         type="checkbox" 
                         id="is-active"
                         className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                        onChange={(e) => {
+                          // Targeting the next sibling element for toggling visibility
+                          const trainingFields = e.target.closest('.space-y-3').querySelector('.training-fields');
+                          if (trainingFields) {
+                            if (e.target.checked) {
+                              trainingFields.classList.remove('hidden');
+                            } else {
+                              trainingFields.classList.add('hidden');
+                            }
+                          }
+                        }}
                       />
                       <label 
                         htmlFor="is-active"
@@ -232,7 +243,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                     
                     {/* These fields will be conditionally shown when checkbox is checked */}
-                    <div className="pl-6 pt-2 space-y-4 border-l-2 border-gray-200">
+                    <div className="pl-6 pt-2 space-y-4 border-l-2 border-gray-200 training-fields hidden">
                       <div>
                         <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Trainings per week</label>
                         <input

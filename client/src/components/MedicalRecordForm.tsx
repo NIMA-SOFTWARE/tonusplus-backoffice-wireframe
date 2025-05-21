@@ -2824,20 +2824,82 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       Add
                     </button>
                   </div>
+                </div>
+              </div>
+              
+              {/* Eye System: Visual Disorders and Diseases */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Eye System: Visual Disorders and Diseases
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Visual Information</h5>
                   
-
+                  {/* Vision Correction Options */}
+                  <div className="mb-3 space-y-2">
+                    <div className="flex items-center">
+                      <input 
+                        type="checkbox" 
+                        id="wears-glasses"
+                        checked={wearGlasses}
+                        onChange={(e) => setWearGlasses(e.target.checked)}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label htmlFor="wears-glasses" className="ml-2 text-sm text-gray-700">
+                        Wears glasses
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input 
+                        type="checkbox" 
+                        id="wears-contacts"
+                        checked={wearContactLenses}
+                        onChange={(e) => setWearContactLenses(e.target.checked)}
+                        className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label htmlFor="wears-contacts" className="ml-2 text-sm text-gray-700">
+                        Wears contact lenses
+                      </label>
+                    </div>
+                  </div>
                   
-                  {/* Menstrual Cycle Input - Only shown for females */}
-                  {isFemale && (
-                    <div className="mt-6 mb-4">
-                      <div className="flex items-center">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                          MENSTRUAL CYCLE
-                        </label>
-                        <span className="ml-2 text-xs text-blue-600 inline-block px-2 py-1 bg-blue-50 rounded">
-                          Female-specific information
-                        </span>
+                  {/* Visual disorders notes */}
+                  <div className="relative">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Additional Visual Information
+                    </label>
+                    <textarea
+                      value={visualDisorderNotes}
+                      onChange={(e) => setVisualDisorderNotes(e.target.value)}
+                      placeholder="Additional information about visual disorders, conditions, or treatments..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-[80px]"
+                    ></textarea>
+                    {voiceInputEnabled && (
+                      <div className="absolute right-2 top-10">
+                        <VoiceInputButton 
+                          onTranscriptionComplete={(text) => {
+                            const newValue = visualDisorderNotes ? `${visualDisorderNotes} ${text}` : text;
+                            setVisualDisorderNotes(newValue);
+                          }}
+                        />
                       </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              {/* Menstrual Cycle Input - Only shown for females */}
+              {isFemale && (
+                <div className="mt-6 mb-4">
+                  <div className="flex items-center">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      MENSTRUAL CYCLE
+                    </label>
+                    <span className="ml-2 text-xs text-blue-600 inline-block px-2 py-1 bg-blue-50 rounded">
+                      Female-specific information
+                    </span>
+                  </div>
                       <div className="flex items-center">
                         <input
                           type="number"
@@ -3148,7 +3210,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   </div>
                 </div>
               </div>
-
             </div>
           </AccordionContent>
         </AccordionItem>

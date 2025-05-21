@@ -48,8 +48,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
               {/* Combined Patient & Session Information */}
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-3">
-                  {/* Patient Information - Read-only displays */}
-                  <div className="col-span-2">
+                  {/* Patient Information - Read-only displays - First row */}
+                  <div>
                     <span className="text-xs font-medium text-gray-500 uppercase">Patient</span>
                     <p className="text-sm font-medium text-gray-800">{participant.name}</p>
                   </div>
@@ -64,6 +64,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <p className="text-sm text-gray-800">{participant.phone || "Not provided"}</p>
                   </div>
                   
+                  {/* Patient Information - Second row */}
                   <div>
                     <span className="text-xs font-medium text-gray-500 uppercase">Date of Birth</span>
                     <p className="text-sm text-gray-800">Not available</p>
@@ -84,7 +85,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <div className="border-t border-gray-200"></div>
                   </div>
                   
-                  {/* Session information - Always inputs with pre-filled values when available */}
+                  {/* Session information row */}
                   <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase">Session Date</label>
                     <input 
@@ -103,12 +104,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     />
                   </div>
                   
-                  <div className="col-span-2 mt-2">
+                  <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase">Location</label>
                     <div className="relative">
                       <input 
                         type="text"
-                        placeholder="Select session location"
+                        placeholder="Select location"
                         className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                       />
                       <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">

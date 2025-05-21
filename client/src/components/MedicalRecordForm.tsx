@@ -73,6 +73,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   
   // Surgical interventions state
   const [surgicalInterventions, setSurgicalInterventions] = useState('');
+  const [osteosynthesisMaterials, setOsteosynthesisMaterials] = useState('');
   
   // Interface for surgical interventions entries
   interface SurgicalIntervention {
@@ -1676,6 +1677,20 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     >
                       Add
                     </button>
+                  </div>
+                  
+                  {/* Osteosynthesis materials textarea */}
+                  <div className="mt-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Osteosynthesis Materials</label>
+                    <VoiceEnabledInput
+                      value={osteosynthesisMaterials}
+                      onChange={setOsteosynthesisMaterials}
+                      placeholder="Enter details about osteosynthesis materials (screws, plates, prostheses, etc.)"
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      isTextarea={true}
+                      rows={3}
+                      voiceEnabled={voiceInputEnabled}
+                    />
                   </div>
                 </div>
               </div>

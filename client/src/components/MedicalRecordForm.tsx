@@ -195,6 +195,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [toothStatus, setToothStatus] = useState<ToothStatus>({});
   
+  // State for Teeth Orientation by Sector
+  interface TeethOrientationBySector {
+    [key: string]: string; // sector key (e.g., "posterior-right"), orientation as value
+  }
+  const [teethOrientation, setTeethOrientation] = useState<TeethOrientationBySector>({});
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4292,9 +4298,151 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   ORIENTATION OF TEETH IN DIFFERENT SECTORS
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <p className="text-sm text-gray-700 italic">
-                    This section is for reference only - no inputs required
-                  </p>
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Dental Arch Orientation by Sector</h5>
+                  
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-2">
+                      Select orientation for each sector by clicking on the corresponding cell
+                    </p>
+                    
+                    {/* Legend for orientation options */}
+                    <div className="grid grid-cols-3 gap-2 mb-4 text-xs">
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-blue-100 border border-blue-500 mr-1 flex items-center justify-center text-blue-700 font-bold">
+                          N
+                        </div>
+                        <span>Normal</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-yellow-100 border border-yellow-500 mr-1 flex items-center justify-center text-yellow-700 font-bold">
+                          V
+                        </div>
+                        <span>Vestibular</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-green-100 border border-green-500 mr-1 flex items-center justify-center text-green-700 font-bold">
+                          P
+                        </div>
+                        <span>Palatine</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-red-100 border border-red-500 mr-1 flex items-center justify-center text-red-700 font-bold">
+                          L
+                        </div>
+                        <span>Lingual</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-purple-100 border border-purple-500 mr-1 flex items-center justify-center text-purple-700 font-bold">
+                          M
+                        </div>
+                        <span>Mesial</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-orange-100 border border-orange-500 mr-1 flex items-center justify-center text-orange-700 font-bold">
+                          D
+                        </div>
+                        <span>Distal</span>
+                      </div>
+                    </div>
+                    
+                    {/* Upper Arch */}
+                    <div className="mb-4">
+                      <h6 className="text-xs font-medium text-gray-600 mb-2">Upper Arch</h6>
+                      <div className="flex justify-center">
+                        <div className="grid grid-cols-3 gap-2 w-full">
+                          {[
+                            { id: 'upper-posterior-right', label: 'Posterior Right (17-18)' },
+                            { id: 'upper-medial-right', label: 'Medial Right (14-16)' },
+                            { id: 'upper-anterior-right', label: 'Anterior Right (11-13)' },
+                            { id: 'upper-anterior-left', label: 'Anterior Left (21-23)' },
+                            { id: 'upper-medial-left', label: 'Medial Left (24-26)' },
+                            { id: 'upper-posterior-left', label: 'Posterior Left (27-28)' },
+                          ].map((sector, index) => (
+                            <div key={sector.id} className={`${index >= 3 ? 'col-start-' + (index - 2) : ''}`}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const orientationOptions = ['N', 'V', 'P', 'L', 'M', 'D', ''];
+                                  const currentOrientation = teethOrientation[sector.id] || '';
+                                  const currentIndex = orientationOptions.indexOf(currentOrientation);
+                                  const nextIndex = (currentIndex + 1) % orientationOptions.length;
+                                  const newOrientation = orientationOptions[nextIndex];
+                                  
+                                  setTeethOrientation({
+                                    ...teethOrientation,
+                                    [sector.id]: newOrientation
+                                  });
+                                }}
+                                className={`w-full h-12 border flex flex-col items-center justify-center ${
+                                  !teethOrientation[sector.id] ? 'border-gray-300 bg-white' :
+                                  teethOrientation[sector.id] === 'N' ? 'border-blue-500 bg-blue-100' :
+                                  teethOrientation[sector.id] === 'V' ? 'border-yellow-500 bg-yellow-100' :
+                                  teethOrientation[sector.id] === 'P' ? 'border-green-500 bg-green-100' :
+                                  teethOrientation[sector.id] === 'L' ? 'border-red-500 bg-red-100' :
+                                  teethOrientation[sector.id] === 'M' ? 'border-purple-500 bg-purple-100' :
+                                  'border-orange-500 bg-orange-100'
+                                } rounded-md text-xs font-medium`}
+                              >
+                                <span className="text-gray-600">{sector.label}</span>
+                                {teethOrientation[sector.id] && (
+                                  <span className="text-sm font-bold mt-1">{teethOrientation[sector.id]}</span>
+                                )}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {/* Lower Arch */}
+                    <div>
+                      <h6 className="text-xs font-medium text-gray-600 mb-2">Lower Arch</h6>
+                      <div className="flex justify-center">
+                        <div className="grid grid-cols-3 gap-2 w-full">
+                          {[
+                            { id: 'lower-posterior-right', label: 'Posterior Right (47-48)' },
+                            { id: 'lower-medial-right', label: 'Medial Right (44-46)' },
+                            { id: 'lower-anterior-right', label: 'Anterior Right (41-43)' },
+                            { id: 'lower-anterior-left', label: 'Anterior Left (31-33)' },
+                            { id: 'lower-medial-left', label: 'Medial Left (34-36)' },
+                            { id: 'lower-posterior-left', label: 'Posterior Left (37-38)' },
+                          ].map((sector, index) => (
+                            <div key={sector.id} className={`${index >= 3 ? 'col-start-' + (index - 2) : ''}`}>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  const orientationOptions = ['N', 'V', 'P', 'L', 'M', 'D', ''];
+                                  const currentOrientation = teethOrientation[sector.id] || '';
+                                  const currentIndex = orientationOptions.indexOf(currentOrientation);
+                                  const nextIndex = (currentIndex + 1) % orientationOptions.length;
+                                  const newOrientation = orientationOptions[nextIndex];
+                                  
+                                  setTeethOrientation({
+                                    ...teethOrientation,
+                                    [sector.id]: newOrientation
+                                  });
+                                }}
+                                className={`w-full h-12 border flex flex-col items-center justify-center ${
+                                  !teethOrientation[sector.id] ? 'border-gray-300 bg-white' :
+                                  teethOrientation[sector.id] === 'N' ? 'border-blue-500 bg-blue-100' :
+                                  teethOrientation[sector.id] === 'V' ? 'border-yellow-500 bg-yellow-100' :
+                                  teethOrientation[sector.id] === 'P' ? 'border-green-500 bg-green-100' :
+                                  teethOrientation[sector.id] === 'L' ? 'border-red-500 bg-red-100' :
+                                  teethOrientation[sector.id] === 'M' ? 'border-purple-500 bg-purple-100' :
+                                  'border-orange-500 bg-orange-100'
+                                } rounded-md text-xs font-medium`}
+                              >
+                                <span className="text-gray-600">{sector.label}</span>
+                                {teethOrientation[sector.id] && (
+                                  <span className="text-sm font-bold mt-1">{teethOrientation[sector.id]}</span>
+                                )}
+                              </button>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 

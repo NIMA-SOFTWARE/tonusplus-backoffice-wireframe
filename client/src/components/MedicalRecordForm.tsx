@@ -107,6 +107,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for stool form options
   const [stoolForms, setStoolForms] = useState<string[]>([]);
   
+  // State for daily hydration (in liters)
+  const [dailyHydration, setDailyHydration] = useState<string>('');
+  
   // Interface and state for urogenital system diseases/dysfunctions
   interface UrogenitalDisease {
     type: string;
@@ -2343,6 +2346,26 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           className="ml-1 text-sm p-1 border border-gray-300 rounded-md w-40"
                         />
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Daily Hydration Input */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Daily Hydration (liters)
+                    </label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        id="daily-hydration"
+                        min="0"
+                        step="0.1"
+                        value={dailyHydration}
+                        onChange={(e) => setDailyHydration(e.target.value)}
+                        placeholder="Enter amount"
+                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">liters</span>
                     </div>
                   </div>
                   

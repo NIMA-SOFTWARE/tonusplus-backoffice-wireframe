@@ -1721,59 +1721,149 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   {/* Existing anatomical anomalies */}
                   {anatomicalAnomalies.map((anomaly, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
-                      <select
-                        value={anomaly.location}
-                        onChange={(e) => {
-                          const updatedAnomalies = [...anatomicalAnomalies];
-                          updatedAnomalies[index].location = e.target.value;
-                          setAnatomicalAnomalies(updatedAnomalies);
-                        }}
-                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select location</option>
-                        <option value="Back">Back</option>
-                        <option value="Spine">Spine</option>
-                        <option value="Shoulder">Shoulder</option>
-                        <option value="Arm">Arm</option>
-                        <option value="Elbow">Elbow</option>
-                        <option value="Forearm">Forearm</option>
-                        <option value="Wrist">Wrist</option>
-                        <option value="Hand">Hand</option>
-                        <option value="Fingers">Fingers</option>
-                        <option value="Hip">Hip</option>
-                        <option value="Thigh">Thigh</option>
-                        <option value="Knee">Knee</option>
-                        <option value="Calf">Calf</option>
-                        <option value="Ankle">Ankle</option>
-                        <option value="Foot">Foot</option>
-                        <option value="Toes">Toes</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      <select
-                        value={anomaly.type}
-                        onChange={(e) => {
-                          const updatedAnomalies = [...anatomicalAnomalies];
-                          updatedAnomalies[index].type = e.target.value;
-                          setAnatomicalAnomalies(updatedAnomalies);
-                        }}
-                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select type</option>
-                        <option value="Scoliosis">Scoliosis</option>
-                        <option value="Kyphosis">Kyphosis</option>
-                        <option value="Lordosis">Lordosis</option>
-                        <option value="Leg length discrepancy">Leg length discrepancy</option>
-                        <option value="Pelvic tilt">Pelvic tilt</option>
-                        <option value="Flat feet">Flat feet</option>
-                        <option value="High arch">High arch</option>
-                        <option value="Knock knees">Knock knees</option>
-                        <option value="Bow legs">Bow legs</option>
-                        <option value="Limited range of motion">Limited range of motion</option>
-                        <option value="Joint hypermobility">Joint hypermobility</option>
-                        <option value="Congenital anomaly">Congenital anomaly</option>
-                        <option value="Postural deviation">Postural deviation</option>
-                        <option value="Other">Other</option>
-                      </select>
+                      {anomaly.location === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={anomaly.location}
+                            onChange={(e) => {
+                              const updatedAnomalies = [...anatomicalAnomalies];
+                              updatedAnomalies[index].location = e.target.value;
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select location</option>
+                            <option value="Back">Back</option>
+                            <option value="Spine">Spine</option>
+                            <option value="Shoulder">Shoulder</option>
+                            <option value="Arm">Arm</option>
+                            <option value="Elbow">Elbow</option>
+                            <option value="Forearm">Forearm</option>
+                            <option value="Wrist">Wrist</option>
+                            <option value="Hand">Hand</option>
+                            <option value="Fingers">Fingers</option>
+                            <option value="Hip">Hip</option>
+                            <option value="Thigh">Thigh</option>
+                            <option value="Knee">Knee</option>
+                            <option value="Calf">Calf</option>
+                            <option value="Ankle">Ankle</option>
+                            <option value="Foot">Foot</option>
+                            <option value="Toes">Toes</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify location"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={anomaly.observation.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedAnomalies = [...anatomicalAnomalies];
+                              const parts = anomaly.observation.split('|');
+                              parts[0] = e.target.value;
+                              updatedAnomalies[index].observation = parts.join('|');
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={anomaly.location}
+                          onChange={(e) => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies[index].location = e.target.value;
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select location</option>
+                          <option value="Back">Back</option>
+                          <option value="Spine">Spine</option>
+                          <option value="Shoulder">Shoulder</option>
+                          <option value="Arm">Arm</option>
+                          <option value="Elbow">Elbow</option>
+                          <option value="Forearm">Forearm</option>
+                          <option value="Wrist">Wrist</option>
+                          <option value="Hand">Hand</option>
+                          <option value="Fingers">Fingers</option>
+                          <option value="Hip">Hip</option>
+                          <option value="Thigh">Thigh</option>
+                          <option value="Knee">Knee</option>
+                          <option value="Calf">Calf</option>
+                          <option value="Ankle">Ankle</option>
+                          <option value="Foot">Foot</option>
+                          <option value="Toes">Toes</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                      
+                      {anomaly.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={anomaly.type}
+                            onChange={(e) => {
+                              const updatedAnomalies = [...anatomicalAnomalies];
+                              updatedAnomalies[index].type = e.target.value;
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select type</option>
+                            <option value="Scoliosis">Scoliosis</option>
+                            <option value="Kyphosis">Kyphosis</option>
+                            <option value="Lordosis">Lordosis</option>
+                            <option value="Leg length discrepancy">Leg length discrepancy</option>
+                            <option value="Pelvic tilt">Pelvic tilt</option>
+                            <option value="Flat feet">Flat feet</option>
+                            <option value="High arch">High arch</option>
+                            <option value="Knock knees">Knock knees</option>
+                            <option value="Bow legs">Bow legs</option>
+                            <option value="Limited range of motion">Limited range of motion</option>
+                            <option value="Joint hypermobility">Joint hypermobility</option>
+                            <option value="Congenital anomaly">Congenital anomaly</option>
+                            <option value="Postural deviation">Postural deviation</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify type"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={anomaly.observation.split('|')[1] || ''}
+                            onChange={(e) => {
+                              const updatedAnomalies = [...anatomicalAnomalies];
+                              const parts = anomaly.observation.split('|');
+                              parts[1] = e.target.value;
+                              updatedAnomalies[index].observation = parts.join('|');
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={anomaly.type}
+                          onChange={(e) => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies[index].type = e.target.value;
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select type</option>
+                          <option value="Scoliosis">Scoliosis</option>
+                          <option value="Kyphosis">Kyphosis</option>
+                          <option value="Lordosis">Lordosis</option>
+                          <option value="Leg length discrepancy">Leg length discrepancy</option>
+                          <option value="Pelvic tilt">Pelvic tilt</option>
+                          <option value="Flat feet">Flat feet</option>
+                          <option value="High arch">High arch</option>
+                          <option value="Knock knees">Knock knees</option>
+                          <option value="Bow legs">Bow legs</option>
+                          <option value="Limited range of motion">Limited range of motion</option>
+                          <option value="Joint hypermobility">Joint hypermobility</option>
+                          <option value="Congenital anomaly">Congenital anomaly</option>
+                          <option value="Postural deviation">Postural deviation</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
                       <input
                         type="text"
                         value={anomaly.observation}
@@ -1800,11 +1890,27 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   ))}
                   
                   {/* Add new anatomical anomaly */}
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-2" id="new-anomaly-container">
                     <select
                       id="anomaly-location"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                       defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-anomaly-container');
+                        const customLocationInput = document.getElementById('anomaly-location-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customLocationInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'anomaly-location-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify location';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('anomaly-type'));
+                        } else if (e.target.value !== 'Other' && customLocationInput) {
+                          customLocationInput.remove();
+                        }
+                      }}
                     >
                       <option value="" disabled>Select location</option>
                       <option value="Back">Back</option>
@@ -1829,6 +1935,22 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       id="anomaly-type"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                       defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-anomaly-container');
+                        const customTypeInput = document.getElementById('anomaly-type-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customTypeInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'anomaly-type-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify type';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('anomaly-observation'));
+                        } else if (e.target.value !== 'Other' && customTypeInput) {
+                          customTypeInput.remove();
+                        }
+                      }}
                     >
                       <option value="" disabled>Select type</option>
                       <option value="Scoliosis">Scoliosis</option>
@@ -1855,24 +1977,45 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <button
                       className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                       onClick={() => {
-                        const locationInput = document.getElementById('anomaly-location') as HTMLInputElement;
-                        const typeInput = document.getElementById('anomaly-type') as HTMLInputElement;
+                        const locationSelect = document.getElementById('anomaly-location') as HTMLSelectElement;
+                        const typeSelect = document.getElementById('anomaly-type') as HTMLSelectElement;
                         const observationInput = document.getElementById('anomaly-observation') as HTMLInputElement;
+                        const locationCustomInput = document.getElementById('anomaly-location-custom') as HTMLInputElement;
+                        const typeCustomInput = document.getElementById('anomaly-type-custom') as HTMLInputElement;
                         
-                        if (locationInput && locationInput.value.trim()) {
+                        if (locationSelect && locationSelect.value) {
+                          let location = locationSelect.value;
+                          let type = typeSelect ? typeSelect.value : '';
+                          let observation = observationInput ? observationInput.value.trim() : '';
+                          
+                          // If "Other" is selected, use the custom input values
+                          if (location === "Other" && locationCustomInput && locationCustomInput.value.trim()) {
+                            // Store the custom location name in the observation field with a special separator
+                            observation = `custom_location:${locationCustomInput.value.trim()}|${observation}`;
+                          }
+                          
+                          if (type === "Other" && typeCustomInput && typeCustomInput.value.trim()) {
+                            // Store the custom type name in the observation field with a special separator
+                            observation = `${observation}|custom_type:${typeCustomInput.value.trim()}`;
+                          }
+                          
                           setAnatomicalAnomalies([
                             ...anatomicalAnomalies,
                             {
-                              location: locationInput.value.trim(),
-                              type: typeInput ? typeInput.value.trim() : '',
-                              observation: observationInput ? observationInput.value.trim() : ''
+                              location: location,
+                              type: type,
+                              observation: observation
                             }
                           ]);
                           
                           // Reset inputs
-                          if (locationInput) locationInput.value = '';
-                          if (typeInput) typeInput.value = '';
+                          locationSelect.selectedIndex = 0;
+                          if (typeSelect) typeSelect.selectedIndex = 0;
                           if (observationInput) observationInput.value = '';
+                          
+                          // Remove custom inputs if they exist
+                          if (locationCustomInput) locationCustomInput.remove();
+                          if (typeCustomInput) typeCustomInput.remove();
                         }
                       }}
                     >
@@ -1908,40 +2051,92 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   {/* Existing pathologies */}
                   {pathologies.map((pathology, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
-                      <select
-                        value={pathology.type}
-                        onChange={(e) => {
-                          const updatedPathologies = [...pathologies];
-                          updatedPathologies[index].type = e.target.value;
-                          setPathologies(updatedPathologies);
-                        }}
-                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select pathology</option>
-                        <option value="Hypertension">Hypertension</option>
-                        <option value="Hypotension">Hypotension</option>
-                        <option value="Arrhythmia">Arrhythmia</option>
-                        <option value="Coronary artery disease">Coronary artery disease</option>
-                        <option value="Heart failure">Heart failure</option>
-                        <option value="Valvular heart disease">Valvular heart disease</option>
-                        <option value="Peripheral vascular disease">Peripheral vascular disease</option>
-                        <option value="Deep vein thrombosis">Deep vein thrombosis</option>
-                        <option value="Asthma">Asthma</option>
-                        <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
-                        <option value="Emphysema">Emphysema</option>
-                        <option value="Bronchitis">Bronchitis</option>
-                        <option value="Pneumonia">Pneumonia</option>
-                        <option value="Pleural effusion">Pleural effusion</option>
-                        <option value="Pulmonary embolism">Pulmonary embolism</option>
-                        <option value="Sleep apnea">Sleep apnea</option>
-                        <option value="Other">Other</option>
-                      </select>
+                      {pathology.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={pathology.type}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              updatedPathologies[index].type = e.target.value;
+                              setPathologies(updatedPathologies);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select pathology</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Hypotension">Hypotension</option>
+                            <option value="Arrhythmia">Arrhythmia</option>
+                            <option value="Coronary artery disease">Coronary artery disease</option>
+                            <option value="Heart failure">Heart failure</option>
+                            <option value="Valvular heart disease">Valvular heart disease</option>
+                            <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                            <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                            <option value="Asthma">Asthma</option>
+                            <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                            <option value="Emphysema">Emphysema</option>
+                            <option value="Bronchitis">Bronchitis</option>
+                            <option value="Pneumonia">Pneumonia</option>
+                            <option value="Pleural effusion">Pleural effusion</option>
+                            <option value="Pulmonary embolism">Pulmonary embolism</option>
+                            <option value="Sleep apnea">Sleep apnea</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify pathology"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={pathology.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              const parts = pathology.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedPathologies[index].notes = parts.join('|');
+                              setPathologies(updatedPathologies);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={pathology.type}
+                          onChange={(e) => {
+                            const updatedPathologies = [...pathologies];
+                            updatedPathologies[index].type = e.target.value;
+                            setPathologies(updatedPathologies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select pathology</option>
+                          <option value="Hypertension">Hypertension</option>
+                          <option value="Hypotension">Hypotension</option>
+                          <option value="Arrhythmia">Arrhythmia</option>
+                          <option value="Coronary artery disease">Coronary artery disease</option>
+                          <option value="Heart failure">Heart failure</option>
+                          <option value="Valvular heart disease">Valvular heart disease</option>
+                          <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                          <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                          <option value="Asthma">Asthma</option>
+                          <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                          <option value="Emphysema">Emphysema</option>
+                          <option value="Bronchitis">Bronchitis</option>
+                          <option value="Pneumonia">Pneumonia</option>
+                          <option value="Pleural effusion">Pleural effusion</option>
+                          <option value="Pulmonary embolism">Pulmonary embolism</option>
+                          <option value="Sleep apnea">Sleep apnea</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
                       <input
                         type="text"
-                        value={pathology.notes}
+                        value={pathology.type === "Other" ? (pathology.notes.split('|')[1] || '') : pathology.notes}
                         onChange={(e) => {
                           const updatedPathologies = [...pathologies];
-                          updatedPathologies[index].notes = e.target.value;
+                          if (pathology.type === "Other") {
+                            const parts = pathology.notes.split('|');
+                            parts[1] = e.target.value;
+                            updatedPathologies[index].notes = parts.join('|');
+                          } else {
+                            updatedPathologies[index].notes = e.target.value;
+                          }
                           setPathologies(updatedPathologies);
                         }}
                         placeholder="Notes"
@@ -1962,11 +2157,27 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   ))}
                   
                   {/* Add new pathology */}
-                  <div className="flex items-center gap-2 mb-2">
+                  <div className="flex items-center gap-2 mb-2" id="new-pathology-container">
                     <select
                       id="pathology-type"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                       defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-pathology-container');
+                        const customInput = document.getElementById('pathology-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'pathology-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify pathology';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('pathology-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
                     >
                       <option value="" disabled>Select pathology</option>
                       <option value="Hypertension">Hypertension</option>
@@ -1998,19 +2209,33 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       onClick={() => {
                         const typeSelect = document.getElementById('pathology-type') as HTMLSelectElement;
                         const notesInput = document.getElementById('pathology-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('pathology-custom') as HTMLInputElement;
                         
                         if (typeSelect && typeSelect.value) {
+                          let pathologyType = typeSelect.value;
+                          let pathologyNotes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, include the custom type in the notes with a separator
+                          if (pathologyType === "Other" && customInput && customInput.value) {
+                            pathologyNotes = customInput.value + '|' + pathologyNotes;
+                          }
+                          
                           setPathologies([
                             ...pathologies,
                             {
-                              type: typeSelect.value,
-                              notes: notesInput ? notesInput.value : ''
+                              type: pathologyType,
+                              notes: pathologyNotes
                             }
                           ]);
                           
                           // Reset inputs
                           typeSelect.selectedIndex = 0;
                           if (notesInput) notesInput.value = '';
+                          
+                          // Remove the custom input if it exists
+                          if (customInput) {
+                            customInput.remove();
+                          }
                         }
                       }}
                     >

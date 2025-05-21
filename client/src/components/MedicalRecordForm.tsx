@@ -259,6 +259,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [bassaniDx, setBassaniDx] = useState<string[]>([]);
   const [bassaniSx, setBassaniSx] = useState<string[]>([]);
   const [tfe, setTfe] = useState<"Dx" | "Sx" | "">("");
+  const [barralOptions, setBarralOptions] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -5981,6 +5982,42 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </div>
                       )}
                     </div>
+                  </div>
+                  
+                  {/* Barral Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Barral</label>
+                    
+                    <TagSelectionInput
+                      label="Select Areas"
+                      placeholder="Select areas of interest..."
+                      options={[
+                        "Skull",
+                        "Lung",
+                        "Liver",
+                        "Kidney",
+                        "Shoulder (Rx)",
+                        "Shoulder (Lx)",
+                        "Stomach",
+                        "Cervical",
+                        "Dorsal",
+                        "Lumbar",
+                        "Uterus",
+                        "Prostate",
+                        "Ascending colon",
+                        "Descending colon",
+                        "Hip (Rx)",
+                        "Hip (Lx)",
+                        "Lower limb (Rx)",
+                        "Lower limb (Lx)",
+                        "Psycho-emotional"
+                      ]}
+                      selectedTags={barralOptions}
+                      onTagsChange={setBarralOptions}
+                      allowCustomTags={false}
+                      voiceEnabled={voiceInputEnabled}
+                      className="mb-2"
+                    />
                   </div>
                 </div>
               </div>

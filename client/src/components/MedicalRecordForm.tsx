@@ -2038,8 +2038,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">Detailed Clinical History</h3>
-              
               {/* Pathologies or Dysfunctions of the circulatory and respiratory systems */}
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">

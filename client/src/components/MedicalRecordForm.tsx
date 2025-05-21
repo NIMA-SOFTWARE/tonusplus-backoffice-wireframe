@@ -289,28 +289,25 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   {/* Daily Driving Hours */}
                   <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Driving Hours</label>
-                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                      <option value="">Select hours</option>
-                      <option value="less-than-1">Less than 1 hour</option>
-                      <option value="1-2">1-2 hours</option>
-                      <option value="2-4">2-4 hours</option>
-                      <option value="4-6">4-6 hours</option>
-                      <option value="more-than-6">More than 6 hours</option>
-                    </select>
+                    <input
+                      type="number"
+                      min="0"
+                      max="24"
+                      placeholder="Hours per day"
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
                   </div>
                   
                   {/* Daily Computer Hours */}
                   <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Computer Hours</label>
-                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                      <option value="">Select hours</option>
-                      <option value="less-than-1">Less than 1 hour</option>
-                      <option value="1-2">1-2 hours</option>
-                      <option value="2-4">2-4 hours</option>
-                      <option value="4-6">4-6 hours</option>
-                      <option value="6-8">6-8 hours</option>
-                      <option value="more-than-8">More than 8 hours</option>
-                    </select>
+                    <input
+                      type="number"
+                      min="0"
+                      max="24"
+                      placeholder="Hours per day"
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
                   </div>
                   
                   {/* Work Type */}

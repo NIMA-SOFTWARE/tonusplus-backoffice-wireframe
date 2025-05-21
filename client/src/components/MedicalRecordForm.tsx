@@ -225,6 +225,16 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [otherSystemicDisorders, setOtherSystemicDisorders] = useState<OtherSystemicDisorder[]>([]);
   
+  // State for Pharmacological Treatments
+  interface PharmacologicalTreatment {
+    name: string;
+    dosage: string;
+    frequency: string;
+    status: 'past' | 'ongoing';
+    notes: string;
+  }
+  const [pharmacologicalTreatments, setPharmacologicalTreatments] = useState<PharmacologicalTreatment[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4969,6 +4979,201 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     >
                       Add
                     </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* PHARMACOLOGICAL TREATMENTS Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  PHARMACOLOGICAL TREATMENTS
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Past and Ongoing Medications</h5>
+                  
+                  {/* Existing Pharmacological Treatments */}
+                  {pharmacologicalTreatments.map((treatment: PharmacologicalTreatment, index: number) => (
+                    <div key={index} className="flex items-center flex-wrap gap-2 mb-4 pb-3 border-b border-gray-200">
+                      <div className="flex-1 min-w-[200px]">
+                        <label className="block text-xs text-gray-500 mb-1">Medication name</label>
+                        <input
+                          type="text"
+                          value={treatment.name}
+                          onChange={(e) => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments[index].name = e.target.value;
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          placeholder="Medication name"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="w-[130px]">
+                        <label className="block text-xs text-gray-500 mb-1">Dosage</label>
+                        <input
+                          type="text"
+                          value={treatment.dosage}
+                          onChange={(e) => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments[index].dosage = e.target.value;
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          placeholder="Dosage"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="w-[150px]">
+                        <label className="block text-xs text-gray-500 mb-1">Frequency</label>
+                        <input
+                          type="text"
+                          value={treatment.frequency}
+                          onChange={(e) => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments[index].frequency = e.target.value;
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          placeholder="Frequency"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="w-[120px]">
+                        <label className="block text-xs text-gray-500 mb-1">Status</label>
+                        <select
+                          value={treatment.status}
+                          onChange={(e) => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments[index].status = e.target.value as 'past' | 'ongoing';
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="ongoing">Ongoing</option>
+                          <option value="past">Past</option>
+                        </select>
+                      </div>
+                      
+                      <div className="flex-1 min-w-[200px]">
+                        <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                        <input
+                          type="text"
+                          value={treatment.notes}
+                          onChange={(e) => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments[index].notes = e.target.value;
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          placeholder="Side effects, reason for use, etc."
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="w-[40px] pt-5">
+                        <button
+                          onClick={() => {
+                            const updatedTreatments = [...pharmacologicalTreatments];
+                            updatedTreatments.splice(index, 1);
+                            setPharmacologicalTreatments(updatedTreatments);
+                          }}
+                          className="p-2 text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Add new Pharmacological Treatment */}
+                  <div className="flex items-center flex-wrap gap-2 mb-2">
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="block text-xs text-gray-500 mb-1">Medication name</label>
+                      <input
+                        type="text"
+                        id="medication-name"
+                        placeholder="Medication name"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <div className="w-[130px]">
+                      <label className="block text-xs text-gray-500 mb-1">Dosage</label>
+                      <input
+                        type="text"
+                        id="medication-dosage"
+                        placeholder="e.g., 10mg"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <div className="w-[150px]">
+                      <label className="block text-xs text-gray-500 mb-1">Frequency</label>
+                      <input
+                        type="text"
+                        id="medication-frequency"
+                        placeholder="e.g., Twice daily"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <div className="w-[120px]">
+                      <label className="block text-xs text-gray-500 mb-1">Status</label>
+                      <select
+                        id="medication-status"
+                        defaultValue="ongoing"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      >
+                        <option value="ongoing">Ongoing</option>
+                        <option value="past">Past</option>
+                      </select>
+                    </div>
+                    
+                    <div className="flex-1 min-w-[200px]">
+                      <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                      <input
+                        type="text"
+                        id="medication-notes"
+                        placeholder="Side effects, reason for use, etc."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <div className="w-[40px] pt-5">
+                      <button
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                        onClick={() => {
+                          const nameInput = document.getElementById('medication-name') as HTMLInputElement;
+                          const dosageInput = document.getElementById('medication-dosage') as HTMLInputElement;
+                          const frequencyInput = document.getElementById('medication-frequency') as HTMLInputElement;
+                          const statusSelect = document.getElementById('medication-status') as HTMLSelectElement;
+                          const notesInput = document.getElementById('medication-notes') as HTMLInputElement;
+                          
+                          if (nameInput && nameInput.value.trim()) {
+                            setPharmacologicalTreatments([
+                              ...pharmacologicalTreatments,
+                              {
+                                name: nameInput.value.trim(),
+                                dosage: dosageInput ? dosageInput.value : '',
+                                frequency: frequencyInput ? frequencyInput.value : '',
+                                status: (statusSelect ? statusSelect.value : 'ongoing') as 'past' | 'ongoing',
+                                notes: notesInput ? notesInput.value : ''
+                              }
+                            ]);
+                            
+                            // Reset inputs
+                            if (nameInput) nameInput.value = '';
+                            if (dosageInput) dosageInput.value = '';
+                            if (frequencyInput) frequencyInput.value = '';
+                            if (statusSelect) statusSelect.value = 'ongoing';
+                            if (notesInput) notesInput.value = '';
+                          }
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

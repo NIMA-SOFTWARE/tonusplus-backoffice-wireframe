@@ -908,10 +908,37 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-6">
               <h3 className="font-medium text-gray-700">General Medical History</h3>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain fields for general medical history
+              
+              {/* Trauma and Diseases/Dysfunctions subsection */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Trauma and Diseases/Dysfunctions of the Musculoskeletal System
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  {/* This is where we'll add inputs later */}
+                </div>
+              </div>
+              
+              {/* Surgical Interventions subsection */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Surgical Interventions
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  {/* This is where we'll add inputs later */}
+                </div>
+              </div>
+              
+              {/* Anatomical Anomalies subsection */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Anatomical Anomalies (Location and Type)
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  {/* This is where we'll add inputs later */}
+                </div>
               </div>
             </div>
           </AccordionContent>

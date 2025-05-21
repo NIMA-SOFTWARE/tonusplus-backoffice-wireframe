@@ -5590,17 +5590,52 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <div key={index} className="flex items-center flex-wrap gap-2 mb-4 pb-3 border-b border-gray-200">
                       <div className="w-full md:w-1/3 mb-2 md:mb-0">
                         <label className="block text-xs text-gray-500 mb-1">Exam Name</label>
-                        <input
-                          type="text"
-                          value={exam.name}
-                          onChange={(e) => {
-                            const updatedExams = [...instrumentalExams];
-                            updatedExams[index].name = e.target.value;
-                            setInstrumentalExams(updatedExams);
-                          }}
-                          placeholder="e.g., X-Ray, MRI, Blood Test"
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        />
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={exam.name.includes('|') ? 'Other' : exam.name}
+                            onChange={(e) => {
+                              const updatedExams = [...instrumentalExams];
+                              
+                              if (e.target.value === 'Other') {
+                                // Preserve any custom name that might be after the pipe
+                                const customName = exam.name.includes('|') ? exam.name.split('|')[1] : '';
+                                updatedExams[index].name = `Other|${customName}`;
+                              } else {
+                                updatedExams[index].name = e.target.value;
+                              }
+                              
+                              setInstrumentalExams(updatedExams);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="X-Ray">X-Ray</option>
+                            <option value="MRI">MRI</option>
+                            <option value="CT Scan">CT Scan</option>
+                            <option value="Ultrasound">Ultrasound</option>
+                            <option value="Blood Test">Blood Test</option>
+                            <option value="Urine Test">Urine Test</option>
+                            <option value="EKG/ECG">EKG/ECG</option>
+                            <option value="EMG">EMG</option>
+                            <option value="Bone Densitometry">Bone Densitometry</option>
+                            <option value="PET Scan">PET Scan</option>
+                            <option value="Endoscopy">Endoscopy</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          
+                          {exam.name.includes('|') && (
+                            <input
+                              type="text"
+                              value={exam.name.split('|')[1] || ''}
+                              onChange={(e) => {
+                                const updatedExams = [...instrumentalExams];
+                                updatedExams[index].name = `Other|${e.target.value}`;
+                                setInstrumentalExams(updatedExams);
+                              }}
+                              placeholder="Specify exam type"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                          )}
+                        </div>
                       </div>
                       
                       <div className="w-full md:w-1/3 mb-2 md:mb-0">
@@ -5674,12 +5709,43 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   <div className="flex items-center flex-wrap gap-2 mb-2">
                     <div className="w-full md:w-1/3 mb-2 md:mb-0">
                       <label className="block text-xs text-gray-500 mb-1">Exam Name</label>
-                      <input
-                        type="text"
-                        id="new-exam-name"
-                        placeholder="e.g., X-Ray, MRI, Blood Test"
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      />
+                      <div className="flex items-center gap-2" id="new-exam-container">
+                        <select
+                          id="new-exam-name"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          defaultValue=""
+                          onChange={(e) => {
+                            const container = document.getElementById('new-exam-container');
+                            const customInput = document.getElementById('new-exam-custom');
+                            
+                            if (e.target.value === 'Other' && container && !customInput) {
+                              // Insert custom input after select
+                              const customField = document.createElement('input');
+                              customField.id = 'new-exam-custom';
+                              customField.type = 'text';
+                              customField.placeholder = 'Specify exam type';
+                              customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                              container.appendChild(customField);
+                            } else if (e.target.value !== 'Other' && customInput) {
+                              customInput.remove();
+                            }
+                          }}
+                        >
+                          <option value="" disabled>Select exam type</option>
+                          <option value="X-Ray">X-Ray</option>
+                          <option value="MRI">MRI</option>
+                          <option value="CT Scan">CT Scan</option>
+                          <option value="Ultrasound">Ultrasound</option>
+                          <option value="Blood Test">Blood Test</option>
+                          <option value="Urine Test">Urine Test</option>
+                          <option value="EKG/ECG">EKG/ECG</option>
+                          <option value="EMG">EMG</option>
+                          <option value="Bone Densitometry">Bone Densitometry</option>
+                          <option value="PET Scan">PET Scan</option>
+                          <option value="Endoscopy">Endoscopy</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
                     </div>
                     
                     <div className="w-full md:w-1/3 mb-2 md:mb-0">
@@ -5728,22 +5794,34 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <button
                         className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                         onClick={() => {
-                          const nameInput = document.getElementById('new-exam-name') as HTMLInputElement;
+                          const nameSelect = document.getElementById('new-exam-name') as HTMLSelectElement;
+                          const customInput = document.getElementById('new-exam-custom') as HTMLInputElement;
                           const fileDisplay = document.getElementById('new-exam-file-display') as HTMLInputElement;
                           const notesInput = document.getElementById('new-exam-notes') as HTMLInputElement;
                           
-                          if (nameInput && nameInput.value.trim()) {
+                          if (nameSelect && nameSelect.value) {
+                            let examName = nameSelect.value;
+                            
+                            // If "Other" is selected, use the custom input value
+                            if (examName === 'Other' && customInput && customInput.value.trim()) {
+                              examName = `Other|${customInput.value.trim()}`;
+                            } else if (examName === 'Other' && (!customInput || !customInput.value.trim())) {
+                              // If "Other" is selected but no custom value is provided, don't add the exam
+                              return;
+                            }
+                            
                             setInstrumentalExams([
                               ...instrumentalExams,
                               {
-                                name: nameInput.value.trim(),
+                                name: examName,
                                 fileAttachment: fileDisplay ? fileDisplay.value : '',
                                 notes: notesInput ? notesInput.value : ''
                               }
                             ]);
                             
                             // Reset inputs
-                            if (nameInput) nameInput.value = '';
+                            nameSelect.selectedIndex = 0;
+                            if (customInput) customInput.remove();
                             if (fileDisplay) fileDisplay.value = '';
                             if (notesInput) notesInput.value = '';
                             

@@ -233,6 +233,39 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <p className="text-sm text-gray-800">Not available</p>
                   </div>
                   
+                  {/* Gender Selection */}
+                  <div className="col-span-full">
+                    <span className="text-xs font-medium text-gray-500 uppercase">Gender</span>
+                    <div className="flex items-center space-x-4 mt-1">
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          id="gender-male"
+                          name="gender"
+                          checked={!isFemale}
+                          onChange={() => setIsFemale(false)}
+                          className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <label htmlFor="gender-male" className="ml-2 text-sm text-gray-700">
+                          Male
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="radio"
+                          id="gender-female"
+                          name="gender"
+                          checked={isFemale}
+                          onChange={() => setIsFemale(true)}
+                          className="h-4 w-4 text-blue-600 border-gray-300 focus:ring-blue-500"
+                        />
+                        <label htmlFor="gender-female" className="ml-2 text-sm text-gray-700">
+                          Female
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
                   {/* Separator */}
                   <div className="col-span-full my-2">
                     <div className="border-t border-gray-200"></div>

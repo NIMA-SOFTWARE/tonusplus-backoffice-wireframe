@@ -5587,27 +5587,184 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   
                   {/* Existing Instrumental Exams */}
                   {instrumentalExams.map((exam: InstrumentalExam, index: number) => (
-                    <div key={index} className="flex items-center flex-wrap gap-2 mb-4 pb-3 border-b border-gray-200">
-                      <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                        <label className="block text-xs text-gray-500 mb-1">Exam Name</label>
-                        <div className="flex items-center gap-2">
-                          <select
-                            value={exam.name.includes('|') ? 'Other' : exam.name}
+                    <div key={index} className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Exam Name</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">File Attachment</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start">
+                        {/* Exam Name */}
+                        <div className="flex-1 mr-2">
+                          <div className="flex items-center gap-2">
+                            <select
+                              value={exam.name.includes('|') ? 'Other' : exam.name}
+                              onChange={(e) => {
+                                const updatedExams = [...instrumentalExams];
+                                
+                                if (e.target.value === 'Other') {
+                                  const customName = exam.name.includes('|') ? exam.name.split('|')[1] : '';
+                                  updatedExams[index].name = `Other|${customName}`;
+                                } else {
+                                  updatedExams[index].name = e.target.value;
+                                }
+                                
+                                setInstrumentalExams(updatedExams);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="X-Ray">X-Ray</option>
+                              <option value="MRI">MRI</option>
+                              <option value="CT Scan">CT Scan</option>
+                              <option value="Ultrasound">Ultrasound</option>
+                              <option value="Blood Test">Blood Test</option>
+                              <option value="Urine Test">Urine Test</option>
+                              <option value="EKG/ECG">EKG/ECG</option>
+                              <option value="EMG">EMG</option>
+                              <option value="Bone Densitometry">Bone Densitometry</option>
+                              <option value="PET Scan">PET Scan</option>
+                              <option value="Endoscopy">Endoscopy</option>
+                              <option value="Other">Other</option>
+                            </select>
+                            
+                            {exam.name.includes('|') && (
+                              <input
+                                type="text"
+                                value={exam.name.split('|')[1] || ''}
+                                onChange={(e) => {
+                                  const updatedExams = [...instrumentalExams];
+                                  updatedExams[index].name = `Other|${e.target.value}`;
+                                  setInstrumentalExams(updatedExams);
+                                }}
+                                placeholder="Specify exam type"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                            )}
+                          </div>
+                        </div>
+                        
+                        {/* File Attachment */}
+                        <div className="flex-1 mr-2">
+                          <div className="flex items-center">
+                            <input
+                              type="text"
+                              value={exam.fileAttachment}
+                              onChange={(e) => {
+                                const updatedExams = [...instrumentalExams];
+                                updatedExams[index].fileAttachment = e.target.value;
+                                setInstrumentalExams(updatedExams);
+                              }}
+                              placeholder="No file selected"
+                              className="w-full text-sm p-2 border border-gray-300 rounded-l-md"
+                              readOnly
+                            />
+                            <label 
+                              htmlFor={`file-upload-${index}`} 
+                              className="cursor-pointer bg-blue-500 text-white px-2 py-2 text-sm rounded-r-md hover:bg-blue-600"
+                            >
+                              Browse
+                            </label>
+                            <input 
+                              id={`file-upload-${index}`}
+                              type="file" 
+                              className="hidden"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const updatedExams = [...instrumentalExams];
+                                  updatedExams[index].fileAttachment = e.target.files[0].name;
+                                  setInstrumentalExams(updatedExams);
+                                }
+                              }}
+                            />
+                          </div>
+                        </div>
+                        
+                        {/* Notes */}
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={exam.notes}
                             onChange={(e) => {
                               const updatedExams = [...instrumentalExams];
-                              
-                              if (e.target.value === 'Other') {
-                                // Preserve any custom name that might be after the pipe
-                                const customName = exam.name.includes('|') ? exam.name.split('|')[1] : '';
-                                updatedExams[index].name = `Other|${customName}`;
-                              } else {
-                                updatedExams[index].name = e.target.value;
-                              }
-                              
+                              updatedExams[index].notes = e.target.value;
                               setInstrumentalExams(updatedExams);
                             }}
+                            placeholder="Additional notes about the exam"
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        
+                        {/* Remove Button */}
+                        <div className="w-8 flex justify-center">
+                          <button
+                            onClick={() => {
+                              const updatedExams = [...instrumentalExams];
+                              updatedExams.splice(index, 1);
+                              setInstrumentalExams(updatedExams);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
                           >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                  
+                  {/* Add New Instrumental Exam */}
+                  <div className="mt-4 border-t pt-4">
+                    {/* Labels row */}
+                    <div className="flex w-full mb-1">
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Exam Name</label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">File Attachment</label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Notes</label>
+                      </div>
+                      <div className="w-8"></div>
+                    </div>
+                    
+                    {/* Inputs row */}
+                    <div className="flex w-full items-start">
+                      {/* Exam Name */}
+                      <div className="flex-1 mr-2">
+                        <div className="flex items-center gap-2" id="new-exam-container">
+                          <select
+                            id="new-exam-name"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                            onChange={(e) => {
+                              const container = document.getElementById('new-exam-container');
+                              const customInput = document.getElementById('new-exam-custom');
+                              
+                              if (e.target.value === 'Other' && container && !customInput) {
+                                // Insert custom input after select
+                                const customField = document.createElement('input');
+                                customField.id = 'new-exam-custom';
+                                customField.type = 'text';
+                                customField.placeholder = 'Specify exam type';
+                                customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                                container.appendChild(customField);
+                              } else if (e.target.value !== 'Other' && customInput) {
+                                customInput.remove();
+                              }
+                            }}
+                          >
+                            <option value="" disabled>Select exam type</option>
                             <option value="X-Ray">X-Ray</option>
                             <option value="MRI">MRI</option>
                             <option value="CT Scan">CT Scan</option>
@@ -5621,218 +5778,97 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             <option value="Endoscopy">Endoscopy</option>
                             <option value="Other">Other</option>
                           </select>
-                          
-                          {exam.name.includes('|') && (
-                            <input
-                              type="text"
-                              value={exam.name.split('|')[1] || ''}
-                              onChange={(e) => {
-                                const updatedExams = [...instrumentalExams];
-                                updatedExams[index].name = `Other|${e.target.value}`;
-                                setInstrumentalExams(updatedExams);
-                              }}
-                              placeholder="Specify exam type"
-                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                            />
-                          )}
                         </div>
                       </div>
                       
-                      <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                        <label className="block text-xs text-gray-500 mb-1">File Attachment</label>
+                      {/* File Attachment */}
+                      <div className="flex-1 mr-2">
                         <div className="flex items-center">
                           <input
                             type="text"
-                            value={exam.fileAttachment}
-                            onChange={(e) => {
-                              const updatedExams = [...instrumentalExams];
-                              updatedExams[index].fileAttachment = e.target.value;
-                              setInstrumentalExams(updatedExams);
-                            }}
+                            id="new-exam-file-display"
                             placeholder="No file selected"
                             className="w-full text-sm p-2 border border-gray-300 rounded-l-md"
                             readOnly
                           />
                           <label 
-                            htmlFor={`file-upload-${index}`} 
-                            className="cursor-pointer bg-blue-500 text-white px-3 py-2 text-sm rounded-r-md hover:bg-blue-600"
+                            htmlFor="new-exam-file" 
+                            className="cursor-pointer bg-blue-500 text-white px-2 py-2 text-sm rounded-r-md hover:bg-blue-600"
                           >
                             Browse
                           </label>
                           <input 
-                            id={`file-upload-${index}`}
+                            id="new-exam-file"
                             type="file" 
                             className="hidden"
                             onChange={(e) => {
                               if (e.target.files && e.target.files[0]) {
-                                const updatedExams = [...instrumentalExams];
-                                updatedExams[index].fileAttachment = e.target.files[0].name;
-                                setInstrumentalExams(updatedExams);
+                                const fileDisplay = document.getElementById('new-exam-file-display') as HTMLInputElement;
+                                if (fileDisplay) {
+                                  fileDisplay.value = e.target.files[0].name;
+                                }
                               }
                             }}
                           />
                         </div>
                       </div>
                       
-                      <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                        <label className="block text-xs text-gray-500 mb-1">Notes</label>
+                      {/* Notes */}
+                      <div className="flex-1 mr-2">
                         <input
                           type="text"
-                          value={exam.notes}
-                          onChange={(e) => {
-                            const updatedExams = [...instrumentalExams];
-                            updatedExams[index].notes = e.target.value;
-                            setInstrumentalExams(updatedExams);
-                          }}
+                          id="new-exam-notes"
                           placeholder="Additional notes about the exam"
                           className="w-full text-sm p-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       
-                      <div className="w-full flex justify-end">
+                      {/* Add Button */}
+                      <div className="w-8 flex justify-center">
                         <button
+                          className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
                           onClick={() => {
-                            const updatedExams = [...instrumentalExams];
-                            updatedExams.splice(index, 1);
-                            setInstrumentalExams(updatedExams);
+                            const nameSelect = document.getElementById('new-exam-name') as HTMLSelectElement;
+                            const customInput = document.getElementById('new-exam-custom') as HTMLInputElement;
+                            const fileDisplay = document.getElementById('new-exam-file-display') as HTMLInputElement;
+                            const notesInput = document.getElementById('new-exam-notes') as HTMLInputElement;
+                            
+                            if (nameSelect && nameSelect.value) {
+                              let examName = nameSelect.value;
+                              
+                              // If "Other" is selected, use the custom input value
+                              if (examName === 'Other' && customInput && customInput.value.trim()) {
+                                examName = `Other|${customInput.value.trim()}`;
+                              } else if (examName === 'Other' && (!customInput || !customInput.value.trim())) {
+                                // If "Other" is selected but no custom value is provided, don't add the exam
+                                return;
+                              }
+                              
+                              setInstrumentalExams([
+                                ...instrumentalExams,
+                                {
+                                  name: examName,
+                                  fileAttachment: fileDisplay ? fileDisplay.value : '',
+                                  notes: notesInput ? notesInput.value : ''
+                                }
+                              ]);
+                              
+                              // Reset inputs
+                              nameSelect.selectedIndex = 0;
+                              if (customInput) customInput.remove();
+                              if (fileDisplay) fileDisplay.value = '';
+                              if (notesInput) notesInput.value = '';
+                              
+                              // Reset file input
+                              const fileInput = document.getElementById('new-exam-file') as HTMLInputElement;
+                              if (fileInput) fileInput.value = '';
+                            }
                           }}
-                          className="p-2 text-red-500 hover:text-red-700"
-                          aria-label="Remove"
+                          aria-label="Add Exam"
                         >
-                          ✕
+                          +
                         </button>
                       </div>
-                    </div>
-                  ))}
-                  
-                  {/* Add New Instrumental Exam */}
-                  <div className="flex items-center flex-wrap gap-2 mb-2">
-                    <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                      <label className="block text-xs text-gray-500 mb-1">Exam Name</label>
-                      <div className="flex items-center gap-2" id="new-exam-container">
-                        <select
-                          id="new-exam-name"
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          defaultValue=""
-                          onChange={(e) => {
-                            const container = document.getElementById('new-exam-container');
-                            const customInput = document.getElementById('new-exam-custom');
-                            
-                            if (e.target.value === 'Other' && container && !customInput) {
-                              // Insert custom input after select
-                              const customField = document.createElement('input');
-                              customField.id = 'new-exam-custom';
-                              customField.type = 'text';
-                              customField.placeholder = 'Specify exam type';
-                              customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
-                              container.appendChild(customField);
-                            } else if (e.target.value !== 'Other' && customInput) {
-                              customInput.remove();
-                            }
-                          }}
-                        >
-                          <option value="" disabled>Select exam type</option>
-                          <option value="X-Ray">X-Ray</option>
-                          <option value="MRI">MRI</option>
-                          <option value="CT Scan">CT Scan</option>
-                          <option value="Ultrasound">Ultrasound</option>
-                          <option value="Blood Test">Blood Test</option>
-                          <option value="Urine Test">Urine Test</option>
-                          <option value="EKG/ECG">EKG/ECG</option>
-                          <option value="EMG">EMG</option>
-                          <option value="Bone Densitometry">Bone Densitometry</option>
-                          <option value="PET Scan">PET Scan</option>
-                          <option value="Endoscopy">Endoscopy</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                    </div>
-                    
-                    <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                      <label className="block text-xs text-gray-500 mb-1">File Attachment</label>
-                      <div className="flex items-center">
-                        <input
-                          type="text"
-                          id="new-exam-file-display"
-                          placeholder="No file selected"
-                          className="w-full text-sm p-2 border border-gray-300 rounded-l-md"
-                          readOnly
-                        />
-                        <label 
-                          htmlFor="new-exam-file" 
-                          className="cursor-pointer bg-blue-500 text-white px-3 py-2 text-sm rounded-r-md hover:bg-blue-600"
-                        >
-                          Browse
-                        </label>
-                        <input 
-                          id="new-exam-file"
-                          type="file" 
-                          className="hidden"
-                          onChange={(e) => {
-                            if (e.target.files && e.target.files[0]) {
-                              const fileDisplay = document.getElementById('new-exam-file-display') as HTMLInputElement;
-                              if (fileDisplay) {
-                                fileDisplay.value = e.target.files[0].name;
-                              }
-                            }
-                          }}
-                        />
-                      </div>
-                    </div>
-                    
-                    <div className="w-full md:w-1/3 mb-2 md:mb-0">
-                      <label className="block text-xs text-gray-500 mb-1">Notes</label>
-                      <input
-                        type="text"
-                        id="new-exam-notes"
-                        placeholder="Additional notes about the exam"
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    
-                    <div className="w-full flex justify-center mt-2">
-                      <button
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                        onClick={() => {
-                          const nameSelect = document.getElementById('new-exam-name') as HTMLSelectElement;
-                          const customInput = document.getElementById('new-exam-custom') as HTMLInputElement;
-                          const fileDisplay = document.getElementById('new-exam-file-display') as HTMLInputElement;
-                          const notesInput = document.getElementById('new-exam-notes') as HTMLInputElement;
-                          
-                          if (nameSelect && nameSelect.value) {
-                            let examName = nameSelect.value;
-                            
-                            // If "Other" is selected, use the custom input value
-                            if (examName === 'Other' && customInput && customInput.value.trim()) {
-                              examName = `Other|${customInput.value.trim()}`;
-                            } else if (examName === 'Other' && (!customInput || !customInput.value.trim())) {
-                              // If "Other" is selected but no custom value is provided, don't add the exam
-                              return;
-                            }
-                            
-                            setInstrumentalExams([
-                              ...instrumentalExams,
-                              {
-                                name: examName,
-                                fileAttachment: fileDisplay ? fileDisplay.value : '',
-                                notes: notesInput ? notesInput.value : ''
-                              }
-                            ]);
-                            
-                            // Reset inputs
-                            nameSelect.selectedIndex = 0;
-                            if (customInput) customInput.remove();
-                            if (fileDisplay) fileDisplay.value = '';
-                            if (notesInput) notesInput.value = '';
-                            
-                            // Reset file input
-                            const fileInput = document.getElementById('new-exam-file') as HTMLInputElement;
-                            if (fileInput) fileInput.value = '';
-                          }
-                        }}
-                      >
-                        Add Exam
-                      </button>
                     </div>
                   </div>
                 </div>

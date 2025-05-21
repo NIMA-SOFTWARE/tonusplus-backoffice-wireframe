@@ -5036,27 +5036,81 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     {/* Existing Current Devices */}
                     {currentDevices.map((device: MedicalDevice, index: number) => (
                       <div key={index} className="flex items-center gap-2 mb-2">
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={device.name}
-                            onChange={(e) => {
-                              const updatedDevices = [...currentDevices];
-                              updatedDevices[index].name = e.target.value;
-                              setCurrentDevices(updatedDevices);
-                            }}
-                            placeholder="Device name (e.g., Pacemaker, Arthroprosthesis)"
-                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                        </div>
+                        {device.name === "Other" ? (
+                          <div className="flex-1 flex gap-1">
+                            <select
+                              value={device.name}
+                              onChange={(e) => {
+                                const updatedDevices = [...currentDevices];
+                                updatedDevices[index].name = e.target.value;
+                                setCurrentDevices(updatedDevices);
+                              }}
+                              className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="Pacemaker">Pacemaker</option>
+                              <option value="Arthroprosthesis">Arthroprosthesis</option>
+                              <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                              <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                              <option value="Insulin Pump">Insulin Pump</option>
+                              <option value="Joint Replacement">Joint Replacement</option>
+                              <option value="Cardiac Stent">Cardiac Stent</option>
+                              <option value="Neurostimulator">Neurostimulator</option>
+                              <option value="Cochlear Implant">Cochlear Implant</option>
+                              <option value="Other">Other</option>
+                            </select>
+                            <input
+                              type="text"
+                              placeholder="Specify device"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              value={device.notes.split('|')[0] || ''}
+                              onChange={(e) => {
+                                const updatedDevices = [...currentDevices];
+                                const parts = device.notes.split('|');
+                                parts[0] = e.target.value;
+                                updatedDevices[index].notes = parts.join('|');
+                                setCurrentDevices(updatedDevices);
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex-1">
+                            <select
+                              value={device.name}
+                              onChange={(e) => {
+                                const updatedDevices = [...currentDevices];
+                                updatedDevices[index].name = e.target.value;
+                                setCurrentDevices(updatedDevices);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="Pacemaker">Pacemaker</option>
+                              <option value="Arthroprosthesis">Arthroprosthesis</option>
+                              <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                              <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                              <option value="Insulin Pump">Insulin Pump</option>
+                              <option value="Joint Replacement">Joint Replacement</option>
+                              <option value="Cardiac Stent">Cardiac Stent</option>
+                              <option value="Neurostimulator">Neurostimulator</option>
+                              <option value="Cochlear Implant">Cochlear Implant</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                        )}
+                        
                         
                         <div className="flex-1">
                           <input
                             type="text"
-                            value={device.notes}
+                            value={device.name === "Other" ? device.notes.split('|')[1] || '' : device.notes}
                             onChange={(e) => {
                               const updatedDevices = [...currentDevices];
-                              updatedDevices[index].notes = e.target.value;
+                              if (device.name === "Other") {
+                                const parts = device.notes.split('|');
+                                parts[1] = e.target.value;
+                                updatedDevices[index].notes = parts.join('|');
+                              } else {
+                                updatedDevices[index].notes = e.target.value;
+                              }
                               setCurrentDevices(updatedDevices);
                             }}
                             placeholder="Notes (type, placement, date installed, etc.)"
@@ -5079,14 +5133,41 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     ))}
                     
                     {/* Add New Current Device */}
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2" id="new-current-device-container">
                       <div className="flex-1">
-                        <input
-                          type="text"
+                        <select
                           id="current-device-name"
-                          placeholder="Device name (e.g., Pacemaker, Arthroprosthesis)"
                           className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        />
+                          defaultValue=""
+                          onChange={(e) => {
+                            const container = document.getElementById('new-current-device-container');
+                            const customInput = document.getElementById('current-device-custom');
+                            
+                            if (e.target.value === 'Other' && container && !customInput) {
+                              // Insert custom input after select
+                              const customField = document.createElement('input');
+                              customField.id = 'current-device-custom';
+                              customField.type = 'text';
+                              customField.placeholder = 'Specify device';
+                              customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md ml-2';
+                              container.insertBefore(customField, document.getElementById('current-device-notes'));
+                            } else if (e.target.value !== 'Other' && customInput) {
+                              customInput.remove();
+                            }
+                          }}
+                        >
+                          <option value="" disabled>Select device</option>
+                          <option value="Pacemaker">Pacemaker</option>
+                          <option value="Arthroprosthesis">Arthroprosthesis</option>
+                          <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                          <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                          <option value="Insulin Pump">Insulin Pump</option>
+                          <option value="Joint Replacement">Joint Replacement</option>
+                          <option value="Cardiac Stent">Cardiac Stent</option>
+                          <option value="Neurostimulator">Neurostimulator</option>
+                          <option value="Cochlear Implant">Cochlear Implant</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
                       
                       <div className="flex-1">
@@ -5101,21 +5182,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <button
                         className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                         onClick={() => {
-                          const nameInput = document.getElementById('current-device-name') as HTMLInputElement;
+                          const typeSelect = document.getElementById('current-device-name') as HTMLSelectElement;
                           const notesInput = document.getElementById('current-device-notes') as HTMLInputElement;
+                          const customInput = document.getElementById('current-device-custom') as HTMLInputElement;
                           
-                          if (nameInput && nameInput.value.trim()) {
+                          if (typeSelect && typeSelect.value) {
+                            let type = typeSelect.value;
+                            let notes = notesInput ? notesInput.value : '';
+                            
+                            // If "Other" is selected, use the custom input value
+                            if (type === "Other" && customInput && customInput.value) {
+                              // Store the custom value in the notes field with a separator
+                              notes = `${customInput.value}|${notes}`;
+                            }
+                            
                             setCurrentDevices([
                               ...currentDevices,
                               {
-                                name: nameInput.value.trim(),
-                                notes: notesInput ? notesInput.value : ''
+                                name: type,
+                                notes
                               }
                             ]);
                             
                             // Reset inputs
-                            if (nameInput) nameInput.value = '';
+                            typeSelect.selectedIndex = 0;
                             if (notesInput) notesInput.value = '';
+                            if (customInput) customInput.remove();
                           }
                         }}
                       >
@@ -5131,27 +5223,80 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     {/* Existing Past Devices */}
                     {pastDevices.map((device: MedicalDevice, index: number) => (
                       <div key={index} className="flex items-center gap-2 mb-2">
-                        <div className="flex-1">
-                          <input
-                            type="text"
-                            value={device.name}
-                            onChange={(e) => {
-                              const updatedDevices = [...pastDevices];
-                              updatedDevices[index].name = e.target.value;
-                              setPastDevices(updatedDevices);
-                            }}
-                            placeholder="Device name (e.g., Osteosynthesis material)"
-                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                        </div>
+                        {device.name === "Other" ? (
+                          <div className="flex-1 flex gap-1">
+                            <select
+                              value={device.name}
+                              onChange={(e) => {
+                                const updatedDevices = [...pastDevices];
+                                updatedDevices[index].name = e.target.value;
+                                setPastDevices(updatedDevices);
+                              }}
+                              className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="Pacemaker">Pacemaker</option>
+                              <option value="Arthroprosthesis">Arthroprosthesis</option>
+                              <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                              <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                              <option value="Insulin Pump">Insulin Pump</option>
+                              <option value="Joint Replacement">Joint Replacement</option>
+                              <option value="Cardiac Stent">Cardiac Stent</option>
+                              <option value="Neurostimulator">Neurostimulator</option>
+                              <option value="Cochlear Implant">Cochlear Implant</option>
+                              <option value="Other">Other</option>
+                            </select>
+                            <input
+                              type="text"
+                              placeholder="Specify device"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              value={device.notes.split('|')[0] || ''}
+                              onChange={(e) => {
+                                const updatedDevices = [...pastDevices];
+                                const parts = device.notes.split('|');
+                                parts[0] = e.target.value;
+                                updatedDevices[index].notes = parts.join('|');
+                                setPastDevices(updatedDevices);
+                              }}
+                            />
+                          </div>
+                        ) : (
+                          <div className="flex-1">
+                            <select
+                              value={device.name}
+                              onChange={(e) => {
+                                const updatedDevices = [...pastDevices];
+                                updatedDevices[index].name = e.target.value;
+                                setPastDevices(updatedDevices);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="Pacemaker">Pacemaker</option>
+                              <option value="Arthroprosthesis">Arthroprosthesis</option>
+                              <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                              <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                              <option value="Insulin Pump">Insulin Pump</option>
+                              <option value="Joint Replacement">Joint Replacement</option>
+                              <option value="Cardiac Stent">Cardiac Stent</option>
+                              <option value="Neurostimulator">Neurostimulator</option>
+                              <option value="Cochlear Implant">Cochlear Implant</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          </div>
+                        )}
                         
                         <div className="flex-1">
                           <input
                             type="text"
-                            value={device.notes}
+                            value={device.name === "Other" ? device.notes.split('|')[1] || '' : device.notes}
                             onChange={(e) => {
                               const updatedDevices = [...pastDevices];
-                              updatedDevices[index].notes = e.target.value;
+                              if (device.name === "Other") {
+                                const parts = device.notes.split('|');
+                                parts[1] = e.target.value;
+                                updatedDevices[index].notes = parts.join('|');
+                              } else {
+                                updatedDevices[index].notes = e.target.value;
+                              }
                               setPastDevices(updatedDevices);
                             }}
                             placeholder="Notes (removal date, reason, etc.)"
@@ -5174,14 +5319,41 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     ))}
                     
                     {/* Add New Past Device */}
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="flex items-center gap-2 mb-2" id="new-past-device-container">
                       <div className="flex-1">
-                        <input
-                          type="text"
+                        <select
                           id="past-device-name"
-                          placeholder="Device name (e.g., Osteosynthesis material)"
                           className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        />
+                          defaultValue=""
+                          onChange={(e) => {
+                            const container = document.getElementById('new-past-device-container');
+                            const customInput = document.getElementById('past-device-custom');
+                            
+                            if (e.target.value === 'Other' && container && !customInput) {
+                              // Insert custom input after select
+                              const customField = document.createElement('input');
+                              customField.id = 'past-device-custom';
+                              customField.type = 'text';
+                              customField.placeholder = 'Specify device';
+                              customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md ml-2';
+                              container.insertBefore(customField, document.getElementById('past-device-notes'));
+                            } else if (e.target.value !== 'Other' && customInput) {
+                              customInput.remove();
+                            }
+                          }}
+                        >
+                          <option value="" disabled>Select device</option>
+                          <option value="Pacemaker">Pacemaker</option>
+                          <option value="Arthroprosthesis">Arthroprosthesis</option>
+                          <option value="Osteosynthesis Material">Osteosynthesis Material</option>
+                          <option value="Cardioverter-Defibrillator">Cardioverter-Defibrillator</option>
+                          <option value="Insulin Pump">Insulin Pump</option>
+                          <option value="Joint Replacement">Joint Replacement</option>
+                          <option value="Cardiac Stent">Cardiac Stent</option>
+                          <option value="Neurostimulator">Neurostimulator</option>
+                          <option value="Cochlear Implant">Cochlear Implant</option>
+                          <option value="Other">Other</option>
+                        </select>
                       </div>
                       
                       <div className="flex-1">
@@ -5196,21 +5368,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <button
                         className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                         onClick={() => {
-                          const nameInput = document.getElementById('past-device-name') as HTMLInputElement;
+                          const typeSelect = document.getElementById('past-device-name') as HTMLSelectElement;
                           const notesInput = document.getElementById('past-device-notes') as HTMLInputElement;
+                          const customInput = document.getElementById('past-device-custom') as HTMLInputElement;
                           
-                          if (nameInput && nameInput.value.trim()) {
+                          if (typeSelect && typeSelect.value) {
+                            let type = typeSelect.value;
+                            let notes = notesInput ? notesInput.value : '';
+                            
+                            // If "Other" is selected, use the custom input value
+                            if (type === "Other" && customInput && customInput.value) {
+                              // Store the custom value in the notes field with a separator
+                              notes = `${customInput.value}|${notes}`;
+                            }
+                            
                             setPastDevices([
                               ...pastDevices,
                               {
-                                name: nameInput.value.trim(),
-                                notes: notesInput ? notesInput.value : ''
+                                name: type,
+                                notes
                               }
                             ]);
                             
                             // Reset inputs
-                            if (nameInput) nameInput.value = '';
+                            typeSelect.selectedIndex = 0;
                             if (notesInput) notesInput.value = '';
+                            if (customInput) customInput.remove();
                           }
                         }}
                       >

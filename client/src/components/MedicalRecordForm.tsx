@@ -165,6 +165,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
     eyeDominance: "" // "dominant" or "non-dominant"
   });
   
+  // State for convergence test
+  const [convergenceTest, setConvergenceTest] = useState({
+    result: "", // "normal", "insufficient", "excessive"
+    distanceCm: "", // distance in centimeters
+    notes: "" 
+  });
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3297,6 +3304,83 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             </select>
                           </div>
                         )}
+                      </div>
+                    </div>
+                    
+                    {/* Convergence Test */}
+                    <div className="rounded-md border border-gray-200 p-3 bg-gray-50 mt-3">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Convergence Test
+                      </label>
+                      <div className="space-y-3">
+                        <div>
+                          <label htmlFor="convergence-result" className="block text-xs text-gray-600 mb-1">
+                            Test Result:
+                          </label>
+                          <select
+                            id="convergence-result"
+                            value={convergenceTest.result}
+                            onChange={(e) => {
+                              setConvergenceTest({
+                                ...convergenceTest,
+                                result: e.target.value
+                              });
+                            }}
+                            className="text-sm p-2 border border-gray-300 rounded-md w-full"
+                          >
+                            <option value="">Select result</option>
+                            <option value="normal">Normal convergence</option>
+                            <option value="insufficient">Insufficient convergence</option>
+                            <option value="excessive">Excessive convergence</option>
+                          </select>
+                        </div>
+                        
+                        <div className="flex items-end gap-2">
+                          <div className="flex-1">
+                            <label htmlFor="convergence-distance" className="block text-xs text-gray-600 mb-1">
+                              Near Point Distance:
+                            </label>
+                            <div className="flex items-center">
+                              <input
+                                type="number"
+                                id="convergence-distance"
+                                min="0"
+                                step="0.1"
+                                value={convergenceTest.distanceCm}
+                                onChange={(e) => {
+                                  setConvergenceTest({
+                                    ...convergenceTest,
+                                    distanceCm: e.target.value
+                                  });
+                                }}
+                                placeholder="Distance"
+                                className="text-sm p-2 border border-gray-300 rounded-l-md w-24"
+                              />
+                              <span className="bg-gray-100 border border-l-0 border-gray-300 rounded-r-md py-2 px-3 text-sm text-gray-500">
+                                cm
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div>
+                          <label htmlFor="convergence-notes" className="block text-xs text-gray-600 mb-1">
+                            Additional Notes:
+                          </label>
+                          <input
+                            type="text"
+                            id="convergence-notes"
+                            value={convergenceTest.notes}
+                            onChange={(e) => {
+                              setConvergenceTest({
+                                ...convergenceTest,
+                                notes: e.target.value
+                              });
+                            }}
+                            placeholder="Any additional observations"
+                            className="text-sm p-2 border border-gray-300 rounded-md w-full"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>

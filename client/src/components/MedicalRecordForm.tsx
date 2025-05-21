@@ -6305,8 +6305,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   </div>
                   
                   {/* Seated Position Section */}
-                  <div className="mt-8 pt-5 border-t-2 border-blue-200">
-                    <h5 className="text-md font-medium text-blue-700 mb-4">Seated Position</h5>
+                  <div className="mt-8 pt-5 border-t-2 border-zinc-200">
+                    <h4 className="text-lg font-semibold text-gray-800 uppercase mb-4">
+                      SEATED POSITION
+                    </h4>
                     
                     {/* TFS Section */}
                     <div className="mb-4">

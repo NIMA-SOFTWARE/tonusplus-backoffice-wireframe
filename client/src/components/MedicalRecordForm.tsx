@@ -82,6 +82,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [surgicalInterventionsList, setSurgicalInterventionsList] = useState<SurgicalIntervention[]>([]);
   
+  // Interface and state for anatomical anomalies
+  interface AnatomicalAnomaly {
+    location: string;
+    type: string;
+    observation: string;
+  }
+  const [anatomicalAnomalies, setAnatomicalAnomalies] = useState<AnatomicalAnomaly[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -1701,7 +1709,105 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   Anatomical Anomalies (Location and Type)
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  {/* This is where we'll add inputs later */}
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Anatomical Anomalies</h5>
+                  
+                  {/* Existing anatomical anomalies */}
+                  {anatomicalAnomalies.map((anomaly, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      <input
+                        type="text"
+                        value={anomaly.location}
+                        onChange={(e) => {
+                          const updatedAnomalies = [...anatomicalAnomalies];
+                          updatedAnomalies[index].location = e.target.value;
+                          setAnatomicalAnomalies(updatedAnomalies);
+                        }}
+                        placeholder="Location"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="text"
+                        value={anomaly.type}
+                        onChange={(e) => {
+                          const updatedAnomalies = [...anatomicalAnomalies];
+                          updatedAnomalies[index].type = e.target.value;
+                          setAnatomicalAnomalies(updatedAnomalies);
+                        }}
+                        placeholder="Type"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <input
+                        type="text"
+                        value={anomaly.observation}
+                        onChange={(e) => {
+                          const updatedAnomalies = [...anatomicalAnomalies];
+                          updatedAnomalies[index].observation = e.target.value;
+                          setAnatomicalAnomalies(updatedAnomalies);
+                        }}
+                        placeholder="Observations"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedAnomalies = [...anatomicalAnomalies];
+                          updatedAnomalies.splice(index, 1);
+                          setAnatomicalAnomalies(updatedAnomalies);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new anatomical anomaly */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <input
+                      type="text"
+                      id="anomaly-location"
+                      placeholder="Location"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <input
+                      type="text"
+                      id="anomaly-type"
+                      placeholder="Type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <input
+                      type="text"
+                      id="anomaly-observation"
+                      placeholder="Observations"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const locationInput = document.getElementById('anomaly-location') as HTMLInputElement;
+                        const typeInput = document.getElementById('anomaly-type') as HTMLInputElement;
+                        const observationInput = document.getElementById('anomaly-observation') as HTMLInputElement;
+                        
+                        if (locationInput && locationInput.value.trim()) {
+                          setAnatomicalAnomalies([
+                            ...anatomicalAnomalies,
+                            {
+                              location: locationInput.value.trim(),
+                              type: typeInput ? typeInput.value.trim() : '',
+                              observation: observationInput ? observationInput.value.trim() : ''
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          if (locationInput) locationInput.value = '';
+                          if (typeInput) typeInput.value = '';
+                          if (observationInput) observationInput.value = '';
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

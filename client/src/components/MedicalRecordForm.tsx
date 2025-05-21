@@ -229,6 +229,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [ongoingTreatments, setOngoingTreatments] = useState("");
   const [pastTreatments, setPastTreatments] = useState("");
   
+  // State for Medical Devices
+  interface MedicalDevice {
+    name: string;
+    notes: string;
+  }
+  const [currentDevices, setCurrentDevices] = useState<MedicalDevice[]>([]);
+  const [pastDevices, setPastDevices] = useState<MedicalDevice[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -5011,6 +5019,204 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       className="w-full text-sm p-3 border border-gray-300 rounded-md min-h-32"
                       rows={5}
                     ></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              {/* MEDICAL DEVICES Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  MEDICAL DEVICES
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  {/* Current Devices */}
+                  <div className="mb-5">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">Current Medical Devices</h5>
+                    
+                    {/* Existing Current Devices */}
+                    {currentDevices.map((device: MedicalDevice, index: number) => (
+                      <div key={index} className="flex items-center gap-2 mb-2">
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={device.name}
+                            onChange={(e) => {
+                              const updatedDevices = [...currentDevices];
+                              updatedDevices[index].name = e.target.value;
+                              setCurrentDevices(updatedDevices);
+                            }}
+                            placeholder="Device name (e.g., Pacemaker, Arthroprosthesis)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={device.notes}
+                            onChange={(e) => {
+                              const updatedDevices = [...currentDevices];
+                              updatedDevices[index].notes = e.target.value;
+                              setCurrentDevices(updatedDevices);
+                            }}
+                            placeholder="Notes (type, placement, date installed, etc.)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        
+                        <button
+                          onClick={() => {
+                            const updatedDevices = [...currentDevices];
+                            updatedDevices.splice(index, 1);
+                            setCurrentDevices(updatedDevices);
+                          }}
+                          className="p-2 text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Add New Current Device */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          id="current-device-name"
+                          placeholder="Device name (e.g., Pacemaker, Arthroprosthesis)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          id="current-device-notes"
+                          placeholder="Notes (type, placement, date installed, etc.)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                        onClick={() => {
+                          const nameInput = document.getElementById('current-device-name') as HTMLInputElement;
+                          const notesInput = document.getElementById('current-device-notes') as HTMLInputElement;
+                          
+                          if (nameInput && nameInput.value.trim()) {
+                            setCurrentDevices([
+                              ...currentDevices,
+                              {
+                                name: nameInput.value.trim(),
+                                notes: notesInput ? notesInput.value : ''
+                              }
+                            ]);
+                            
+                            // Reset inputs
+                            if (nameInput) nameInput.value = '';
+                            if (notesInput) notesInput.value = '';
+                          }
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Past Devices */}
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">Past Medical Devices</h5>
+                    
+                    {/* Existing Past Devices */}
+                    {pastDevices.map((device: MedicalDevice, index: number) => (
+                      <div key={index} className="flex items-center gap-2 mb-2">
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={device.name}
+                            onChange={(e) => {
+                              const updatedDevices = [...pastDevices];
+                              updatedDevices[index].name = e.target.value;
+                              setPastDevices(updatedDevices);
+                            }}
+                            placeholder="Device name (e.g., Osteosynthesis material)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        
+                        <div className="flex-1">
+                          <input
+                            type="text"
+                            value={device.notes}
+                            onChange={(e) => {
+                              const updatedDevices = [...pastDevices];
+                              updatedDevices[index].notes = e.target.value;
+                              setPastDevices(updatedDevices);
+                            }}
+                            placeholder="Notes (removal date, reason, etc.)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                        
+                        <button
+                          onClick={() => {
+                            const updatedDevices = [...pastDevices];
+                            updatedDevices.splice(index, 1);
+                            setPastDevices(updatedDevices);
+                          }}
+                          className="p-2 text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Add New Past Device */}
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          id="past-device-name"
+                          placeholder="Device name (e.g., Osteosynthesis material)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          id="past-device-notes"
+                          placeholder="Notes (removal date, reason, etc.)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                        onClick={() => {
+                          const nameInput = document.getElementById('past-device-name') as HTMLInputElement;
+                          const notesInput = document.getElementById('past-device-notes') as HTMLInputElement;
+                          
+                          if (nameInput && nameInput.value.trim()) {
+                            setPastDevices([
+                              ...pastDevices,
+                              {
+                                name: nameInput.value.trim(),
+                                notes: notesInput ? notesInput.value : ''
+                              }
+                            ]);
+                            
+                            // Reset inputs
+                            if (nameInput) nameInput.value = '';
+                            if (notesInput) notesInput.value = '';
+                          }
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>

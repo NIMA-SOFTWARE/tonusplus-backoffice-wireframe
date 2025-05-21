@@ -161,11 +161,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   
   // State for vision quality tracking
   const [visionQuality, setVisionQuality] = useState({
-    rightEye: false,
-    leftEye: false,
-    bothEyes: false,
-    dominantEye: false,
-    nonDominantEye: false
+    eyeCount: "", // "one" or "both"
+    eyeDominance: "" // "dominant" or "non-dominant"
   });
   
   // Toggle voice input functionality
@@ -3256,96 +3253,50 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-2">
                         Vision Quality
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="vision-right-eye"
-                            checked={visionQuality.rightEye}
+                      <div className="flex flex-wrap items-center gap-4">
+                        <div>
+                          <label htmlFor="vision-eye-count" className="block text-xs text-gray-600 mb-1">
+                            Client sees well with:
+                          </label>
+                          <select
+                            id="vision-eye-count"
+                            value={visionQuality.eyeCount}
                             onChange={(e) => {
                               setVisionQuality({
                                 ...visionQuality,
-                                rightEye: e.target.checked
+                                eyeCount: e.target.value
                               });
                             }}
-                            className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="vision-right-eye" className="text-sm text-gray-700">
-                            Sees well with right eye (Dx)
-                          </label>
+                            className="text-sm p-2 border border-gray-300 rounded-md w-36"
+                          >
+                            <option value="">Select</option>
+                            <option value="one">One eye</option>
+                            <option value="both">Both eyes</option>
+                          </select>
                         </div>
                         
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="vision-left-eye"
-                            checked={visionQuality.leftEye}
-                            onChange={(e) => {
-                              setVisionQuality({
-                                ...visionQuality,
-                                leftEye: e.target.checked
-                              });
-                            }}
-                            className="mr-2 h-4 w-4 text-red-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="vision-left-eye" className="text-sm text-gray-700">
-                            Sees well with left eye (Sx)
-                          </label>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="vision-both-eyes"
-                            checked={visionQuality.bothEyes}
-                            onChange={(e) => {
-                              setVisionQuality({
-                                ...visionQuality,
-                                bothEyes: e.target.checked
-                              });
-                            }}
-                            className="mr-2 h-4 w-4 text-purple-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="vision-both-eyes" className="text-sm text-gray-700">
-                            Sees well with both eyes
-                          </label>
-                        </div>
-                        
-                        <div className="flex items-center">
-                          <input
-                            type="checkbox"
-                            id="vision-dominant-eye"
-                            checked={visionQuality.dominantEye}
-                            onChange={(e) => {
-                              setVisionQuality({
-                                ...visionQuality,
-                                dominantEye: e.target.checked
-                              });
-                            }}
-                            className="mr-2 h-4 w-4 text-green-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="vision-dominant-eye" className="text-sm text-gray-700">
-                            Sees well with dominant eye
-                          </label>
-                        </div>
-                        
-                        <div className="flex items-center col-span-2">
-                          <input
-                            type="checkbox"
-                            id="vision-non-dominant-eye"
-                            checked={visionQuality.nonDominantEye}
-                            onChange={(e) => {
-                              setVisionQuality({
-                                ...visionQuality,
-                                nonDominantEye: e.target.checked
-                              });
-                            }}
-                            className="mr-2 h-4 w-4 text-amber-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="vision-non-dominant-eye" className="text-sm text-gray-700">
-                            Sees well with non-dominant eye
-                          </label>
-                        </div>
+                        {visionQuality.eyeCount === "one" && (
+                          <div>
+                            <label htmlFor="vision-eye-dominance" className="block text-xs text-gray-600 mb-1">
+                              Which eye:
+                            </label>
+                            <select
+                              id="vision-eye-dominance"
+                              value={visionQuality.eyeDominance}
+                              onChange={(e) => {
+                                setVisionQuality({
+                                  ...visionQuality,
+                                  eyeDominance: e.target.value
+                                });
+                              }}
+                              className="text-sm p-2 border border-gray-300 rounded-md w-40"
+                            >
+                              <option value="">Select</option>
+                              <option value="dominant">Dominant eye</option>
+                              <option value="non-dominant">Non-dominant eye</option>
+                            </select>
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

@@ -261,6 +261,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [tfe, setTfe] = useState<"Dx" | "Sx" | "">("");
   const [barralOptions, setBarralOptions] = useState<string[]>([]);
   const [bendingTestOptions, setBendingTestOptions] = useState<string[]>([]);
+  const [lateralFlexionDxAcutePoint, setLateralFlexionDxAcutePoint] = useState("");
+  const [lateralFlexionDxStraightLine, setLateralFlexionDxStraightLine] = useState("");
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -6038,6 +6040,85 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       voiceEnabled={voiceInputEnabled}
                       className="mb-2"
                     />
+                  </div>
+                  
+                  {/* Lateral Flexion Dx Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Lateral Flexion Dx</label>
+                    
+                    <div className="space-y-4">
+                      <div>
+                        <label htmlFor="lateral-flexion-dx-acute" className="block text-sm font-medium text-gray-700 mb-1">
+                          Acute inflection point at
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            id="lateral-flexion-dx-acute"
+                            value={lateralFlexionDxAcutePoint}
+                            onChange={(e) => setLateralFlexionDxAcutePoint(e.target.value)}
+                            placeholder="e.g., T7-T8"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                          {voiceInputEnabled && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                // Start voice recognition for this field
+                                const recognition = new (window as any).webkitSpeechRecognition();
+                                recognition.lang = 'en-US';
+                                recognition.onresult = (event: any) => {
+                                  const transcript = event.results[0][0].transcript;
+                                  setLateralFlexionDxAcutePoint(transcript);
+                                };
+                                recognition.start();
+                              }}
+                              className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                              aria-label="Voice input"
+                              title="Use voice input"
+                            >
+                              🎤
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label htmlFor="lateral-flexion-dx-straight" className="block text-sm font-medium text-gray-700 mb-1">
+                          Straight line at
+                        </label>
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            id="lateral-flexion-dx-straight"
+                            value={lateralFlexionDxStraightLine}
+                            onChange={(e) => setLateralFlexionDxStraightLine(e.target.value)}
+                            placeholder="e.g., T11-L1"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                          {voiceInputEnabled && (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                // Start voice recognition for this field
+                                const recognition = new (window as any).webkitSpeechRecognition();
+                                recognition.lang = 'en-US';
+                                recognition.onresult = (event: any) => {
+                                  const transcript = event.results[0][0].transcript;
+                                  setLateralFlexionDxStraightLine(transcript);
+                                };
+                                recognition.start();
+                              }}
+                              className="ml-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                              aria-label="Voice input"
+                              title="Use voice input"
+                            >
+                              🎤
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

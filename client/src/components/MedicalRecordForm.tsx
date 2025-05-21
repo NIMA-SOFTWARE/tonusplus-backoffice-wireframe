@@ -6664,347 +6664,177 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       Select the exercises performed with the client during this session:
                     </p>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {/* Breathing Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Breathing Exercises</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Diaphragmatic Breathing')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Diaphragmatic Breathing']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Diaphragmatic Breathing'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Diaphragmatic Breathing</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Lateral Costal Breathing')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Lateral Costal Breathing']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Lateral Costal Breathing'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Lateral Costal Breathing</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Alternate Nostril Breathing')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Alternate Nostril Breathing']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Alternate Nostril Breathing'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Alternate Nostril Breathing</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Breathing Exercises"
+                          placeholder="Select breathing exercises..."
+                          options={[
+                            "Diaphragmatic Breathing",
+                            "Lateral Costal Breathing",
+                            "Alternate Nostril Breathing",
+                            "Box Breathing",
+                            "Pursed Lip Breathing"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["Diaphragmatic Breathing", "Lateral Costal Breathing", "Alternate Nostril Breathing", 
+                             "Box Breathing", "Pursed Lip Breathing"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            // Remove existing breathing exercises and add new ones
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["Diaphragmatic Breathing", "Lateral Costal Breathing", "Alternate Nostril Breathing", 
+                                "Box Breathing", "Pursed Lip Breathing"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                       
                       {/* Mobility Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Mobility Exercises</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Thoracic Spine Mobility')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Thoracic Spine Mobility']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Thoracic Spine Mobility'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Thoracic Spine Mobility</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Hip Mobility')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Hip Mobility']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Hip Mobility'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Hip Mobility</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Shoulder Mobility')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Shoulder Mobility']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Shoulder Mobility'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Shoulder Mobility</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Mobility Exercises"
+                          placeholder="Select mobility exercises..."
+                          options={[
+                            "Thoracic Spine Mobility",
+                            "Hip Mobility",
+                            "Shoulder Mobility",
+                            "Ankle Mobility",
+                            "Neck Mobility",
+                            "Wrist Mobility"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["Thoracic Spine Mobility", "Hip Mobility", "Shoulder Mobility", 
+                             "Ankle Mobility", "Neck Mobility", "Wrist Mobility"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["Thoracic Spine Mobility", "Hip Mobility", "Shoulder Mobility", 
+                                "Ankle Mobility", "Neck Mobility", "Wrist Mobility"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                       
                       {/* Stability Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Stability Exercises</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Core Activation')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Core Activation']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Core Activation'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Core Activation</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Pelvic Floor Activation')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Pelvic Floor Activation']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Pelvic Floor Activation'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Pelvic Floor Activation</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Balance Exercises')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Balance Exercises']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Balance Exercises'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Balance Exercises</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Stability Exercises"
+                          placeholder="Select stability exercises..."
+                          options={[
+                            "Core Activation",
+                            "Pelvic Floor Activation",
+                            "Balance Exercises",
+                            "Posture Stability",
+                            "Scapular Stabilization"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["Core Activation", "Pelvic Floor Activation", "Balance Exercises", 
+                             "Posture Stability", "Scapular Stabilization"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["Core Activation", "Pelvic Floor Activation", "Balance Exercises", 
+                                "Posture Stability", "Scapular Stabilization"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                       
                       {/* Equipment Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Pilates Equipment</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Reformer Exercises')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Reformer Exercises']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Reformer Exercises'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Reformer Exercises</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Cadillac Exercises')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Cadillac Exercises']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Cadillac Exercises'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Cadillac Exercises</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Chair Exercises')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Chair Exercises']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Chair Exercises'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Chair Exercises</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Barrel Exercises')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Barrel Exercises']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Barrel Exercises'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Barrel Exercises</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Pilates Equipment"
+                          placeholder="Select equipment exercises..."
+                          options={[
+                            "Reformer Exercises",
+                            "Cadillac Exercises",
+                            "Chair Exercises",
+                            "Barrel Exercises",
+                            "Tower Exercises"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["Reformer Exercises", "Cadillac Exercises", "Chair Exercises", 
+                             "Barrel Exercises", "Tower Exercises"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["Reformer Exercises", "Cadillac Exercises", "Chair Exercises", 
+                                "Barrel Exercises", "Tower Exercises"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                       
                       {/* Mat Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Mat Exercises</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('The Hundred')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'The Hundred']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'The Hundred'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">The Hundred</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Roll-Up')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Roll-Up']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Roll-Up'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Roll-Up</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Spine Twist')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Spine Twist']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Spine Twist'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Spine Twist</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Side Kicks')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Side Kicks']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Side Kicks'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Side Kicks</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Mat Exercises"
+                          placeholder="Select mat exercises..."
+                          options={[
+                            "The Hundred",
+                            "Roll-Up",
+                            "Spine Twist",
+                            "Side Kicks",
+                            "Swan Dive",
+                            "The Teaser",
+                            "The Seal"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["The Hundred", "Roll-Up", "Spine Twist", "Side Kicks", 
+                             "Swan Dive", "The Teaser", "The Seal"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["The Hundred", "Roll-Up", "Spine Twist", "Side Kicks", 
+                                "Swan Dive", "The Teaser", "The Seal"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                       
                       {/* Therapeutic Exercises */}
-                      <div className="border rounded-md p-3">
-                        <h4 className="font-medium text-gray-800 mb-2">Therapeutic</h4>
-                        <div className="space-y-2">
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Fascial Release')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Fascial Release']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Fascial Release'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Fascial Release</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Postural Alignment')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Postural Alignment']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Postural Alignment'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Postural Alignment</span>
-                          </label>
-                          <label className="flex items-start">
-                            <input
-                              type="checkbox"
-                              checked={selectedExercises.includes('Gait Training')}
-                              onChange={(e) => {
-                                if (e.target.checked) {
-                                  setSelectedExercises([...selectedExercises, 'Gait Training']);
-                                } else {
-                                  setSelectedExercises(selectedExercises.filter(ex => ex !== 'Gait Training'));
-                                }
-                              }}
-                              className="mt-0.5 h-4 w-4"
-                            />
-                            <span className="ml-2 text-sm">Gait Training</span>
-                          </label>
-                        </div>
+                      <div>
+                        <TagSelectionInput
+                          label="Therapeutic"
+                          placeholder="Select therapeutic exercises..."
+                          options={[
+                            "Fascial Release",
+                            "Postural Alignment",
+                            "Gait Training",
+                            "Joint Mobilization",
+                            "Myofascial Release"
+                          ]}
+                          selectedTags={selectedExercises.filter(ex => 
+                            ["Fascial Release", "Postural Alignment", "Gait Training", 
+                             "Joint Mobilization", "Myofascial Release"].includes(ex)
+                          )}
+                          onTagsChange={(tags) => {
+                            const filteredExercises = selectedExercises.filter(ex => 
+                              !["Fascial Release", "Postural Alignment", "Gait Training", 
+                                "Joint Mobilization", "Myofascial Release"].includes(ex)
+                            );
+                            setSelectedExercises([...filteredExercises, ...tags]);
+                          }}
+                          allowCustomTags={true}
+                          className="w-full"
+                        />
                       </div>
                     </div>
                     

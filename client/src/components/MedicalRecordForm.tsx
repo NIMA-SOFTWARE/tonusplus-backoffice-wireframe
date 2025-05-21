@@ -1509,8 +1509,128 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
                   Surgical Interventions
                 </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  {/* This is where we'll add inputs later */}
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-4">
+                  {/* List of existing surgical interventions */}
+                  <div className="space-y-3">
+                    {/* This will map through all saved interventions */}
+                    {surgicalInterventions.split('\n')
+                      .filter(intervention => intervention.trim().length > 0)
+                      .map((intervention, index) => (
+                        <div key={index} className="flex items-center gap-2 mb-2 bg-white p-2 rounded border border-gray-200">
+                          <span className="flex-1">{intervention}</span>
+                          <button
+                            onClick={() => {
+                              const updatedInterventions = surgicalInterventions
+                                .split('\n')
+                                .filter((_, i) => i !== index)
+                                .join('\n');
+                              setSurgicalInterventions(updatedInterventions);
+                            }}
+                            className="text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                  </div>
+
+                  {/* Add new intervention */}
+                  <div className="space-y-3">
+                    <h5 className="text-sm font-medium text-gray-700">Add Surgical Intervention</h5>
+                    <div className="flex flex-wrap items-start gap-3">
+                      <div className="flex-1 min-w-[200px]">
+                        <label className="block text-xs text-gray-500 mb-1">Type</label>
+                        <select
+                          id="surgical-intervention-type"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          onChange={(e) => {
+                            // Show/hide other input when "Other" is selected
+                            const otherInput = document.getElementById('other-intervention-container');
+                            if (otherInput) {
+                              otherInput.style.display = e.target.value === 'Other' ? 'block' : 'none';
+                            }
+                          }}
+                        >
+                          <option value="">Select intervention type</option>
+                          <option value="Appendectomy">Appendectomy</option>
+                          <option value="Cesarean section">Cesarean section</option>
+                          <option value="Cholecystectomy">Cholecystectomy</option>
+                          <option value="Hysterectomy">Hysterectomy</option>
+                          <option value="Mastectomy">Mastectomy</option>
+                          <option value="Renal">Renal</option>
+                          <option value="Pulmonary">Pulmonary</option>
+                          <option value="Tumor">Tumor</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      </div>
+
+                      <div id="other-intervention-container" style={{ display: 'none' }} className="flex-1 min-w-[200px]">
+                        <label className="block text-xs text-gray-500 mb-1">Specify other</label>
+                        <input
+                          type="text"
+                          id="other-intervention-input"
+                          placeholder="Specify intervention"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+
+                      <div className="w-32">
+                        <label className="block text-xs text-gray-500 mb-1">Year</label>
+                        <input
+                          type="text"
+                          id="intervention-year"
+                          placeholder="Year"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+
+                      <div className="self-end pb-[1px]">
+                        <button
+                          className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          onClick={() => {
+                            const typeSelect = document.getElementById('surgical-intervention-type') as HTMLSelectElement;
+                            const otherInput = document.getElementById('other-intervention-input') as HTMLInputElement;
+                            const yearInput = document.getElementById('intervention-year') as HTMLInputElement;
+                            
+                            if (typeSelect && typeSelect.value) {
+                              let interventionType = typeSelect.value;
+                              
+                              // Use the custom value if "Other" is selected
+                              if (interventionType === 'Other' && otherInput && otherInput.value.trim()) {
+                                interventionType = otherInput.value.trim();
+                              }
+                              
+                              if (interventionType !== 'Other') {  // Ensure we have a valid type
+                                const yearText = yearInput && yearInput.value ? ` (${yearInput.value})` : '';
+                                const newIntervention = `${interventionType}${yearText}`;
+                                
+                                setSurgicalInterventions(prev => {
+                                  const currentInterventions = prev.trim();
+                                  return currentInterventions
+                                    ? `${currentInterventions}\n${newIntervention}`
+                                    : newIntervention;
+                                });
+                                
+                                // Reset inputs
+                                typeSelect.selectedIndex = 0;
+                                if (otherInput) otherInput.value = '';
+                                if (yearInput) yearInput.value = '';
+                                
+                                // Hide other input
+                                const otherContainer = document.getElementById('other-intervention-container');
+                                if (otherContainer) {
+                                  otherContainer.style.display = 'none';
+                                }
+                              }
+                            }
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               

@@ -189,6 +189,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for Lingual Frenulum
   const [lingualFrenulum, setLingualFrenulum] = useState("");
   
+  // State for Tooth Status
+  interface ToothStatus {
+    [key: string]: string; // FDI number as key, status code as value
+  }
+  const [toothStatus, setToothStatus] = useState<ToothStatus>({});
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4084,6 +4090,198 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <option value="Ankylosing">Ankylosing</option>
                       <option value="Short posterior">Short posterior</option>
                     </select>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Edentulous Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  EDENTULOUS
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Permanent Teeth Chart (FDI)</h5>
+                  
+                  <div className="mb-4">
+                    <p className="text-xs text-gray-500 mb-2">
+                      Select status for each tooth by clicking on its number
+                    </p>
+                    
+                    {/* Legend for tooth status codes */}
+                    <div className="grid grid-cols-3 gap-2 mb-4 text-xs">
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-green-100 border border-green-500 mr-1"></div>
+                        <span>H: Healthy</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-red-100 border border-red-500 mr-1"></div>
+                        <span>M: Missing</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-blue-100 border border-blue-500 mr-1"></div>
+                        <span>F: Filled</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-yellow-100 border border-yellow-500 mr-1"></div>
+                        <span>D: Decayed</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-purple-100 border border-purple-500 mr-1"></div>
+                        <span>R: Root canal</span>
+                      </div>
+                      <div className="flex items-center">
+                        <div className="w-4 h-4 bg-gray-100 border border-gray-500 mr-1"></div>
+                        <span>I: Implant</span>
+                      </div>
+                    </div>
+                    
+                    {/* Top row of teeth (18-28) */}
+                    <div className="flex justify-center mb-6">
+                      <div className="grid grid-cols-8 gap-2">
+                        {[18, 17, 16, 15, 14, 13, 12, 11].map((tooth) => (
+                          <div key={tooth} className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const statusOptions = ['H', 'M', 'F', 'D', 'R', 'I', ''];
+                                const currentStatus = toothStatus[tooth.toString()] || '';
+                                const currentIndex = statusOptions.indexOf(currentStatus);
+                                const nextIndex = (currentIndex + 1) % statusOptions.length;
+                                const newStatus = statusOptions[nextIndex];
+                                
+                                setToothStatus({
+                                  ...toothStatus,
+                                  [tooth.toString()]: newStatus
+                                });
+                              }}
+                              className={`w-10 h-10 border ${
+                                !toothStatus[tooth.toString()] ? 'border-gray-300 bg-white' :
+                                toothStatus[tooth.toString()] === 'H' ? 'border-green-500 bg-green-100' :
+                                toothStatus[tooth.toString()] === 'M' ? 'border-red-500 bg-red-100' :
+                                toothStatus[tooth.toString()] === 'F' ? 'border-blue-500 bg-blue-100' :
+                                toothStatus[tooth.toString()] === 'D' ? 'border-yellow-500 bg-yellow-100' :
+                                toothStatus[tooth.toString()] === 'R' ? 'border-purple-500 bg-purple-100' :
+                                'border-gray-500 bg-gray-100'
+                              } rounded-md text-sm font-medium`}
+                            >
+                              {tooth}
+                              {toothStatus[tooth.toString()] && (
+                                <span className="block text-xs">{toothStatus[tooth.toString()]}</span>
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-8 gap-2">
+                        {[21, 22, 23, 24, 25, 26, 27, 28].map((tooth) => (
+                          <div key={tooth} className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const statusOptions = ['H', 'M', 'F', 'D', 'R', 'I', ''];
+                                const currentStatus = toothStatus[tooth.toString()] || '';
+                                const currentIndex = statusOptions.indexOf(currentStatus);
+                                const nextIndex = (currentIndex + 1) % statusOptions.length;
+                                const newStatus = statusOptions[nextIndex];
+                                
+                                setToothStatus({
+                                  ...toothStatus,
+                                  [tooth.toString()]: newStatus
+                                });
+                              }}
+                              className={`w-10 h-10 border ${
+                                !toothStatus[tooth.toString()] ? 'border-gray-300 bg-white' :
+                                toothStatus[tooth.toString()] === 'H' ? 'border-green-500 bg-green-100' :
+                                toothStatus[tooth.toString()] === 'M' ? 'border-red-500 bg-red-100' :
+                                toothStatus[tooth.toString()] === 'F' ? 'border-blue-500 bg-blue-100' :
+                                toothStatus[tooth.toString()] === 'D' ? 'border-yellow-500 bg-yellow-100' :
+                                toothStatus[tooth.toString()] === 'R' ? 'border-purple-500 bg-purple-100' :
+                                'border-gray-500 bg-gray-100'
+                              } rounded-md text-sm font-medium`}
+                            >
+                              {tooth}
+                              {toothStatus[tooth.toString()] && (
+                                <span className="block text-xs">{toothStatus[tooth.toString()]}</span>
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    
+                    {/* Bottom row of teeth (48-38) */}
+                    <div className="flex justify-center">
+                      <div className="grid grid-cols-8 gap-2">
+                        {[48, 47, 46, 45, 44, 43, 42, 41].map((tooth) => (
+                          <div key={tooth} className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const statusOptions = ['H', 'M', 'F', 'D', 'R', 'I', ''];
+                                const currentStatus = toothStatus[tooth.toString()] || '';
+                                const currentIndex = statusOptions.indexOf(currentStatus);
+                                const nextIndex = (currentIndex + 1) % statusOptions.length;
+                                const newStatus = statusOptions[nextIndex];
+                                
+                                setToothStatus({
+                                  ...toothStatus,
+                                  [tooth.toString()]: newStatus
+                                });
+                              }}
+                              className={`w-10 h-10 border ${
+                                !toothStatus[tooth.toString()] ? 'border-gray-300 bg-white' :
+                                toothStatus[tooth.toString()] === 'H' ? 'border-green-500 bg-green-100' :
+                                toothStatus[tooth.toString()] === 'M' ? 'border-red-500 bg-red-100' :
+                                toothStatus[tooth.toString()] === 'F' ? 'border-blue-500 bg-blue-100' :
+                                toothStatus[tooth.toString()] === 'D' ? 'border-yellow-500 bg-yellow-100' :
+                                toothStatus[tooth.toString()] === 'R' ? 'border-purple-500 bg-purple-100' :
+                                'border-gray-500 bg-gray-100'
+                              } rounded-md text-sm font-medium`}
+                            >
+                              {tooth}
+                              {toothStatus[tooth.toString()] && (
+                                <span className="block text-xs">{toothStatus[tooth.toString()]}</span>
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                      <div className="grid grid-cols-8 gap-2">
+                        {[31, 32, 33, 34, 35, 36, 37, 38].map((tooth) => (
+                          <div key={tooth} className="text-center">
+                            <button
+                              type="button"
+                              onClick={() => {
+                                const statusOptions = ['H', 'M', 'F', 'D', 'R', 'I', ''];
+                                const currentStatus = toothStatus[tooth.toString()] || '';
+                                const currentIndex = statusOptions.indexOf(currentStatus);
+                                const nextIndex = (currentIndex + 1) % statusOptions.length;
+                                const newStatus = statusOptions[nextIndex];
+                                
+                                setToothStatus({
+                                  ...toothStatus,
+                                  [tooth.toString()]: newStatus
+                                });
+                              }}
+                              className={`w-10 h-10 border ${
+                                !toothStatus[tooth.toString()] ? 'border-gray-300 bg-white' :
+                                toothStatus[tooth.toString()] === 'H' ? 'border-green-500 bg-green-100' :
+                                toothStatus[tooth.toString()] === 'M' ? 'border-red-500 bg-red-100' :
+                                toothStatus[tooth.toString()] === 'F' ? 'border-blue-500 bg-blue-100' :
+                                toothStatus[tooth.toString()] === 'D' ? 'border-yellow-500 bg-yellow-100' :
+                                toothStatus[tooth.toString()] === 'R' ? 'border-purple-500 bg-purple-100' :
+                                'border-gray-500 bg-gray-100'
+                              } rounded-md text-sm font-medium`}
+                            >
+                              {tooth}
+                              {toothStatus[tooth.toString()] && (
+                                <span className="block text-xs">{toothStatus[tooth.toString()]}</span>
+                              )}
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

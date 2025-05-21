@@ -931,26 +931,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     <div className="space-y-3 mb-4">
                       {fractures.map((fracture, index) => (
                         <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-                          <div className="flex justify-between items-start">
-                            <div className="font-medium text-gray-700">{fracture.location}</div>
-                            <button
-                              onClick={() => {
-                                const updatedFractures = [...fractures];
-                                updatedFractures.splice(index, 1);
-                                setFractures(updatedFractures);
-                              }}
-                              className="text-red-500 hover:text-red-700"
-                              aria-label="Remove fracture"
-                            >
-                              ✕
-                            </button>
-                          </div>
-                          
-                          <div className="grid grid-cols-2 gap-2 mt-2">
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Year</label>
+                          <div className="flex items-center gap-2">
+                            <div className="font-medium text-gray-700 w-1/5">{fracture.location}</div>
+                            
+                            <div className="flex-shrink-0 w-20">
                               <input
                                 type="text"
+                                placeholder="Year"
                                 value={fracture.year}
                                 onChange={(e) => {
                                   const updatedFractures = [...fractures];
@@ -960,10 +947,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 className="w-full text-sm p-1 border border-gray-300 rounded-md"
                               />
                             </div>
-                            <div>
-                              <label className="block text-xs text-gray-500 mb-1">Observation</label>
+                            
+                            <div className="flex-grow">
                               <input
                                 type="text"
+                                placeholder="Observation"
                                 value={fracture.observation}
                                 onChange={(e) => {
                                   const updatedFractures = [...fractures];
@@ -973,6 +961,18 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 className="w-full text-sm p-1 border border-gray-300 rounded-md"
                               />
                             </div>
+                            
+                            <button
+                              onClick={() => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures.splice(index, 1);
+                                setFractures(updatedFractures);
+                              }}
+                              className="flex-shrink-0 text-red-500 hover:text-red-700"
+                              aria-label="Remove fracture"
+                            >
+                              ✕
+                            </button>
                           </div>
                         </div>
                       ))}

@@ -3,36 +3,34 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Participant } from '@shared/schema';
+import { format } from 'date-fns';
 
 interface MedicalRecordFormProps {
   participant: Participant;
   onClose: () => void;
+  sessionId?: string;
+  sessionDate?: string;
+  sessionTime?: string;
 }
 
 const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({ 
   participant, 
-  onClose
+  onClose,
+  sessionDate,
+  sessionTime
 }) => {
   return (
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-5xl mx-auto">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-800">Medical Record</h2>
-        <div className="mt-2 bg-blue-50 p-4 rounded-md">
-          <h3 className="font-semibold text-blue-800">Patient Information</h3>
-          <div className="grid grid-cols-2 gap-4 mt-2">
-            <div>
-              <span className="text-sm text-gray-500">Name:</span>
-              <p className="font-medium">{participant.name}</p>
-            </div>
-            <div>
-              <span className="text-sm text-gray-500">Email:</span>
-              <p className="font-medium">{participant.email}</p>
-            </div>
-            {participant.phone && (
-              <div>
-                <span className="text-sm text-gray-500">Phone:</span>
-                <p className="font-medium">{participant.phone}</p>
-              </div>
+        <div className="flex justify-between items-center">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-800">
+              Medical Record - {participant.name}
+            </h2>
+            {sessionDate && sessionTime && (
+              <p className="text-sm text-gray-500 mt-1">
+                Session: {sessionDate} at {sessionTime}
+              </p>
             )}
           </div>
         </div>

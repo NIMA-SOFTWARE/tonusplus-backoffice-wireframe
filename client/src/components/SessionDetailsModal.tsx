@@ -202,14 +202,6 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
 
   return (
     <>
-      {medicalRecordParticipant && (
-        <MedicalRecordModal
-          participant={medicalRecordParticipant}
-          sessionId={session.id}
-          isOpen={!!medicalRecordParticipant}
-          onClose={() => setMedicalRecordParticipant(null)}
-        />
-      )}
       <Dialog open={isOpen} onOpenChange={onClose}>
         <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
@@ -481,15 +473,6 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
                                 <td className="py-2 px-4 text-slate-600">{participant.email}</td>
                                 <td className="py-2 px-4">
                                   <div className="flex space-x-2">
-                                    <Button 
-                                      variant="outline" 
-                                      size="sm"
-                                      onClick={() => setMedicalRecordParticipant(participant)}
-                                      className="h-8 text-green-600 hover:text-green-800 hover:bg-green-50 border-green-200"
-                                    >
-                                      <FileText className="h-4 w-4 mr-1.5" />
-                                      Medical Record
-                                    </Button>
                                     <Button 
                                       variant="ghost" 
                                       size="sm"

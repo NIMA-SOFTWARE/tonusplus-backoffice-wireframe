@@ -1,36 +1,13 @@
 import { 
   users, 
-  customers,
   sessionsTable, 
   participantsTable, 
-  medicalRecords, 
-  recurrentActivities,
-  participationReason,
-  physicalPains,
-  traumaHistory,
-  surgicalInterventions,
-  physiologicalHistory,
-  clinicalExams,
-  standingTests,
-  shoulderTests,
-  hipTests,
-  anatomicalAnomalies,
-  respiratoryIssues,
-  circulatoryIssues,
-  digestiveIssues,
-  conclusions,
-  fileUploads,
   type User, 
   type InsertUser,
-  type Customer,
-  type InsertCustomer,
   type Session,
   type InsertSession,
   type SessionParticipant,
-  type InsertParticipant,
-  type MedicalRecord,
-  type InsertMedicalRecord,
-  type MedicalRecordFormData
+  type InsertParticipant
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and, inArray, like, or } from "drizzle-orm";
@@ -42,13 +19,6 @@ export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
-  
-  // Customer methods
-  getCustomers(): Promise<Customer[]>;
-  getCustomerById(id: number): Promise<Customer | undefined>;
-  getCustomerByEmail(email: string): Promise<Customer | undefined>;
-  createCustomer(customer: InsertCustomer): Promise<Customer>;
-  updateCustomer(id: number, customer: Partial<InsertCustomer>): Promise<Customer | undefined>;
   
   // Session methods
   getSessions(): Promise<Session[]>;
@@ -63,26 +33,6 @@ export interface IStorage {
   createParticipant(participant: InsertParticipant): Promise<SessionParticipant>;
   updateParticipantStatus(id: number, status: string): Promise<SessionParticipant | undefined>;
   removeParticipant(id: number): Promise<boolean>;
-  
-  // Medical records methods
-  getMedicalRecordsByParticipantId(participantId: number): Promise<MedicalRecord[]>;
-  getMedicalRecordsByCustomerId(customerId: number): Promise<MedicalRecord[]>;
-  getMedicalRecordById(id: number): Promise<MedicalRecord | undefined>;
-  createMedicalRecord(record: InsertMedicalRecord): Promise<MedicalRecord>;
-  
-  // Specialized methods for medical record sections
-  saveRecurrentActivities(medicalRecordId: number, data: MedicalRecordFormData['recurrentActivities']): Promise<boolean>;
-  saveParticipationReason(medicalRecordId: number, data: MedicalRecordFormData['participationReason']): Promise<boolean>;
-  savePhysicalPains(medicalRecordId: number, data: MedicalRecordFormData['physicalPains']): Promise<boolean>;
-  saveTraumaHistory(medicalRecordId: number, data: MedicalRecordFormData['traumaHistory']): Promise<boolean>;
-  saveSurgicalInterventions(medicalRecordId: number, data: MedicalRecordFormData['surgicalInterventions']): Promise<boolean>;
-  savePhysiologicalHistory(medicalRecordId: number, data: MedicalRecordFormData['physiologicalHistory']): Promise<boolean>;
-  saveObjectiveExamination(medicalRecordId: number, data: MedicalRecordFormData['objectiveExamination']): Promise<boolean>;
-  saveSpecificClinicalHistory(medicalRecordId: number, data: MedicalRecordFormData['specificClinicalHistory']): Promise<boolean>;
-  saveConclusions(medicalRecordId: number, data: MedicalRecordFormData['conclusions']): Promise<boolean>;
-  
-  // File upload method
-  saveFileUpload(medicalRecordId: number, section: string, fileName: string, fileType: string, fileUrl: string): Promise<number>;
 }
 
 export class DatabaseStorage implements IStorage {

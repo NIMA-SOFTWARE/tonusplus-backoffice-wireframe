@@ -44,10 +44,137 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
             Personal Data
           </AccordionTrigger>
           <AccordionContent>
-            <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">Personal Information</h3>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                Personal data section will be auto-completed from the customer's profile
+            <div className="p-4 space-y-6">
+              {/* Patient Information */}
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <h3 className="font-medium text-gray-700 mb-4">Patient Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Name</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {participant.name}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Email</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {participant.email}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Phone Number</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {participant.phone || "Not provided"}
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">Date of Birth</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {/* Placeholder for DOB */}
+                      Not available
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">City</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {/* Placeholder for city */}
+                      Not available
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <label className="block text-sm font-medium text-gray-600">County</label>
+                    <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                      {/* Placeholder for county */}
+                      Not available
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Session Information */}
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <h3 className="font-medium text-gray-700 mb-4">Session Information</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {sessionDate && sessionTime ? (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Session Date</label>
+                        <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                          {sessionDate}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Session Time</label>
+                        <div className="mt-1 py-2 px-3 bg-white border border-gray-200 rounded-md">
+                          {sessionTime}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Location</label>
+                        <input 
+                          type="text"
+                          placeholder="Enter session location"
+                          className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Session Date</label>
+                        <input 
+                          type="date"
+                          className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Session Time</label>
+                        <input 
+                          type="time"
+                          className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-600">Location</label>
+                        <input 
+                          type="text"
+                          placeholder="Enter session location"
+                          className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
+              </div>
+              
+              {/* Referring Doctor */}
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <h3 className="font-medium text-gray-700 mb-4">Referring Doctor</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600">Doctor Name</label>
+                  <div className="relative">
+                    <input 
+                      type="text"
+                      placeholder="Search or add new doctor"
+                      className="mt-1 py-2 px-3 w-full bg-white border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    />
+                    <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                      <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer">Dr. John Smith</div>
+                      <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer">Dr. Sarah Johnson</div>
+                      <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer">Dr. Michael Brown</div>
+                      <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer">+ Add new doctor</div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </AccordionContent>

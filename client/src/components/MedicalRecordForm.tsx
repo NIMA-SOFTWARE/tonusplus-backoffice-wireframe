@@ -5,6 +5,10 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Participant } from '@shared/schema';
 import { format } from 'date-fns';
+import { 
+  User, FileText, Target, Activity, 
+  Clipboard, History, Stethoscope
+} from 'lucide-react';
 
 interface MedicalRecordFormProps {
   participant: Participant;
@@ -41,7 +45,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 1: Personal Data */}
         <AccordionItem value="personal-data">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Personal Data
+            <div className="flex items-center">
+              <User className="mr-2 h-5 w-5 text-blue-500" />
+              <span>Personal Data</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -146,7 +153,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 2: Professional Data */}
         <AccordionItem value="professional-data">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Professional Data
+            <div className="flex items-center">
+              <FileText className="mr-2 h-5 w-5 text-green-500" />
+              <span>Professional Data</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -161,7 +171,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 3: Main Reason for Participation */}
         <AccordionItem value="participation-reason">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Reason for Participation
+            <div className="flex items-center">
+              <Target className="mr-2 h-5 w-5 text-rose-500" />
+              <span>Reason for Participation</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -288,7 +301,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 4: Local Anamnesis */}
         <AccordionItem value="local-anamnesis">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Local Anamnesis
+            <div className="flex items-center">
+              <Activity className="mr-2 h-5 w-5 text-purple-500" />
+              <span>Local Anamnesis</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -303,7 +319,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 5: Generic Anamnesis */}
         <AccordionItem value="generic-anamnesis">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Generic Anamnesis
+            <div className="flex items-center">
+              <Clipboard className="mr-2 h-5 w-5 text-amber-500" />
+              <span>Generic Anamnesis</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -318,7 +337,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 6: Specific Clinical History */}
         <AccordionItem value="clinical-history">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Specific Clinical History
+            <div className="flex items-center">
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>Specific Clinical History</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -333,7 +355,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         {/* Section 7: Objective Examination */}
         <AccordionItem value="objective-examination">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            Objective Examination
+            <div className="flex items-center">
+              <Stethoscope className="mr-2 h-5 w-5 text-teal-500" />
+              <span>Objective Examination</span>
+            </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">

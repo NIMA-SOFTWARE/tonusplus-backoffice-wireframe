@@ -6645,7 +6645,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
 
         {/* EXERCISES */}
         <AccordionItem value="exercises">
-          <AccordionTrigger className="text-lg font-semibold">EXERCISES</AccordionTrigger>
+          <AccordionTrigger className="text-lg font-semibold uppercase">EXERCISES</AccordionTrigger>
           <AccordionContent>
             <div className="p-4">
               <div className="bg-white rounded-lg p-6">

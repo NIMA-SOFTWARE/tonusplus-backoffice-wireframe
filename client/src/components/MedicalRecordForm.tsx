@@ -275,6 +275,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [inferiorSacralAngle, setInferiorSacralAngle] = useState<"Dx" | "Sx" | "">("");
   const [seatedBendingTest, setSeatedBendingTest] = useState<"Maintain gibbosity" | "Cancel gibbosity" | "">("");
   
+  // State for Decubitus Position
+  const [decubitusBarralOptions, setDecubitusBarralOptions] = useState<string[]>([]);
+  const [sacralBone, setSacralBone] = useState<"Dx-Dx" | "Sx-Sx" | "Dx-Sx" | "Sx-Dx" | "">("");
+  const [priority, setPriority] = useState<"Ascendant" | "Descendant" | "Visceral" | "Mixed" | "">("");
+  const [limitedInternalRotation, setLimitedInternalRotation] = useState<"M inf Sx" | "M inf Dx" | "">("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -6393,6 +6399,174 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             className="h-4 w-4 text-blue-600"
                           />
                           <span className="ml-2 text-sm text-gray-700">Cancel gibbosity</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* DECUBITUS POSITION Section */}
+                  <div className="mt-8 pt-5 border-t-2 border-zinc-200">
+                    <h4 className="text-lg font-semibold text-gray-800 uppercase mb-4">
+                      DECUBITUS POSITION
+                    </h4>
+                    
+                    {/* Barral Section */}
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Barral</label>
+                      
+                      <TagSelectionInput
+                        label="Select Areas"
+                        placeholder="Select areas of interest..."
+                        options={[
+                          "Ankle (Rx)",
+                          "Ankle (Lx)",
+                          "Knee (Rx)",
+                          "Knee (Lx)",
+                          "Hip (Rx)",
+                          "Hip (Lx)",
+                          "Iliac fossa (Rx)",
+                          "Iliac fossa (Lx)",
+                          "Umbilical",
+                          "Hypochondrium (Rx)",
+                          "Hypochondrium (Lx)",
+                          "Spleen",
+                          "Heart"
+                        ]}
+                        selectedTags={decubitusBarralOptions}
+                        onTagsChange={setDecubitusBarralOptions}
+                        allowCustomTags={false}
+                        voiceEnabled={voiceInputEnabled}
+                        className="mb-2"
+                      />
+                    </div>
+
+                    {/* Sacral Bone Section */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Sacral Bone</label>
+                      <div className="flex flex-wrap gap-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="sacral-bone"
+                            value="Dx-Dx"
+                            checked={sacralBone === "Dx-Dx"}
+                            onChange={() => setSacralBone("Dx-Dx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Dx-Dx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="sacral-bone"
+                            value="Sx-Sx"
+                            checked={sacralBone === "Sx-Sx"}
+                            onChange={() => setSacralBone("Sx-Sx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Sx-Sx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="sacral-bone"
+                            value="Dx-Sx"
+                            checked={sacralBone === "Dx-Sx"}
+                            onChange={() => setSacralBone("Dx-Sx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Dx-Sx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="sacral-bone"
+                            value="Sx-Dx"
+                            checked={sacralBone === "Sx-Dx"}
+                            onChange={() => setSacralBone("Sx-Dx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Sx-Dx</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Priority Section */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Priority</label>
+                      <div className="flex flex-wrap gap-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="priority"
+                            value="Ascendant"
+                            checked={priority === "Ascendant"}
+                            onChange={() => setPriority("Ascendant")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Ascendant</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="priority"
+                            value="Descendant"
+                            checked={priority === "Descendant"}
+                            onChange={() => setPriority("Descendant")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Descendant</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="priority"
+                            value="Visceral"
+                            checked={priority === "Visceral"}
+                            onChange={() => setPriority("Visceral")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Visceral</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="priority"
+                            value="Mixed"
+                            checked={priority === "Mixed"}
+                            onChange={() => setPriority("Mixed")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Mixed</span>
+                        </label>
+                      </div>
+                    </div>
+
+                    {/* Limited Internal Rotation Prone Position */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Limited Internal Rotation Prone Position</label>
+                      <div className="flex flex-wrap gap-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="limited-internal-rotation"
+                            value="M inf Sx"
+                            checked={limitedInternalRotation === "M inf Sx"}
+                            onChange={() => setLimitedInternalRotation("M inf Sx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">M inf Sx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="limited-internal-rotation"
+                            value="M inf Dx"
+                            checked={limitedInternalRotation === "M inf Dx"}
+                            onChange={() => setLimitedInternalRotation("M inf Dx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">M inf Dx</span>
                         </label>
                       </div>
                     </div>

@@ -71,6 +71,16 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [fallsOnIce, setFallsOnIce] = useState('');
   const [fallsOnStairs, setFallsOnStairs] = useState('');
   
+  // Surgical interventions state
+  const [surgicalInterventions, setSurgicalInterventions] = useState('');
+  
+  // Interface for surgical interventions entries
+  interface SurgicalIntervention {
+    name: string;
+    year: string;
+  }
+  const [surgicalInterventionsList, setSurgicalInterventionsList] = useState<SurgicalIntervention[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -1513,26 +1523,24 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   {/* List of existing surgical interventions */}
                   <div className="space-y-3">
                     {/* This will map through all saved interventions */}
-                    {surgicalInterventions.split('\n')
-                      .filter(intervention => intervention.trim().length > 0)
-                      .map((intervention, index) => (
-                        <div key={index} className="flex items-center gap-2 mb-2 bg-white p-2 rounded border border-gray-200">
-                          <span className="flex-1">{intervention}</span>
-                          <button
-                            onClick={() => {
-                              const updatedInterventions = surgicalInterventions
-                                .split('\n')
-                                .filter((_, i) => i !== index)
-                                .join('\n');
-                              setSurgicalInterventions(updatedInterventions);
-                            }}
-                            className="text-red-500 hover:text-red-700"
-                            aria-label="Remove"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                      ))}
+                    {surgicalInterventionsList.map((intervention, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-2 bg-white p-2 rounded border border-gray-200">
+                        <span className="flex-1">
+                          {intervention.name} {intervention.year ? `(${intervention.year})` : ''}
+                        </span>
+                        <button
+                          onClick={() => {
+                            const updatedInterventions = [...surgicalInterventionsList];
+                            updatedInterventions.splice(index, 1);
+                            setSurgicalInterventionsList(updatedInterventions);
+                          }}
+                          className="text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Add new intervention */}
@@ -1601,16 +1609,15 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 interventionType = otherInput.value.trim();
                               }
                               
-                              if (interventionType !== 'Other') {  // Ensure we have a valid type
-                                const yearText = yearInput && yearInput.value ? ` (${yearInput.value})` : '';
-                                const newIntervention = `${interventionType}${yearText}`;
-                                
-                                setSurgicalInterventions(prev => {
-                                  const currentInterventions = prev.trim();
-                                  return currentInterventions
-                                    ? `${currentInterventions}\n${newIntervention}`
-                                    : newIntervention;
-                                });
+                              if (interventionType !== 'Other' || (interventionType === 'Other' && otherInput && otherInput.value.trim())) {
+                                // Add the new intervention to our list
+                                setSurgicalInterventionsList([
+                                  ...surgicalInterventionsList,
+                                  {
+                                    name: interventionType,
+                                    year: yearInput ? yearInput.value : ''
+                                  }
+                                ]);
                                 
                                 // Reset inputs
                                 typeSelect.selectedIndex = 0;

@@ -37,10 +37,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [voiceInputEnabled, setVoiceInputEnabled] = useState(false);
   
   // Local Anamnesis state
-  const [whenDoesItHurt, setWhenDoesItHurt] = useState('');
-  const [howDoesItHurt, setHowDoesItHurt] = useState('');
+  const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
+  const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
   const [painIntensity, setPainIntensity] = useState(5);
-  const [whereDoesItHurt, setWhereDoesItHurt] = useState('');
+  const [whereDoesItHurt, setWhereDoesItHurt] = useState<string[]>([]);
   const [painStartDuration, setPainStartDuration] = useState('days');
   const [painStartValue, setPainStartValue] = useState(1);
   const [painStartDate, setPainStartDate] = useState('');
@@ -571,42 +571,62 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
             <div className="p-4 space-y-4">
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                 <div className="space-y-6">
-                  {/* When does it hurt */}
+                  {/* When does it hurt - TagSelectionInput */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">When does it hurt</label>
-                    <select 
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={whenDoesItHurt}
-                      onChange={(e) => setWhenDoesItHurt(e.target.value)}
-                    >
-                      <option value="">Select when pain occurs</option>
-                      <option value="when_wake_up">When I wake up</option>
-                      <option value="during_day">During the day</option>
-                      <option value="end_of_day">End of day</option>
-                      <option value="during_night">During night-time</option>
-                    </select>
+                    <TagSelectionInput
+                      label="When does it hurt"
+                      placeholder="Select when pain occurs..."
+                      options={[
+                        "When I wake up", 
+                        "During the day", 
+                        "End of day", 
+                        "During night-time",
+                        "After sitting",
+                        "After standing",
+                        "During movement",
+                        "At rest",
+                        "After exercise",
+                        "After eating",
+                        "After certain movements",
+                        "Continuously"
+                      ]}
+                      selectedTags={whenDoesItHurt}
+                      onTagsChange={setWhenDoesItHurt}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                    />
                   </div>
                   
-                  {/* How does it hurt */}
+                  {/* How does it hurt - TagSelectionInput */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">How does it hurt</label>
-                    <select 
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={howDoesItHurt}
-                      onChange={(e) => setHowDoesItHurt(e.target.value)}
-                    >
-                      <option value="">Select pain type</option>
-                      <option value="acute">Acute</option>
-                      <option value="chronic">Chronic</option>
-                      <option value="punctual">Punctual</option>
-                      <option value="global">Global</option>
-                      <option value="arrow">Arrow</option>
-                      <option value="claw">Claw</option>
-                      <option value="rheumatic">Rheumatic pain</option>
-                      <option value="diffuse">Diffuse</option>
-                      <option value="descending">Descending</option>
-                      <option value="ascending">Ascending</option>
-                    </select>
+                    <TagSelectionInput
+                      label="How does it hurt"
+                      placeholder="Select pain type..."
+                      options={[
+                        "Acute", 
+                        "Chronic", 
+                        "Punctual", 
+                        "Global",
+                        "Arrow", 
+                        "Claw", 
+                        "Rheumatic pain", 
+                        "Diffuse",
+                        "Descending", 
+                        "Ascending",
+                        "Burning",
+                        "Sharp",
+                        "Dull",
+                        "Throbbing",
+                        "Stabbing",
+                        "Tingling",
+                        "Radiating",
+                        "Aching"
+                      ]}
+                      selectedTags={howDoesItHurt}
+                      onTagsChange={setHowDoesItHurt}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                    />
                   </div>
                   
                   {/* Pain intensity */}
@@ -630,46 +650,56 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Where does it hurt */}
+                  {/* Where does it hurt - TagSelectionInput */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Where does it hurt</label>
-                    <select 
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      value={whereDoesItHurt}
-                      onChange={(e) => setWhereDoesItHurt(e.target.value)}
-                    >
-                      <option value="">Select pain location</option>
-                      <option value="occipital">Occipital</option>
-                      <option value="back">Back</option>
-                      <option value="neck">Neck</option>
-                      <option value="shoulder">Shoulder</option>
-                      <option value="cervicothoracic">Cervicothoracic</option>
-                      <option value="interscapular">Interscapular</option>
-                      <option value="subscapular">Subscapular</option>
-                      <option value="thoracolumbar">Thoracolumbar</option>
-                      <option value="back_pain">Back pain</option>
-                      <option value="lumbosacral">Lumbosacral</option>
-                      <option value="sacral">Sacral</option>
-                      <option value="coccygeal">Coccygeal</option>
-                      <option value="sacroiliac">Sacroiliac</option>
-                      <option value="buttock">Buttock</option>
-                      <option value="anterior_thigh">Anterior thigh</option>
-                      <option value="lateral_thigh">Lateral thigh</option>
-                      <option value="posterior_thigh">Posterior thigh</option>
-                      <option value="anterior_knee">Anterior knee</option>
-                      <option value="lateral_knee">Lateral knee</option>
-                      <option value="medial_knee">Medial knee</option>
-                      <option value="posterior_knee">Posterior knee</option>
-                      <option value="calf_lateral">Calf (lateral)</option>
-                      <option value="calf_anterior">Calf (anterior)</option>
-                      <option value="calf_posterior">Calf (posterior)</option>
-                      <option value="ankle">Ankle</option>
-                      <option value="foot_anterior">Foot (anterior)</option>
-                      <option value="foot_posterior">Foot (posterior)</option>
-                      <option value="foot_lateral">Foot (lateral)</option>
-                      <option value="foot_medial">Foot (medial)</option>
-                      <option value="foot_plantar">Foot (plantar)</option>
-                    </select>
+                    <TagSelectionInput
+                      label="Where does it hurt"
+                      placeholder="Select pain locations..."
+                      options={[
+                        "Occipital",
+                        "Back",
+                        "Neck",
+                        "Shoulder",
+                        "Cervicothoracic",
+                        "Interscapular",
+                        "Subscapular",
+                        "Thoracolumbar",
+                        "Back pain",
+                        "Lumbosacral",
+                        "Sacral",
+                        "Coccygeal",
+                        "Sacroiliac",
+                        "Buttock",
+                        "Anterior thigh",
+                        "Lateral thigh",
+                        "Posterior thigh",
+                        "Anterior knee",
+                        "Lateral knee", 
+                        "Medial knee",
+                        "Posterior knee",
+                        "Calf (lateral)",
+                        "Calf (anterior)",
+                        "Calf (posterior)",
+                        "Ankle",
+                        "Foot (anterior)",
+                        "Foot (posterior)",
+                        "Foot (lateral)",
+                        "Foot (medial)",
+                        "Foot (plantar)",
+                        "Wrist",
+                        "Elbow",
+                        "Shoulder joint",
+                        "Hip",
+                        "Lower back",
+                        "Upper back",
+                        "Jaw",
+                        "Head"
+                      ]}
+                      selectedTags={whereDoesItHurt}
+                      onTagsChange={setWhereDoesItHurt}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                    />
                   </div>
                   
                   {/* When did the pain start */}

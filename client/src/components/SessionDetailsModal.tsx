@@ -11,9 +11,8 @@ import { usePilates } from '@/context/PilatesContext';
 import { formatTimeRange } from '@/lib/utils';
 import { AlertCircle, Users, ClockIcon, CheckCircle, X, Calendar, MapPin, Plus, PlusCircle, 
   UserPlus, ChevronsDown, FileEdit, Trash2, ExternalLink, ArrowUpRight, Dumbbell, Home,
-  ClipboardCheck, FileText } from 'lucide-react';
+  ClipboardCheck } from 'lucide-react';
 import AddParticipantForm from '@/components/AddParticipantForm';
-import MedicalRecordModal from '@/components/MedicalRecordModal';
 
 interface SessionDetailsModalProps {
   isOpen: boolean;
@@ -31,7 +30,6 @@ const SessionDetailsModal: React.FC<SessionDetailsModalProps> = ({
   const { removeSession, editSession, cancelUserBooking, sessions } = usePilates();
   const [showAddParticipant, setShowAddParticipant] = useState(false);
   const [showAddWaitlist, setShowAddWaitlist] = useState(false);
-  const [medicalRecordParticipant, setMedicalRecordParticipant] = useState<Participant | null>(null);
   
   // Get all unique customers from all sessions for autocomplete
   const existingCustomers = React.useMemo(() => {

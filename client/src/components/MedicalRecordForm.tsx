@@ -4285,6 +4285,18 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   </div>
                 </div>
               </div>
+              
+              {/* ORIENTATION OF TEETH IN DIFFERENT SECTORS Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ORIENTATION OF TEETH IN DIFFERENT SECTORS
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <p className="text-sm text-gray-700 italic">
+                    This section is for reference only - no inputs required
+                  </p>
+                </div>
+              </div>
 
             </div>
           </AccordionContent>

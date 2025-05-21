@@ -161,8 +161,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           <AccordionContent>
             <div className="p-4 space-y-4">
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                <h3 className="font-medium text-gray-700 mb-4">Professional Information</h3>
-                
                 <div className="space-y-6">
                   {/* Profession Dropdown with Search */}
                   <div>

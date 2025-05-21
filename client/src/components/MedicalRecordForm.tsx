@@ -97,6 +97,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [pathologies, setPathologies] = useState<Pathology[]>([]);
   
+  // Interface and state for digestive system diseases/dysfunctions
+  interface DigestiveDisease {
+    type: string;
+    notes: string;
+  }
+  const [digestiveDiseases, setDigestiveDiseases] = useState<DigestiveDisease[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -2243,8 +2250,210 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
+              {/* Diseases or Dysfunctions of the digestive system */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Diseases or Dysfunctions of the Digestive System
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Digestive Conditions</h5>
+                  
+                  {/* Existing digestive diseases */}
+                  {digestiveDiseases.map((disease, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {disease.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={disease.type}
+                            onChange={(e) => {
+                              const updatedDiseases = [...digestiveDiseases];
+                              updatedDiseases[index].type = e.target.value;
+                              setDigestiveDiseases(updatedDiseases);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Gastroesophageal reflux disease">Gastroesophageal reflux disease</option>
+                            <option value="Peptic ulcer">Peptic ulcer</option>
+                            <option value="Gastritis">Gastritis</option>
+                            <option value="Irritable bowel syndrome">Irritable bowel syndrome</option>
+                            <option value="Inflammatory bowel disease">Inflammatory bowel disease</option>
+                            <option value="Crohn's disease">Crohn's disease</option>
+                            <option value="Ulcerative colitis">Ulcerative colitis</option>
+                            <option value="Celiac disease">Celiac disease</option>
+                            <option value="Diverticulitis">Diverticulitis</option>
+                            <option value="Gallstones">Gallstones</option>
+                            <option value="Fatty liver disease">Fatty liver disease</option>
+                            <option value="Hepatitis">Hepatitis</option>
+                            <option value="Cirrhosis">Cirrhosis</option>
+                            <option value="Pancreatitis">Pancreatitis</option>
+                            <option value="Hiatal hernia">Hiatal hernia</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify condition"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={disease.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedDiseases = [...digestiveDiseases];
+                              const parts = disease.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedDiseases[index].notes = parts.join('|');
+                              setDigestiveDiseases(updatedDiseases);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={disease.type}
+                          onChange={(e) => {
+                            const updatedDiseases = [...digestiveDiseases];
+                            updatedDiseases[index].type = e.target.value;
+                            setDigestiveDiseases(updatedDiseases);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select condition</option>
+                          <option value="Gastroesophageal reflux disease">Gastroesophageal reflux disease</option>
+                          <option value="Peptic ulcer">Peptic ulcer</option>
+                          <option value="Gastritis">Gastritis</option>
+                          <option value="Irritable bowel syndrome">Irritable bowel syndrome</option>
+                          <option value="Inflammatory bowel disease">Inflammatory bowel disease</option>
+                          <option value="Crohn's disease">Crohn's disease</option>
+                          <option value="Ulcerative colitis">Ulcerative colitis</option>
+                          <option value="Celiac disease">Celiac disease</option>
+                          <option value="Diverticulitis">Diverticulitis</option>
+                          <option value="Gallstones">Gallstones</option>
+                          <option value="Fatty liver disease">Fatty liver disease</option>
+                          <option value="Hepatitis">Hepatitis</option>
+                          <option value="Cirrhosis">Cirrhosis</option>
+                          <option value="Pancreatitis">Pancreatitis</option>
+                          <option value="Hiatal hernia">Hiatal hernia</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                      <input
+                        type="text"
+                        value={disease.type === "Other" ? (disease.notes.split('|')[1] || '') : disease.notes}
+                        onChange={(e) => {
+                          const updatedDiseases = [...digestiveDiseases];
+                          if (disease.type === "Other") {
+                            const parts = disease.notes.split('|');
+                            parts[1] = e.target.value;
+                            updatedDiseases[index].notes = parts.join('|');
+                          } else {
+                            updatedDiseases[index].notes = e.target.value;
+                          }
+                          setDigestiveDiseases(updatedDiseases);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedDiseases = [...digestiveDiseases];
+                          updatedDiseases.splice(index, 1);
+                          setDigestiveDiseases(updatedDiseases);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new digestive disease */}
+                  <div className="flex items-center gap-2 mb-2" id="new-digestive-container">
+                    <select
+                      id="digestive-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-digestive-container');
+                        const customInput = document.getElementById('digestive-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'digestive-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify condition';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('digestive-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select condition</option>
+                      <option value="Gastroesophageal reflux disease">Gastroesophageal reflux disease</option>
+                      <option value="Peptic ulcer">Peptic ulcer</option>
+                      <option value="Gastritis">Gastritis</option>
+                      <option value="Irritable bowel syndrome">Irritable bowel syndrome</option>
+                      <option value="Inflammatory bowel disease">Inflammatory bowel disease</option>
+                      <option value="Crohn's disease">Crohn's disease</option>
+                      <option value="Ulcerative colitis">Ulcerative colitis</option>
+                      <option value="Celiac disease">Celiac disease</option>
+                      <option value="Diverticulitis">Diverticulitis</option>
+                      <option value="Gallstones">Gallstones</option>
+                      <option value="Fatty liver disease">Fatty liver disease</option>
+                      <option value="Hepatitis">Hepatitis</option>
+                      <option value="Cirrhosis">Cirrhosis</option>
+                      <option value="Pancreatitis">Pancreatitis</option>
+                      <option value="Hiatal hernia">Hiatal hernia</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <input
+                      type="text"
+                      id="digestive-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('digestive-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('digestive-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('digestive-custom') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          let diseaseType = typeSelect.value;
+                          let diseaseNotes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, include the custom type in the notes with a separator
+                          if (diseaseType === "Other" && customInput && customInput.value) {
+                            diseaseNotes = customInput.value + '|' + diseaseNotes;
+                          }
+                          
+                          setDigestiveDiseases([
+                            ...digestiveDiseases,
+                            {
+                              type: diseaseType,
+                              notes: diseaseNotes
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                          
+                          // Remove the custom input if it exists
+                          if (customInput) {
+                            customInput.remove();
+                          }
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
               {/* Other clinical history fields will go here */}
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic mt-6">
                 Additional clinical history fields will be added as needed
               </div>
             </div>

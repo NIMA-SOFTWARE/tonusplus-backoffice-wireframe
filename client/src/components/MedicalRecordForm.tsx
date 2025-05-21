@@ -155,6 +155,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [eyeConditions, setEyeConditions] = useState<EyeCondition[]>([]);
   
+  // State for dominant eye
+  const [dominantEye, setDominantEye] = useState<string>('');
+  const [dominantEyeAngle, setDominantEyeAngle] = useState<string>('');
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3164,32 +3168,88 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Visual Aid</h5>
                   
-                  {/* Eyewear options */}
-                  <div className="flex flex-col space-y-4 mb-4">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="wearing-glasses"
-                        checked={wearingGlasses}
-                        onChange={(e) => setWearingGlasses(e.target.checked)}
-                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
-                      />
-                      <label htmlFor="wearing-glasses" className="text-sm text-gray-700">
-                        Wearing glasses
-                      </label>
+                  {/* Eyewear and dominant eye */}
+                  <div className="space-y-4 mb-4">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="wearing-glasses"
+                          checked={wearingGlasses}
+                          onChange={(e) => setWearingGlasses(e.target.checked)}
+                          className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                        />
+                        <label htmlFor="wearing-glasses" className="text-sm text-gray-700">
+                          Wearing glasses
+                        </label>
+                      </div>
+                      
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="wearing-contact-lenses"
+                          checked={wearingContactLenses}
+                          onChange={(e) => setWearingContactLenses(e.target.checked)}
+                          className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                        />
+                        <label htmlFor="wearing-contact-lenses" className="text-sm text-gray-700">
+                          Wearing contact lenses
+                        </label>
+                      </div>
                     </div>
                     
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="wearing-contact-lenses"
-                        checked={wearingContactLenses}
-                        onChange={(e) => setWearingContactLenses(e.target.checked)}
-                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
-                      />
-                      <label htmlFor="wearing-contact-lenses" className="text-sm text-gray-700">
-                        Wearing contact lenses
+                    {/* Dominant eye selection */}
+                    <div className="rounded-md border border-gray-200 p-3 bg-gray-50">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Dominant Eye
                       </label>
+                      <div className="flex flex-wrap items-center gap-3">
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="dominant-eye-right"
+                            name="dominant-eye"
+                            value="Right (Dx)"
+                            checked={dominantEye === "Right (Dx)"}
+                            onChange={(e) => setDominantEye(e.target.value)}
+                            className="mr-2 h-4 w-4 text-blue-600 border-gray-300"
+                          />
+                          <label htmlFor="dominant-eye-right" className="text-sm text-blue-700 font-medium">
+                            Right eye (Dx)
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="dominant-eye-left"
+                            name="dominant-eye"
+                            value="Left (Sx)"
+                            checked={dominantEye === "Left (Sx)"}
+                            onChange={(e) => setDominantEye(e.target.value)}
+                            className="mr-2 h-4 w-4 text-red-600 border-gray-300"
+                          />
+                          <label htmlFor="dominant-eye-left" className="text-sm text-red-700 font-medium">
+                            Left eye (Sx)
+                          </label>
+                        </div>
+                        
+                        {dominantEye && (
+                          <div className="flex items-center gap-2">
+                            <label htmlFor="dominant-eye-angle" className="text-xs text-gray-600">
+                              Angle:
+                            </label>
+                            <input
+                              type="text"
+                              id="dominant-eye-angle"
+                              value={dominantEyeAngle}
+                              onChange={(e) => setDominantEyeAngle(e.target.value)}
+                              placeholder="e.g., 180°"
+                              className="text-sm p-1.5 border border-gray-300 rounded-md w-20"
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                   

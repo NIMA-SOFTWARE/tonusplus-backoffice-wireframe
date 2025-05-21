@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import VoiceEnabledInput from './VoiceEnabledInput';
 import VoiceInputButton from './VoiceInputButton';
+import TagSelectionInput from './TagSelectionInput';
 
 interface MedicalRecordFormProps {
   participant: Participant;
@@ -47,6 +48,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [hourlyInterval, setHourlyInterval] = useState('');
   const [activitiesWorsen, setActivitiesWorsen] = useState('');
   const [activitiesRelieve, setActivitiesRelieve] = useState('');
+  const [dailyActivities, setDailyActivities] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -730,6 +732,27 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       onChange={(e) => setHourlyInterval(e.target.value)}
                       className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                       placeholder="e.g., Every 2 hours"
+                    />
+                  </div>
+                  
+                  {/* Daily Activities - Tag selection with search */}
+                  <div>
+                    <TagSelectionInput
+                      label="Daily Activities"
+                      placeholder="Search or add activities..."
+                      options={[
+                        "Walking", "Running", "Swimming", "Cycling", "Yoga", "Pilates", 
+                        "Weight training", "Sitting for long periods", "Standing for long periods",
+                        "Office work", "Manual labor", "Driving", "Cooking", "Cleaning",
+                        "Gardening", "Playing sports", "Child care", "Elderly care",
+                        "Computer work", "Desk work", "Construction", "Heavy lifting",
+                        "Repetitive movements", "Public speaking", "Teaching", "Serving customers",
+                        "Music practice", "Art/crafts", "Reading", "Writing"
+                      ]}
+                      selectedTags={dailyActivities}
+                      onTagsChange={setDailyActivities}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
                     />
                   </div>
                   

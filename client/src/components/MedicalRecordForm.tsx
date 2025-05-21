@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
@@ -7,8 +7,9 @@ import { Participant } from '@shared/schema';
 import { format } from 'date-fns';
 import { 
   User, FileText, Target, Activity, 
-  Clipboard, History, Stethoscope
+  Clipboard, History, Stethoscope, Search, Mic
 } from 'lucide-react';
+import VoiceEnabledInput from './VoiceEnabledInput';
 
 interface MedicalRecordFormProps {
   participant: Participant;
@@ -24,6 +25,24 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   sessionDate,
   sessionTime
 }) => {
+  // Form state for voice input fields
+  const [otherReasons, setOtherReasons] = useState('');
+  const [mainReason, setMainReason] = useState('');
+  const [searchSymptomTerm, setSearchSymptomTerm] = useState('');
+  const [showSymptomSearch, setShowSymptomSearch] = useState(false);
+  
+  // Toggle symptom search dropdown
+  const handleSearchFocus = () => setShowSymptomSearch(true);
+  const handleSearchBlur = () => {
+    // Small delay to allow for selection
+    setTimeout(() => setShowSymptomSearch(false), 200);
+  };
+  
+  // Select a symptom from dropdown
+  const handleSelectSymptom = (symptom: string) => {
+    setMainReason(symptom);
+    setShowSymptomSearch(false);
+  };
   return (
     <div className="bg-white p-4 md:p-6 w-full h-full overflow-y-auto">
       <div className="mb-4 border-b pb-4">
@@ -398,38 +417,91 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Main reason with search */}
+                  {/* Main reason with search and voice input */}
                   <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Main reason</label>
                     <div className="relative">
-                      <input 
-                        type="text"
-                        placeholder="Search medical symptoms..."
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Chronic lower back pain</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Reduced mobility</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Neck and shoulder tension</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Joint stiffness</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Postural problems</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Recovery from injury</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Core strength weakness</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Balance issues</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Sciatica</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Scoliosis management</div>
-                        <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new symptom</div>
+                      <div className="flex items-center">
+                        <div className="relative flex-1">
+                          <input 
+                            type="text"
+                            placeholder="Search or speak medical symptoms..."
+                            value={searchSymptomTerm}
+                            onChange={(e) => setSearchSymptomTerm(e.target.value)}
+                            onFocus={handleSearchFocus}
+                            onBlur={handleSearchBlur}
+                            className="w-full text-sm p-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+                            <Search className="h-4 w-4 text-gray-400" />
+                          </div>
+                        </div>
+                        <VoiceInputButton 
+                          onTranscriptionComplete={(text) => {
+                            setSearchSymptomTerm(text);
+                            setShowSymptomSearch(true);
+                          }}
+                          className="ml-2" 
+                        />
                       </div>
+                      
+                      {/* Selected main reason display */}
+                      {mainReason && (
+                        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md flex justify-between items-center">
+                          <span className="text-sm text-blue-700">{mainReason}</span>
+                          <button 
+                            type="button"
+                            onClick={() => setMainReason('')}
+                            className="text-blue-500 hover:text-blue-700"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                      
+                      {/* Dropdown for search results */}
+                      {showSymptomSearch && (
+                        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                          {['Chronic lower back pain', 'Reduced mobility', 'Neck and shoulder tension', 
+                            'Joint stiffness', 'Postural problems', 'Recovery from injury', 
+                            'Core strength weakness', 'Balance issues', 'Sciatica', 'Scoliosis management']
+                            .filter(symptom => !searchSymptomTerm || symptom.toLowerCase().includes(searchSymptomTerm.toLowerCase()))
+                            .map((symptom, index) => (
+                              <div 
+                                key={index}
+                                className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm"
+                                onClick={() => handleSelectSymptom(symptom)}
+                              >
+                                {symptom}
+                              </div>
+                            ))
+                          }
+                          <div 
+                            className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm border-t"
+                            onClick={() => {
+                              if (searchSymptomTerm) {
+                                handleSelectSymptom(searchSymptomTerm);
+                              }
+                            }}
+                          >
+                            {searchSymptomTerm ? `+ Add "${searchSymptomTerm}"` : '+ Add new symptom'}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   </div>
                   
-                  {/* Other reasons as textarea */}
+                  {/* Other reasons as textarea with voice input */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Other reasons</label>
-                    <textarea
+                    <VoiceEnabledInput
+                      label="Other reasons"
+                      value={otherReasons}
+                      onChange={setOtherReasons}
                       placeholder="Additional information about the patient's reasons for participation..."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-24"
-                    ></textarea>
+                      isTextarea={true}
+                      rows={4}
+                      id="other-reasons"
+                    />
                   </div>
                   
 

@@ -268,6 +268,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [headRotationDx, setHeadRotationDx] = useState("");
   const [headRotationSx, setHeadRotationSx] = useState("");
   const [globalPosture, setGlobalPosture] = useState<string[]>([]);
+  const [typology, setTypology] = useState("");
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -6276,6 +6277,26 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       voiceEnabled={voiceInputEnabled}
                       className="mb-2"
                     />
+                  </div>
+                  
+                  {/* Typology Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label htmlFor="typology" className="block text-sm font-medium text-gray-700 mb-3">
+                      Typology
+                    </label>
+                    <select
+                      id="typology"
+                      value={typology}
+                      onChange={(e) => setTypology(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select an option</option>
+                      <option value="Runaway (rejection)">Runaway (rejection)</option>
+                      <option value="Dependent (abandonment)">Dependent (abandonment)</option>
+                      <option value="Masochistic (humiliation)">Masochistic (humiliation)</option>
+                      <option value="Dominant (betrayal)">Dominant (betrayal)</option>
+                      <option value="Rigid (injustice)">Rigid (injustice)</option>
+                    </select>
                   </div>
                 </div>
               </div>

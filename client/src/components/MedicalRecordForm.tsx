@@ -149,7 +149,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // Interface and state for eye conditions
   interface EyeCondition {
     condition: string;
-    eye: string; // "Right (Dx)", "Left (Sx)", or "Both"
+    rightEye: boolean;
+    rightEyeAngle: string;
+    leftEye: boolean;
+    leftEyeAngle: string;
     observation: string;
   }
   const [eyeConditions, setEyeConditions] = useState<EyeCondition[]>([]);
@@ -3200,17 +3203,192 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     
                     {/* Existing eye conditions */}
                     {eyeConditions.map((condition, index) => (
-                      <div key={index} className="flex items-center gap-2 mb-2">
+                      <div key={index} className="space-y-3 mb-4 p-3 border border-gray-200 rounded-lg bg-white">
+                        <div className="flex items-center gap-2">
+                          <select
+                            value={condition.condition}
+                            onChange={(e) => {
+                              const updatedConditions = [...eyeConditions];
+                              updatedConditions[index].condition = e.target.value;
+                              setEyeConditions(updatedConditions);
+                            }}
+                            className="text-sm p-2 border border-gray-300 rounded-md w-64"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Myopia">Myopia (nearsightedness)</option>
+                            <option value="Hyperopia">Hyperopia (farsightedness)</option>
+                            <option value="Astigmatism">Astigmatism</option>
+                            <option value="Presbyopia">Presbyopia</option>
+                            <option value="Glaucoma">Glaucoma</option>
+                            <option value="Cataract">Cataract</option>
+                            <option value="Macular Degeneration">Macular Degeneration</option>
+                            <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
+                            <option value="Amblyopia">Amblyopia (lazy eye)</option>
+                            <option value="Strabismus">Strabismus (crossed eyes)</option>
+                            <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          
+                          {condition.condition === "Other" && (
+                            <input
+                              type="text"
+                              value={condition.observation.split('|')[0] || ''}
+                              onChange={(e) => {
+                                const updatedConditions = [...eyeConditions];
+                                const parts = condition.observation.split('|');
+                                parts[0] = e.target.value;
+                                updatedConditions[index].observation = parts.join('|');
+                                setEyeConditions(updatedConditions);
+                              }}
+                              placeholder="Specify condition"
+                              className="text-sm p-2 border border-gray-300 rounded-md flex-1"
+                            />
+                          )}
+                          
+                          <button
+                            onClick={() => {
+                              const updatedConditions = [...eyeConditions];
+                              updatedConditions.splice(index, 1);
+                              setEyeConditions(updatedConditions);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700 ml-auto"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                        
+                        {/* Right eye controls */}
+                        <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-blue-400 bg-blue-50 rounded-r-md">
+                          <div className="flex items-center mr-2">
+                            <input
+                              type="checkbox"
+                              id={`right-eye-${index}`}
+                              checked={condition.rightEye}
+                              onChange={(e) => {
+                                const updatedConditions = [...eyeConditions];
+                                updatedConditions[index].rightEye = e.target.checked;
+                                setEyeConditions(updatedConditions);
+                              }}
+                              className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300"
+                            />
+                            <label htmlFor={`right-eye-${index}`} className="text-sm font-medium text-gray-700">
+                              Right eye (Dx)
+                            </label>
+                          </div>
+                          
+                          {condition.rightEye && (
+                            <div className="flex items-center gap-2 ml-4">
+                              <label htmlFor={`right-eye-angle-${index}`} className="text-xs text-gray-600">
+                                Angle:
+                              </label>
+                              <input
+                                type="text"
+                                id={`right-eye-angle-${index}`}
+                                value={condition.rightEyeAngle}
+                                onChange={(e) => {
+                                  const updatedConditions = [...eyeConditions];
+                                  updatedConditions[index].rightEyeAngle = e.target.value;
+                                  setEyeConditions(updatedConditions);
+                                }}
+                                placeholder="e.g., 180°"
+                                className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Left eye controls */}
+                        <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-red-400 bg-red-50 rounded-r-md">
+                          <div className="flex items-center mr-2">
+                            <input
+                              type="checkbox"
+                              id={`left-eye-${index}`}
+                              checked={condition.leftEye}
+                              onChange={(e) => {
+                                const updatedConditions = [...eyeConditions];
+                                updatedConditions[index].leftEye = e.target.checked;
+                                setEyeConditions(updatedConditions);
+                              }}
+                              className="mr-2 h-4 w-4 text-red-600 rounded border-gray-300"
+                            />
+                            <label htmlFor={`left-eye-${index}`} className="text-sm font-medium text-gray-700">
+                              Left eye (Sx)
+                            </label>
+                          </div>
+                          
+                          {condition.leftEye && (
+                            <div className="flex items-center gap-2 ml-4">
+                              <label htmlFor={`left-eye-angle-${index}`} className="text-xs text-gray-600">
+                                Angle:
+                              </label>
+                              <input
+                                type="text"
+                                id={`left-eye-angle-${index}`}
+                                value={condition.leftEyeAngle}
+                                onChange={(e) => {
+                                  const updatedConditions = [...eyeConditions];
+                                  updatedConditions[index].leftEyeAngle = e.target.value;
+                                  setEyeConditions(updatedConditions);
+                                }}
+                                placeholder="e.g., 180°"
+                                className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Additional notes */}
+                        <div className="pt-2">
+                          <input
+                            type="text"
+                            value={condition.condition === "Other" 
+                              ? (condition.observation.split('|')[1] || '') 
+                              : condition.observation}
+                            onChange={(e) => {
+                              const updatedConditions = [...eyeConditions];
+                              if (condition.condition === "Other") {
+                                const parts = condition.observation.split('|');
+                                parts[1] = e.target.value;
+                                updatedConditions[index].observation = parts.join('|');
+                              } else {
+                                updatedConditions[index].observation = e.target.value;
+                              }
+                              setEyeConditions(updatedConditions);
+                            }}
+                            placeholder="Additional notes"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+                      </div>
+                    ))}
+                    
+                    {/* Add new eye condition */}
+                    <div className="space-y-3 p-3 border border-gray-200 rounded-lg bg-white">
+                      <div className="flex items-center gap-2" id="new-eye-condition-container">
                         <select
-                          value={condition.condition}
+                          id="eye-condition-type"
+                          className="text-sm p-2 border border-gray-300 rounded-md w-64"
+                          defaultValue=""
                           onChange={(e) => {
-                            const updatedConditions = [...eyeConditions];
-                            updatedConditions[index].condition = e.target.value;
-                            setEyeConditions(updatedConditions);
+                            const customContainer = document.getElementById('custom-condition-container');
+                            if (customContainer) {
+                              if (e.target.value === 'Other') {
+                                customContainer.innerHTML = `
+                                  <input
+                                    type="text"
+                                    id="custom-condition-input"
+                                    placeholder="Specify condition"
+                                    className="text-sm p-2 border border-gray-300 rounded-md flex-1"
+                                  />
+                                `;
+                              } else {
+                                customContainer.innerHTML = '';
+                              }
+                            }
                           }}
-                          className="text-sm p-2 border border-gray-300 rounded-md w-40"
                         >
-                          <option value="">Select condition</option>
+                          <option value="" disabled>Select condition</option>
                           <option value="Myopia">Myopia (nearsightedness)</option>
                           <option value="Hyperopia">Hyperopia (farsightedness)</option>
                           <option value="Astigmatism">Astigmatism</option>
@@ -3225,171 +3403,125 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <option value="Other">Other</option>
                         </select>
                         
-                        {condition.condition === "Other" && (
+                        <div id="custom-condition-container"></div>
+                      </div>
+                      
+                      {/* Right eye controls */}
+                      <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-blue-400 bg-blue-50 rounded-r-md">
+                        <div className="flex items-center mr-2">
+                          <input
+                            type="checkbox"
+                            id="new-right-eye"
+                            className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300"
+                          />
+                          <label htmlFor="new-right-eye" className="text-sm font-medium text-gray-700">
+                            Right eye (Dx)
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 ml-4" id="right-angle-container">
+                          <label htmlFor="new-right-eye-angle" className="text-xs text-gray-600">
+                            Angle:
+                          </label>
                           <input
                             type="text"
-                            value={condition.observation.split('|')[0] || ''}
-                            onChange={(e) => {
-                              const updatedConditions = [...eyeConditions];
-                              const parts = condition.observation.split('|');
-                              parts[0] = e.target.value;
-                              updatedConditions[index].observation = parts.join('|');
-                              setEyeConditions(updatedConditions);
-                            }}
-                            placeholder="Specify condition"
-                            className="text-sm p-2 border border-gray-300 rounded-md w-40"
+                            id="new-right-eye-angle"
+                            placeholder="e.g., 180°"
+                            className="text-sm p-1 border border-gray-300 rounded-md w-20"
                           />
-                        )}
+                        </div>
+                      </div>
+                      
+                      {/* Left eye controls */}
+                      <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-red-400 bg-red-50 rounded-r-md">
+                        <div className="flex items-center mr-2">
+                          <input
+                            type="checkbox"
+                            id="new-left-eye"
+                            className="mr-2 h-4 w-4 text-red-600 rounded border-gray-300"
+                          />
+                          <label htmlFor="new-left-eye" className="text-sm font-medium text-gray-700">
+                            Left eye (Sx)
+                          </label>
+                        </div>
                         
-                        <select
-                          value={condition.eye}
-                          onChange={(e) => {
-                            const updatedConditions = [...eyeConditions];
-                            updatedConditions[index].eye = e.target.value;
-                            setEyeConditions(updatedConditions);
-                          }}
-                          className="text-sm p-2 border border-gray-300 rounded-md w-32"
-                        >
-                          <option value="">Select eye</option>
-                          <option value="Right (Dx)">Right eye (Dx)</option>
-                          <option value="Left (Sx)">Left eye (Sx)</option>
-                          <option value="Both">Both eyes</option>
-                        </select>
-                        
+                        <div className="flex items-center gap-2 ml-4" id="left-angle-container">
+                          <label htmlFor="new-left-eye-angle" className="text-xs text-gray-600">
+                            Angle:
+                          </label>
+                          <input
+                            type="text"
+                            id="new-left-eye-angle"
+                            placeholder="e.g., 180°"
+                            className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                          />
+                        </div>
+                      </div>
+                      
+                      {/* Additional notes */}
+                      <div>
                         <input
                           type="text"
-                          value={condition.condition === "Other" 
-                            ? (condition.observation.split('|')[1] || '') 
-                            : condition.observation}
-                          onChange={(e) => {
-                            const updatedConditions = [...eyeConditions];
-                            if (condition.condition === "Other") {
-                              const parts = condition.observation.split('|');
-                              parts[1] = e.target.value;
-                              updatedConditions[index].observation = parts.join('|');
-                            } else {
-                              updatedConditions[index].observation = e.target.value;
-                            }
-                            setEyeConditions(updatedConditions);
-                          }}
+                          id="new-eye-condition-notes"
                           placeholder="Additional notes"
-                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
                         />
-                        
+                      </div>
+                      
+                      <div className="pt-2 text-right">
                         <button
+                          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                           onClick={() => {
-                            const updatedConditions = [...eyeConditions];
-                            updatedConditions.splice(index, 1);
-                            setEyeConditions(updatedConditions);
+                            const typeSelect = document.getElementById('eye-condition-type') as HTMLSelectElement;
+                            const rightEyeCheckbox = document.getElementById('new-right-eye') as HTMLInputElement;
+                            const leftEyeCheckbox = document.getElementById('new-left-eye') as HTMLInputElement;
+                            const rightEyeAngle = document.getElementById('new-right-eye-angle') as HTMLInputElement;
+                            const leftEyeAngle = document.getElementById('new-left-eye-angle') as HTMLInputElement;
+                            const notesInput = document.getElementById('new-eye-condition-notes') as HTMLInputElement;
+                            const customInput = document.getElementById('custom-condition-input') as HTMLInputElement;
+                            
+                            // Check if at least one eye is selected
+                            if (typeSelect && typeSelect.value && (rightEyeCheckbox.checked || leftEyeCheckbox.checked)) {
+                              let condition = typeSelect.value;
+                              let observation = notesInput ? notesInput.value : '';
+                              
+                              // If "Other" is selected, use the custom input value
+                              if (condition === "Other" && customInput && customInput.value) {
+                                // Store the custom condition in the observation field with a separator
+                                observation = `${customInput.value}|${observation}`;
+                              }
+                              
+                              setEyeConditions([
+                                ...eyeConditions,
+                                {
+                                  condition,
+                                  rightEye: rightEyeCheckbox.checked,
+                                  rightEyeAngle: rightEyeCheckbox.checked ? rightEyeAngle.value : '',
+                                  leftEye: leftEyeCheckbox.checked,
+                                  leftEyeAngle: leftEyeCheckbox.checked ? leftEyeAngle.value : '',
+                                  observation
+                                }
+                              ]);
+                              
+                              // Reset inputs
+                              typeSelect.selectedIndex = 0;
+                              rightEyeCheckbox.checked = false;
+                              leftEyeCheckbox.checked = false;
+                              rightEyeAngle.value = '';
+                              leftEyeAngle.value = '';
+                              if (notesInput) notesInput.value = '';
+                              
+                              // Remove custom input if it exists
+                              const customContainer = document.getElementById('custom-condition-container');
+                              if (customContainer) {
+                                customContainer.innerHTML = '';
+                              }
+                            }
                           }}
-                          className="p-2 text-red-500 hover:text-red-700"
-                          aria-label="Remove"
                         >
-                          ✕
+                          Add Condition
                         </button>
                       </div>
-                    ))}
-                    
-                    {/* Add new eye condition */}
-                    <div className="flex items-center gap-2 mb-2" id="new-eye-condition-container">
-                      <select
-                        id="eye-condition-type"
-                        className="text-sm p-2 border border-gray-300 rounded-md w-40"
-                        defaultValue=""
-                        onChange={(e) => {
-                          const container = document.getElementById('new-eye-condition-container');
-                          const customInput = document.getElementById('eye-condition-custom');
-                          
-                          if (e.target.value === 'Other' && container && !customInput) {
-                            // Create custom input field
-                            const customField = document.createElement('input');
-                            customField.id = 'eye-condition-custom';
-                            customField.type = 'text';
-                            customField.placeholder = 'Specify condition';
-                            customField.className = 'text-sm p-2 border border-gray-300 rounded-md w-40';
-                            
-                            // Insert after the select
-                            container.insertBefore(customField, document.getElementById('eye-condition-eye'));
-                          } else if (e.target.value !== 'Other' && customInput) {
-                            customInput.remove();
-                          }
-                        }}
-                      >
-                        <option value="" disabled>Select condition</option>
-                        <option value="Myopia">Myopia (nearsightedness)</option>
-                        <option value="Hyperopia">Hyperopia (farsightedness)</option>
-                        <option value="Astigmatism">Astigmatism</option>
-                        <option value="Presbyopia">Presbyopia</option>
-                        <option value="Glaucoma">Glaucoma</option>
-                        <option value="Cataract">Cataract</option>
-                        <option value="Macular Degeneration">Macular Degeneration</option>
-                        <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
-                        <option value="Amblyopia">Amblyopia (lazy eye)</option>
-                        <option value="Strabismus">Strabismus (crossed eyes)</option>
-                        <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
-                        <option value="Other">Other</option>
-                      </select>
-                      
-                      <select
-                        id="eye-condition-eye"
-                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
-                        defaultValue=""
-                      >
-                        <option value="" disabled>Select eye</option>
-                        <option value="Right (Dx)">Right eye (Dx)</option>
-                        <option value="Left (Sx)">Left eye (Sx)</option>
-                        <option value="Both">Both eyes</option>
-                      </select>
-                      
-                      <input
-                        type="text"
-                        id="eye-condition-notes"
-                        placeholder="Additional notes"
-                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      />
-                      
-                      <button
-                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                        onClick={() => {
-                          const typeSelect = document.getElementById('eye-condition-type') as HTMLSelectElement;
-                          const eyeSelect = document.getElementById('eye-condition-eye') as HTMLSelectElement;
-                          const notesInput = document.getElementById('eye-condition-notes') as HTMLInputElement;
-                          const customInput = document.getElementById('eye-condition-custom') as HTMLInputElement;
-                          
-                          if (typeSelect && typeSelect.value && eyeSelect && eyeSelect.value) {
-                            let condition = typeSelect.value;
-                            let eye = eyeSelect.value;
-                            let observation = notesInput ? notesInput.value : '';
-                            
-                            // If "Other" is selected, use the custom input value
-                            if (condition === "Other" && customInput && customInput.value) {
-                              // Store the custom condition in the observation field with a separator
-                              observation = `${customInput.value}|${observation}`;
-                            }
-                            
-                            setEyeConditions([
-                              ...eyeConditions,
-                              {
-                                condition,
-                                eye,
-                                observation
-                              }
-                            ]);
-                            
-                            // Reset inputs
-                            typeSelect.selectedIndex = 0;
-                            eyeSelect.selectedIndex = 0;
-                            if (notesInput) notesInput.value = '';
-                            
-                            // Remove custom input if it exists
-                            if (customInput) {
-                              customInput.remove();
-                            }
-                          }
-                        }}
-                      >
-                        Add
-                      </button>
                     </div>
                   </div>
                   

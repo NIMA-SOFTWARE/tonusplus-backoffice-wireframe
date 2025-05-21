@@ -35,6 +35,19 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // Voice-to-text state
   const [voiceInputEnabled, setVoiceInputEnabled] = useState(false);
   
+  // Local Anamnesis state
+  const [whenDoesItHurt, setWhenDoesItHurt] = useState('');
+  const [howDoesItHurt, setHowDoesItHurt] = useState('');
+  const [painIntensity, setPainIntensity] = useState(5);
+  const [whereDoesItHurt, setWhereDoesItHurt] = useState('');
+  const [painStartDuration, setPainStartDuration] = useState('days');
+  const [painStartValue, setPainStartValue] = useState(1);
+  const [painStartDate, setPainStartDate] = useState('');
+  const [painDurationMinutes, setPainDurationMinutes] = useState(0);
+  const [hourlyInterval, setHourlyInterval] = useState('');
+  const [activitiesWorsen, setActivitiesWorsen] = useState('');
+  const [activitiesRelieve, setActivitiesRelieve] = useState('');
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -554,9 +567,218 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">History of Present Illness (HPI)</h3>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain fields for documenting the history of present illness
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <div className="space-y-6">
+                  {/* When does it hurt */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">When does it hurt</label>
+                    <select 
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={whenDoesItHurt}
+                      onChange={(e) => setWhenDoesItHurt(e.target.value)}
+                    >
+                      <option value="">Select when pain occurs</option>
+                      <option value="when_wake_up">When I wake up</option>
+                      <option value="during_day">During the day</option>
+                      <option value="end_of_day">End of day</option>
+                      <option value="during_night">During night-time</option>
+                    </select>
+                  </div>
+                  
+                  {/* How does it hurt */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">How does it hurt</label>
+                    <select 
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={howDoesItHurt}
+                      onChange={(e) => setHowDoesItHurt(e.target.value)}
+                    >
+                      <option value="">Select pain type</option>
+                      <option value="acute">Acute</option>
+                      <option value="chronic">Chronic</option>
+                      <option value="punctual">Punctual</option>
+                      <option value="global">Global</option>
+                      <option value="arrow">Arrow</option>
+                      <option value="claw">Claw</option>
+                      <option value="rheumatic">Rheumatic pain</option>
+                      <option value="diffuse">Diffuse</option>
+                      <option value="descending">Descending</option>
+                      <option value="ascending">Ascending</option>
+                    </select>
+                  </div>
+                  
+                  {/* Pain intensity */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain intensity (1-10)</label>
+                    <div className="flex items-center space-x-2">
+                      <input 
+                        type="range" 
+                        min="1" 
+                        max="10" 
+                        step="1"
+                        value={painIntensity}
+                        onChange={(e) => setPainIntensity(parseInt(e.target.value))}
+                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                      />
+                      <span className="text-sm font-medium text-gray-700 w-8 text-center">{painIntensity}</span>
+                    </div>
+                    <div className="flex justify-between mt-1 px-1">
+                      <span className="text-xs text-gray-500">Mild</span>
+                      <span className="text-xs text-gray-500">Severe</span>
+                    </div>
+                  </div>
+                  
+                  {/* Where does it hurt */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Where does it hurt</label>
+                    <select 
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      value={whereDoesItHurt}
+                      onChange={(e) => setWhereDoesItHurt(e.target.value)}
+                    >
+                      <option value="">Select pain location</option>
+                      <option value="occipital">Occipital</option>
+                      <option value="back">Back</option>
+                      <option value="neck">Neck</option>
+                      <option value="shoulder">Shoulder</option>
+                      <option value="cervicothoracic">Cervicothoracic</option>
+                      <option value="interscapular">Interscapular</option>
+                      <option value="subscapular">Subscapular</option>
+                      <option value="thoracolumbar">Thoracolumbar</option>
+                      <option value="back_pain">Back pain</option>
+                      <option value="lumbosacral">Lumbosacral</option>
+                      <option value="sacral">Sacral</option>
+                      <option value="coccygeal">Coccygeal</option>
+                      <option value="sacroiliac">Sacroiliac</option>
+                      <option value="buttock">Buttock</option>
+                      <option value="anterior_thigh">Anterior thigh</option>
+                      <option value="lateral_thigh">Lateral thigh</option>
+                      <option value="posterior_thigh">Posterior thigh</option>
+                      <option value="anterior_knee">Anterior knee</option>
+                      <option value="lateral_knee">Lateral knee</option>
+                      <option value="medial_knee">Medial knee</option>
+                      <option value="posterior_knee">Posterior knee</option>
+                      <option value="calf_lateral">Calf (lateral)</option>
+                      <option value="calf_anterior">Calf (anterior)</option>
+                      <option value="calf_posterior">Calf (posterior)</option>
+                      <option value="ankle">Ankle</option>
+                      <option value="foot_anterior">Foot (anterior)</option>
+                      <option value="foot_posterior">Foot (posterior)</option>
+                      <option value="foot_lateral">Foot (lateral)</option>
+                      <option value="foot_medial">Foot (medial)</option>
+                      <option value="foot_plantar">Foot (plantar)</option>
+                    </select>
+                  </div>
+                  
+                  {/* When did the pain start */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">When did the pain start</label>
+                    <div className="flex space-x-2 items-end">
+                      <div className="w-20">
+                        <input 
+                          type="number" 
+                          min="1"
+                          value={painStartValue}
+                          onChange={(e) => setPainStartValue(parseInt(e.target.value) || 1)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      <div className="w-32">
+                        <select 
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          value={painStartDuration}
+                          onChange={(e) => setPainStartDuration(e.target.value)}
+                        >
+                          <option value="days">days ago</option>
+                          <option value="months">months ago</option>
+                          <option value="years">years ago</option>
+                          <option value="specific_date">specific date</option>
+                        </select>
+                      </div>
+                      {painStartDuration === 'specific_date' && (
+                        <div className="flex-1">
+                          <input 
+                            type="date"
+                            value={painStartDate}
+                            onChange={(e) => setPainStartDate(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Pain duration */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain duration (minutes)</label>
+                    <input 
+                      type="number" 
+                      min="0"
+                      value={painDurationMinutes}
+                      onChange={(e) => setPainDurationMinutes(parseInt(e.target.value) || 0)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Duration in minutes"
+                    />
+                  </div>
+                  
+                  {/* Hourly interval */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Hourly interval</label>
+                    <input 
+                      type="text"
+                      value={hourlyInterval}
+                      onChange={(e) => setHourlyInterval(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="e.g., Every 2 hours"
+                    />
+                  </div>
+                  
+                  {/* Activities that worsen pain */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Activities which make the pain worse</label>
+                    <div className="relative">
+                      <textarea
+                        value={activitiesWorsen}
+                        onChange={(e) => setActivitiesWorsen(e.target.value)}
+                        placeholder="List activities that worsen the pain..."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-24"
+                      ></textarea>
+                      {voiceInputEnabled && (
+                        <div className="absolute right-2 top-4">
+                          <VoiceInputButton 
+                            onTranscriptionComplete={(text) => {
+                              const newValue = activitiesWorsen ? `${activitiesWorsen} ${text}` : text;
+                              setActivitiesWorsen(newValue);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Activities that relieve pain */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Activities which help relieve the pain</label>
+                    <div className="relative">
+                      <textarea
+                        value={activitiesRelieve}
+                        onChange={(e) => setActivitiesRelieve(e.target.value)}
+                        placeholder="List activities that help relieve the pain..."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-24"
+                      ></textarea>
+                      {voiceInputEnabled && (
+                        <div className="absolute right-2 top-4">
+                          <VoiceInputButton 
+                            onTranscriptionComplete={(text) => {
+                              const newValue = activitiesRelieve ? `${activitiesRelieve} ${text}` : text;
+                              setActivitiesRelieve(newValue);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </AccordionContent>

@@ -260,6 +260,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [bassaniSx, setBassaniSx] = useState<string[]>([]);
   const [tfe, setTfe] = useState<"Dx" | "Sx" | "">("");
   const [barralOptions, setBarralOptions] = useState<string[]>([]);
+  const [bendingTestOptions, setBendingTestOptions] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -6014,6 +6015,25 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       ]}
                       selectedTags={barralOptions}
                       onTagsChange={setBarralOptions}
+                      allowCustomTags={false}
+                      voiceEnabled={voiceInputEnabled}
+                      className="mb-2"
+                    />
+                  </div>
+                  
+                  {/* Bending Test Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Bending Test</label>
+                    
+                    <TagSelectionInput
+                      label="Select Vertebrae"
+                      placeholder="Select relevant vertebrae..."
+                      options={[
+                        "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9", "T10", "T11", "T12",
+                        "L1", "L2", "L3", "L4", "L5"
+                      ]}
+                      selectedTags={bendingTestOptions}
+                      onTagsChange={setBendingTestOptions}
                       allowCustomTags={false}
                       voiceEnabled={voiceInputEnabled}
                       className="mb-2"

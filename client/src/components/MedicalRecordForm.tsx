@@ -267,6 +267,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [lateralFlexionSxStraightLine, setLateralFlexionSxStraightLine] = useState("");
   const [headRotationDx, setHeadRotationDx] = useState("");
   const [headRotationSx, setHeadRotationSx] = useState("");
+  const [globalPosture, setGlobalPosture] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -6245,6 +6246,36 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </select>
                       </div>
                     </div>
+                  </div>
+                  
+                  {/* Global Posture Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Global Posture</label>
+                    
+                    <TagSelectionInput
+                      label="Select Posture Characteristics"
+                      placeholder="Select posture characteristics..."
+                      options={[
+                        "Head antedus",
+                        "Head projected posteriorly",
+                        "Pelvis anteverted",
+                        "Pelvis retroverted",
+                        "G in front",
+                        "G in back",
+                        "Knees in hyperextension",
+                        "Sway Back",
+                        "Military",
+                        "Trunk translated (Rx)",
+                        "Trunk translated (Lx)",
+                        "Pelvis translated (Rx)",
+                        "Pelvis translated (Lx)"
+                      ]}
+                      selectedTags={globalPosture}
+                      onTagsChange={setGlobalPosture}
+                      allowCustomTags={false}
+                      voiceEnabled={voiceInputEnabled}
+                      className="mb-2"
+                    />
                   </div>
                 </div>
               </div>

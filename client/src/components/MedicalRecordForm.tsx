@@ -303,39 +303,42 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </label>
                   </div>
                   
-                  {/* Daily Driving Hours */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Driving Hours</label>
-                    <input
-                      type="number"
-                      min="0"
-                      max="24"
-                      placeholder="Hours per day"
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  {/* Daily Computer Hours */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Computer Hours</label>
-                    <input
-                      type="number"
-                      min="0"
-                      max="24"
-                      placeholder="Hours per day"
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
-                  </div>
-                  
-                  {/* Work Type */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Work Type</label>
-                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                      <option value="">Select work type</option>
-                      <option value="hard">Hard (physical labor, high exertion)</option>
-                      <option value="medium">Medium (mix of physical and sedentary)</option>
-                      <option value="easy">Easy (mostly sedentary)</option>
-                    </select>
+                  {/* Daily Hours & Work Type - Grouped in a row */}
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Daily Driving Hours */}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Driving Hours</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="24"
+                        placeholder="Hours per day"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    
+                    {/* Daily Computer Hours */}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Computer Hours</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="24"
+                        placeholder="Hours per day"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                    </div>
+                    
+                    {/* Work Type */}
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Work Type</label>
+                      <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select work type</option>
+                        <option value="hard">Hard (physical labor)</option>
+                        <option value="medium">Medium (mixed)</option>
+                        <option value="easy">Easy (sedentary)</option>
+                      </select>
+                    </div>
                   </div>
                   
                   {/* Sports */}

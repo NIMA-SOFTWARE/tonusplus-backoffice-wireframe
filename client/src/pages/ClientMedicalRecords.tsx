@@ -18,7 +18,7 @@ import { ChevronLeft, FileText, Calendar, ClipboardList } from 'lucide-react';
 import { format } from 'date-fns';
 import { Participant } from '@shared/schema';
 import { Skeleton } from '@/components/ui/skeleton';
-import MedicalRecordDetails from '@/components/MedicalRecordDetails';
+import ClientMedicalRecordDetails from '@/components/ClientMedicalRecordDetails';
 
 interface MedicalRecord {
   id: number;
@@ -37,8 +37,8 @@ const ClientMedicalRecords = () => {
   const [, setLocation] = useLocation();
   const [selectedRecord, setSelectedRecord] = useState<number | null>(null);
   
-  // Get participant information
-  const { data: participant, isLoading: participantLoading } = useQuery({
+  // Get customer information
+  const { data: customer, isLoading: customerLoading } = useQuery({
     queryKey: ['/api/customers', customerId],
     queryFn: async () => {
       const response = await fetch(`/api/customers/${customerId}`);
@@ -76,7 +76,7 @@ const ClientMedicalRecords = () => {
   };
   
   if (selectedRecord) {
-    return <MedicalRecordDetails recordId={selectedRecord} onClose={handleCloseDetails} />;
+    return <ClientMedicalRecordDetails recordId={selectedRecord} onClose={handleCloseDetails} />;
   }
   
   return (
@@ -88,10 +88,10 @@ const ClientMedicalRecords = () => {
             Back
           </Button>
           <h1 className="text-2xl font-bold">
-            {participantLoading ? (
+            {customerLoading ? (
               <Skeleton className="h-8 w-64" />
             ) : (
-              `Medical Records - ${participant?.name}`
+              `Medical Records - ${customer?.name || 'Client'}`
             )}
           </h1>
         </div>

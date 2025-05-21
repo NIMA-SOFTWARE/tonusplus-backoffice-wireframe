@@ -336,11 +336,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
       <Accordion type="single" collapsible className="w-full mb-4">
         {/* Section 1: Personal Data */}
         <AccordionItem value="personal-data">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <User className="mr-2 h-5 w-5 text-blue-500" />
-              <span>Personal Data</span>
-            </div>
+          <AccordionTrigger className="text-lg font-semibold uppercase">
+            PERSONAL DATA
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -477,11 +474,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         
         {/* Section 2: Professional Data */}
         <AccordionItem value="professional-data">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <FileText className="mr-2 h-5 w-5 text-green-500" />
-              <span>Professional Data</span>
-            </div>
+          <AccordionTrigger className="text-lg font-semibold uppercase">
+            PROFESSIONAL DATA
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -703,11 +697,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         
         {/* Section 3: Main Reason for Participation */}
         <AccordionItem value="participation-reason">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <Target className="mr-2 h-5 w-5 text-rose-500" />
-              <span>Reason for Participation</span>
-            </div>
+          <AccordionTrigger className="text-lg font-semibold uppercase">
+            REASON FOR PARTICIPATION
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
@@ -831,11 +822,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         
         {/* Section 4: Local Anamnesis */}
         <AccordionItem value="local-anamnesis">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <Activity className="mr-2 h-5 w-5 text-purple-500" />
-              <span>Local Anamnesis</span>
-            </div>
+          <AccordionTrigger className="text-lg font-semibold uppercase">
+            LOCAL ANAMNESIS
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">

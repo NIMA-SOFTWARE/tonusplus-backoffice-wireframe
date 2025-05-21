@@ -55,12 +55,21 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [ongoingTherapies, setOngoingTherapies] = useState<string[]>([]);
   
   // Generic Anamnesis state
-  interface FractureEntry {
+  interface TraumaEntry {
     location: string;
     year: string;
     observation: string;
   }
-  const [fractures, setFractures] = useState<FractureEntry[]>([]);
+  const [fractures, setFractures] = useState<TraumaEntry[]>([]);
+  const [strains, setStrains] = useState<TraumaEntry[]>([]);
+  const [sprains, setSprains] = useState<TraumaEntry[]>([]);
+  const [muscleTears, setMuscleTears] = useState<TraumaEntry[]>([]);
+  const [tendonRuptures, setTendonRuptures] = useState<TraumaEntry[]>([]);
+  const [ligamentRuptures, setLigamentRuptures] = useState<TraumaEntry[]>([]);
+  const [carAccidents, setCarAccidents] = useState('');
+  const [fallsFromHeight, setFallsFromHeight] = useState('');
+  const [fallsOnIce, setFallsOnIce] = useState('');
+  const [fallsOnStairs, setFallsOnStairs] = useState('');
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -923,106 +932,306 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   Trauma and Diseases/Dysfunctions of the Musculoskeletal System
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-6">
-                  {/* Fractures multi-select with year and observation */}
-                  <div>
-                    <h5 className="text-sm font-medium text-gray-700 mb-3">Fractures</h5>
-                    
-                    {/* Selected fractures list with year and observation */}
-                    <div className="space-y-3 mb-4">
-                      {fractures.map((fracture, index) => (
-                        <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-                          <div className="flex items-center gap-2">
-                            <div className="font-medium text-gray-700 w-1/5">{fracture.location}</div>
-                            
-                            <div className="flex-shrink-0 w-20">
-                              <input
-                                type="text"
-                                placeholder="Year"
-                                value={fracture.year}
-                                onChange={(e) => {
-                                  const updatedFractures = [...fractures];
-                                  updatedFractures[index].year = e.target.value;
-                                  setFractures(updatedFractures);
-                                }}
-                                className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                              />
+                  {/* Reusable trauma entry component */}
+                  {/* This is a local component for reuse within the medical record form */}
+                  {(() => {
+                    const TraumaEntrySection = ({
+                      title,
+                      entries,
+                      setEntries,
+                      options,
+                      selectLabel,
+                      allowCustomEntry = false
+                    }: {
+                      title: string;
+                      entries: TraumaEntry[];
+                      setEntries: React.Dispatch<React.SetStateAction<TraumaEntry[]>>;
+                      options: { value: string; label: string }[];
+                      selectLabel: string;
+                      allowCustomEntry?: boolean;
+                    }) => (
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">{title}</h5>
+                        
+                        {/* Selected entries list with year and observation */}
+                        <div className="space-y-3 mb-4">
+                          {entries.map((entry, index) => (
+                            <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
+                              <div className="flex items-center gap-2">
+                                <div className="font-medium text-gray-700 w-1/5">{entry.location}</div>
+                                
+                                <div className="flex-shrink-0 w-20">
+                                  <input
+                                    type="text"
+                                    placeholder="Year"
+                                    value={entry.year}
+                                    onChange={(e) => {
+                                      const updatedEntries = [...entries];
+                                      updatedEntries[index].year = e.target.value;
+                                      setEntries(updatedEntries);
+                                    }}
+                                    className="w-full text-sm p-1 border border-gray-300 rounded-md"
+                                  />
+                                </div>
+                                
+                                <div className="flex-grow">
+                                  <input
+                                    type="text"
+                                    placeholder="Observation"
+                                    value={entry.observation}
+                                    onChange={(e) => {
+                                      const updatedEntries = [...entries];
+                                      updatedEntries[index].observation = e.target.value;
+                                      setEntries(updatedEntries);
+                                    }}
+                                    className="w-full text-sm p-1 border border-gray-300 rounded-md"
+                                  />
+                                </div>
+                                
+                                <button
+                                  onClick={() => {
+                                    const updatedEntries = [...entries];
+                                    updatedEntries.splice(index, 1);
+                                    setEntries(updatedEntries);
+                                  }}
+                                  className="flex-shrink-0 text-red-500 hover:text-red-700"
+                                  aria-label="Remove entry"
+                                >
+                                  ✕
+                                </button>
+                              </div>
                             </div>
-                            
+                          ))}
+                        </div>
+                        
+                        {/* Entry location selector */}
+                        <div className="flex items-end gap-2">
+                          {allowCustomEntry ? (
+                            <div className="flex flex-grow gap-2">
+                              <div className="flex-grow">
+                                <div className="mb-1 text-xs text-gray-500">{selectLabel}</div>
+                                <input
+                                  type="text"
+                                  placeholder={`Enter ${title.toLowerCase()} details`}
+                                  className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
+                                      setEntries([
+                                        ...entries,
+                                        {
+                                          location: e.currentTarget.value.trim(),
+                                          year: '',
+                                          observation: ''
+                                        }
+                                      ]);
+                                      e.currentTarget.value = '';
+                                    }
+                                  }}
+                                />
+                              </div>
+                              <button
+                                className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-5"
+                                onClick={(e) => {
+                                  const input = e.currentTarget.previousSibling?.querySelector('input');
+                                  if (input && input.value.trim()) {
+                                    setEntries([
+                                      ...entries,
+                                      {
+                                        location: input.value.trim(),
+                                        year: '',
+                                        observation: ''
+                                      }
+                                    ]);
+                                    input.value = '';
+                                  }
+                                }}
+                              >
+                                Add
+                              </button>
+                            </div>
+                          ) : (
                             <div className="flex-grow">
-                              <input
-                                type="text"
-                                placeholder="Observation"
-                                value={fracture.observation}
+                              <div className="mb-1 text-xs text-gray-500">{selectLabel}</div>
+                              <select
+                                className="w-full text-sm p-2 border border-gray-300 rounded-md"
                                 onChange={(e) => {
-                                  const updatedFractures = [...fractures];
-                                  updatedFractures[index].observation = e.target.value;
-                                  setFractures(updatedFractures);
+                                  if (e.target.value) {
+                                    setEntries([
+                                      ...entries,
+                                      { 
+                                        location: e.target.value, 
+                                        year: '', 
+                                        observation: '' 
+                                      }
+                                    ]);
+                                    e.target.value = ''; // Reset select after adding
+                                  }
                                 }}
-                                className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                              />
+                              >
+                                <option value="">Select location</option>
+                                {options.map((option) => (
+                                  <option key={option.value} value={option.value}>{option.label}</option>
+                                ))}
+                              </select>
                             </div>
-                            
-                            <button
-                              onClick={() => {
-                                const updatedFractures = [...fractures];
-                                updatedFractures.splice(index, 1);
-                                setFractures(updatedFractures);
-                              }}
-                              className="flex-shrink-0 text-red-500 hover:text-red-700"
-                              aria-label="Remove fracture"
-                            >
-                              ✕
-                            </button>
+                          )}
+                        </div>
+                      </div>
+                    );
+                    
+                    return (
+                      <>
+                        {/* Fractures */}
+                        <TraumaEntrySection
+                          title="Fractures"
+                          entries={fractures}
+                          setEntries={setFractures}
+                          options={[
+                            { value: "Humerus", label: "Humerus" },
+                            { value: "Radius", label: "Radius" },
+                            { value: "Cubitus", label: "Cubitus" },
+                            { value: "Olecranon", label: "Olecranon" },
+                            { value: "Carpals", label: "Carpals" },
+                            { value: "Costal", label: "Costal" },
+                            { value: "Vertebra", label: "Vertebra" },
+                            { value: "Pelvis", label: "Pelvis" },
+                            { value: "Coccyx", label: "Coccyx" },
+                            { value: "Femoral neck", label: "Femoral neck" },
+                            { value: "Femur", label: "Femur" },
+                            { value: "Tibial plateau", label: "Tibial plateau" },
+                            { value: "Tibia", label: "Tibia" },
+                            { value: "Fibula", label: "Fibula" },
+                            { value: "Internal malleolus", label: "Internal malleolus" },
+                            { value: "External malleolus", label: "External malleolus" },
+                            { value: "Bimalleolar", label: "Bimalleolar" },
+                            { value: "Tarsals", label: "Tarsals" },
+                            { value: "Halcus", label: "Halcus" },
+                            { value: "Other", label: "Other (specify in observation)" }
+                          ]}
+                          selectLabel="Add new fracture location"
+                        />
+                        
+                        {/* Strains */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <TraumaEntrySection
+                          title="Strains"
+                          entries={strains}
+                          setEntries={setStrains}
+                          options={[
+                            { value: "Ankle", label: "Ankle" },
+                            { value: "Knee", label: "Knee" },
+                            { value: "Hip", label: "Hip" },
+                            { value: "Fist", label: "Fist" },
+                            { value: "Other", label: "Other (specify in observation)" }
+                          ]}
+                          selectLabel="Add new strain location"
+                        />
+                        
+                        {/* Sprains */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <TraumaEntrySection
+                          title="Sprains"
+                          entries={sprains}
+                          setEntries={setSprains}
+                          options={[
+                            { value: "Ankle", label: "Ankle" },
+                            { value: "Knee", label: "Knee" },
+                            { value: "Hip", label: "Hip" },
+                            { value: "Fist", label: "Fist" },
+                            { value: "Other", label: "Other (specify in observation)" }
+                          ]}
+                          selectLabel="Add new sprain location"
+                        />
+                        
+                        {/* Muscle Tears */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <TraumaEntrySection
+                          title="Muscle Tears"
+                          entries={muscleTears}
+                          setEntries={setMuscleTears}
+                          options={[]}
+                          selectLabel="Enter muscle name"
+                          allowCustomEntry={true}
+                        />
+                        
+                        {/* Tendon Ruptures */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <TraumaEntrySection
+                          title="Tendon Ruptures"
+                          entries={tendonRuptures}
+                          setEntries={setTendonRuptures}
+                          options={[]}
+                          selectLabel="Enter tendon name"
+                          allowCustomEntry={true}
+                        />
+                        
+                        {/* Ligament Ruptures */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <TraumaEntrySection
+                          title="Ligament Ruptures"
+                          entries={ligamentRuptures}
+                          setEntries={setLigamentRuptures}
+                          options={[]}
+                          selectLabel="Enter ligament name"
+                          allowCustomEntry={true}
+                        />
+                        
+                        {/* Additional text inputs for accidents and falls */}
+                        <div className="border-t border-gray-200 pt-4 mt-4"></div>
+                        <div className="space-y-4">
+                          <h5 className="text-sm font-medium text-gray-700 mb-3">Accidents and Falls</h5>
+                          
+                          {/* Car Accidents */}
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Car Accidents</label>
+                            <input 
+                              type="text"
+                              value={carAccidents}
+                              onChange={(e) => setCarAccidents(e.target.value)}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Enter details about car accidents..."
+                            />
+                          </div>
+                          
+                          {/* Falls from height */}
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Falls from Height</label>
+                            <input 
+                              type="text"
+                              value={fallsFromHeight}
+                              onChange={(e) => setFallsFromHeight(e.target.value)}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Enter details about falls from height..."
+                            />
+                          </div>
+                          
+                          {/* Falls on ice */}
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Falls on Ice</label>
+                            <input 
+                              type="text"
+                              value={fallsOnIce}
+                              onChange={(e) => setFallsOnIce(e.target.value)}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Enter details about falls on ice..."
+                            />
+                          </div>
+                          
+                          {/* Falls on stairs */}
+                          <div>
+                            <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Falls on Stairs</label>
+                            <input 
+                              type="text"
+                              value={fallsOnStairs}
+                              onChange={(e) => setFallsOnStairs(e.target.value)}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                              placeholder="Enter details about falls on stairs..."
+                            />
                           </div>
                         </div>
-                      ))}
-                    </div>
-                    
-                    {/* Fracture location selector */}
-                    <div className="flex items-end gap-2">
-                      <div className="flex-grow">
-                        <div className="mb-1 text-xs text-gray-500">Add new fracture location</div>
-                        <select
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          onChange={(e) => {
-                            if (e.target.value) {
-                              setFractures([
-                                ...fractures,
-                                { 
-                                  location: e.target.value, 
-                                  year: '', 
-                                  observation: '' 
-                                }
-                              ]);
-                              e.target.value = ''; // Reset select after adding
-                            }
-                          }}
-                        >
-                          <option value="">Select fracture location</option>
-                          <option value="Humerus">Humerus</option>
-                          <option value="Radius">Radius</option>
-                          <option value="Cubitus">Cubitus</option>
-                          <option value="Olecranon">Olecranon</option>
-                          <option value="Carpals">Carpals</option>
-                          <option value="Costal">Costal</option>
-                          <option value="Vertebra">Vertebra</option>
-                          <option value="Pelvis">Pelvis</option>
-                          <option value="Coccyx">Coccyx</option>
-                          <option value="Femoral neck">Femoral neck</option>
-                          <option value="Femur">Femur</option>
-                          <option value="Tibial plateau">Tibial plateau</option>
-                          <option value="Tibia">Tibia</option>
-                          <option value="Fibula">Fibula</option>
-                          <option value="Internal malleolus">Internal malleolus</option>
-                          <option value="External malleolus">External malleolus</option>
-                          <option value="Bimalleolar">Bimalleolar</option>
-                          <option value="Tarsals">Tarsals</option>
-                          <option value="Halcus">Halcus</option>
-                          <option value="Other">Other (specify in observation)</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
+                      </>
+                    );
+                  })()}
                 </div>
               </div>
               

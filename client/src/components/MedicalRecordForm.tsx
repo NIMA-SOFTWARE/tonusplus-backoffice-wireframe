@@ -104,6 +104,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [digestiveDiseases, setDigestiveDiseases] = useState<DigestiveDisease[]>([]);
   
+  // Interface and state for urogenital system diseases/dysfunctions
+  interface UrogenitalDisease {
+    type: string;
+    notes: string;
+  }
+  const [urogenitalDiseases, setUrogenitalDiseases] = useState<UrogenitalDisease[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -2452,6 +2459,207 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
+              {/* Diseases or Dysfunctions of the urogenital system */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Diseases or Dysfunctions of the Uro-Genital System
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Urogenital Conditions</h5>
+                  
+                  {/* Existing urogenital diseases */}
+                  {urogenitalDiseases.map((disease, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {disease.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={disease.type}
+                            onChange={(e) => {
+                              const updatedDiseases = [...urogenitalDiseases];
+                              updatedDiseases[index].type = e.target.value;
+                              setUrogenitalDiseases(updatedDiseases);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Urinary tract infection">Urinary tract infection</option>
+                            <option value="Kidney stones">Kidney stones</option>
+                            <option value="Kidney disease">Kidney disease</option>
+                            <option value="Polycystic kidney disease">Polycystic kidney disease</option>
+                            <option value="Bladder dysfunction">Bladder dysfunction</option>
+                            <option value="Overactive bladder">Overactive bladder</option>
+                            <option value="Urinary incontinence">Urinary incontinence</option>
+                            <option value="Prostate enlargement">Prostate enlargement</option>
+                            <option value="Prostatitis">Prostatitis</option>
+                            <option value="Endometriosis">Endometriosis</option>
+                            <option value="Uterine fibroids">Uterine fibroids</option>
+                            <option value="Polycystic ovary syndrome">Polycystic ovary syndrome</option>
+                            <option value="Ovarian cysts">Ovarian cysts</option>
+                            <option value="Pelvic inflammatory disease">Pelvic inflammatory disease</option>
+                            <option value="Sexually transmitted infection">Sexually transmitted infection</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify condition"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={disease.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedDiseases = [...urogenitalDiseases];
+                              const parts = disease.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedDiseases[index].notes = parts.join('|');
+                              setUrogenitalDiseases(updatedDiseases);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={disease.type}
+                          onChange={(e) => {
+                            const updatedDiseases = [...urogenitalDiseases];
+                            updatedDiseases[index].type = e.target.value;
+                            setUrogenitalDiseases(updatedDiseases);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select condition</option>
+                          <option value="Urinary tract infection">Urinary tract infection</option>
+                          <option value="Kidney stones">Kidney stones</option>
+                          <option value="Kidney disease">Kidney disease</option>
+                          <option value="Polycystic kidney disease">Polycystic kidney disease</option>
+                          <option value="Bladder dysfunction">Bladder dysfunction</option>
+                          <option value="Overactive bladder">Overactive bladder</option>
+                          <option value="Urinary incontinence">Urinary incontinence</option>
+                          <option value="Prostate enlargement">Prostate enlargement</option>
+                          <option value="Prostatitis">Prostatitis</option>
+                          <option value="Endometriosis">Endometriosis</option>
+                          <option value="Uterine fibroids">Uterine fibroids</option>
+                          <option value="Polycystic ovary syndrome">Polycystic ovary syndrome</option>
+                          <option value="Ovarian cysts">Ovarian cysts</option>
+                          <option value="Pelvic inflammatory disease">Pelvic inflammatory disease</option>
+                          <option value="Sexually transmitted infection">Sexually transmitted infection</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                      <input
+                        type="text"
+                        value={disease.type === "Other" ? (disease.notes.split('|')[1] || '') : disease.notes}
+                        onChange={(e) => {
+                          const updatedDiseases = [...urogenitalDiseases];
+                          if (disease.type === "Other") {
+                            const parts = disease.notes.split('|');
+                            parts[1] = e.target.value;
+                            updatedDiseases[index].notes = parts.join('|');
+                          } else {
+                            updatedDiseases[index].notes = e.target.value;
+                          }
+                          setUrogenitalDiseases(updatedDiseases);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedDiseases = [...urogenitalDiseases];
+                          updatedDiseases.splice(index, 1);
+                          setUrogenitalDiseases(updatedDiseases);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new urogenital disease */}
+                  <div className="flex items-center gap-2 mb-2" id="new-urogenital-container">
+                    <select
+                      id="urogenital-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-urogenital-container');
+                        const customInput = document.getElementById('urogenital-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'urogenital-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify condition';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('urogenital-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select condition</option>
+                      <option value="Urinary tract infection">Urinary tract infection</option>
+                      <option value="Kidney stones">Kidney stones</option>
+                      <option value="Kidney disease">Kidney disease</option>
+                      <option value="Polycystic kidney disease">Polycystic kidney disease</option>
+                      <option value="Bladder dysfunction">Bladder dysfunction</option>
+                      <option value="Overactive bladder">Overactive bladder</option>
+                      <option value="Urinary incontinence">Urinary incontinence</option>
+                      <option value="Prostate enlargement">Prostate enlargement</option>
+                      <option value="Prostatitis">Prostatitis</option>
+                      <option value="Endometriosis">Endometriosis</option>
+                      <option value="Uterine fibroids">Uterine fibroids</option>
+                      <option value="Polycystic ovary syndrome">Polycystic ovary syndrome</option>
+                      <option value="Ovarian cysts">Ovarian cysts</option>
+                      <option value="Pelvic inflammatory disease">Pelvic inflammatory disease</option>
+                      <option value="Sexually transmitted infection">Sexually transmitted infection</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <input
+                      type="text"
+                      id="urogenital-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('urogenital-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('urogenital-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('urogenital-custom') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          let diseaseType = typeSelect.value;
+                          let diseaseNotes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, include the custom type in the notes with a separator
+                          if (diseaseType === "Other" && customInput && customInput.value) {
+                            diseaseNotes = customInput.value + '|' + diseaseNotes;
+                          }
+                          
+                          setUrogenitalDiseases([
+                            ...urogenitalDiseases,
+                            {
+                              type: diseaseType,
+                              notes: diseaseNotes
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                          
+                          // Remove the custom input if it exists
+                          if (customInput) {
+                            customInput.remove();
+                          }
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
 
             </div>
           </AccordionContent>

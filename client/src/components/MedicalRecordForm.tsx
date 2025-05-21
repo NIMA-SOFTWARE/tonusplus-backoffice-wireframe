@@ -2452,10 +2452,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
-              {/* Other clinical history fields will go here */}
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic mt-6">
-                Additional clinical history fields will be added as needed
-              </div>
+
             </div>
           </AccordionContent>
         </AccordionItem>

@@ -186,6 +186,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [stomatognaticConditions, setStomatognaticConditions] = useState<StomatognaticCondition[]>([]);
   
+  // State for Lingual Frenulum
+  const [lingualFrenulum, setLingualFrenulum] = useState("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3872,6 +3875,25 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Angle's Occlusal Classification</h5>
+                  
+                  {/* Lingual Frenulum */}
+                  <div className="mb-4 pb-4 border-b border-zinc-200">
+                    <label htmlFor="lingual-frenulum" className="block text-sm font-medium text-gray-700 mb-2">
+                      Lingual Frenulum
+                    </label>
+                    <select
+                      id="lingual-frenulum"
+                      value={lingualFrenulum}
+                      onChange={(e) => setLingualFrenulum(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="" disabled>Select frenulum type</option>
+                      <option value="Normal">Normal</option>
+                      <option value="Short">Short</option>
+                      <option value="Ankylosing">Ankylosing</option>
+                      <option value="Short posterior">Short posterior</option>
+                    </select>
+                  </div>
                   
                   {/* Existing Stomatognatic conditions */}
                   {stomatognaticConditions.map((condition, index) => (

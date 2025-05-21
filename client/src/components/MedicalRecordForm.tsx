@@ -204,12 +204,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for Orthodontic History
   const [orthodonticHistory, setOrthodonticHistory] = useState("");
   
-  // State for Hormonal Apparatus
-  interface HormonalApparatus {
+  // State for Endocrine System
+  interface EndocrineSystem {
     type: string;
     notes: string;
   }
-  const [hormonalApparatuses, setHormonalApparatuses] = useState<HormonalApparatus[]>([]);
+  const [endocrineSystemEntries, setEndocrineSystemEntries] = useState<EndocrineSystem[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -4478,75 +4478,75 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
-              {/* HORMONAL APPARATUS Section */}
+              {/* ENDOCRINE SYSTEM Section */}
               <div className="space-y-4 mt-6">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  HORMONAL APPARATUS
+                  ENDOCRINE SYSTEM
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Hormonal Apparatus Types</h5>
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Endocrine System Conditions</h5>
                   
-                  {/* Existing Hormonal Apparatus */}
-                  {hormonalApparatuses.map((apparatus: HormonalApparatus, index: number) => (
+                  {/* Existing Endocrine System Entries */}
+                  {endocrineSystemEntries.map((entry: EndocrineSystem, index: number) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
-                      {apparatus.type === "Other" ? (
+                      {entry.type === "Other" ? (
                         <div className="flex-1 flex gap-1">
                           <select
-                            value={apparatus.type}
+                            value={entry.type}
                             onChange={(e) => {
-                              const updatedApparatuses = [...hormonalApparatuses];
-                              updatedApparatuses[index].type = e.target.value;
-                              setHormonalApparatuses(updatedApparatuses);
+                              const updatedEntries = [...endocrineSystemEntries];
+                              updatedEntries[index].type = e.target.value;
+                              setEndocrineSystemEntries(updatedEntries);
                             }}
                             className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
                           >
-                            <option value="">Select apparatus</option>
-                            <option value="Levonorgestrel IUD">Levonorgestrel IUD</option>
-                            <option value="Copper IUD">Copper IUD</option>
-                            <option value="Subdermal Implant">Subdermal Implant</option>
-                            <option value="Transdermal Patch">Transdermal Patch</option>
-                            <option value="Vaginal Ring">Vaginal Ring</option>
-                            <option value="Combined Oral Contraceptive">Combined Oral Contraceptive</option>
-                            <option value="Progestin-Only Pill">Progestin-Only Pill</option>
-                            <option value="Depot Injection">Depot Injection</option>
-                            <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                            <option value="">Select condition</option>
+                            <option value="Diabetes Mellitus Type 1">Diabetes Mellitus Type 1</option>
+                            <option value="Diabetes Mellitus Type 2">Diabetes Mellitus Type 2</option>
+                            <option value="Hypothyroidism">Hypothyroidism</option>
+                            <option value="Hyperthyroidism">Hyperthyroidism</option>
+                            <option value="Adrenal Insufficiency">Adrenal Insufficiency</option>
+                            <option value="Cushing's Syndrome">Cushing's Syndrome</option>
+                            <option value="Polycystic Ovary Syndrome">Polycystic Ovary Syndrome</option>
+                            <option value="Hypopituitarism">Hypopituitarism</option>
+                            <option value="Hormone Therapy">Hormone Therapy</option>
                             <option value="Other">Other</option>
                           </select>
                           <input
                             type="text"
-                            placeholder="Specify apparatus"
+                            placeholder="Specify condition"
                             className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                            value={apparatus.notes.split('|')[0] || ''}
+                            value={entry.notes.split('|')[0] || ''}
                             onChange={(e) => {
-                              const updatedApparatuses = [...hormonalApparatuses];
-                              const parts = apparatus.notes.split('|');
+                              const updatedEntries = [...endocrineSystemEntries];
+                              const parts = entry.notes.split('|');
                               parts[0] = e.target.value;
-                              updatedApparatuses[index].notes = parts.join('|');
-                              setHormonalApparatuses(updatedApparatuses);
+                              updatedEntries[index].notes = parts.join('|');
+                              setEndocrineSystemEntries(updatedEntries);
                             }}
                           />
                         </div>
                       ) : (
                         <div className="flex-1">
                           <select
-                            value={apparatus.type}
+                            value={entry.type}
                             onChange={(e) => {
-                              const updatedApparatuses = [...hormonalApparatuses];
-                              updatedApparatuses[index].type = e.target.value;
-                              setHormonalApparatuses(updatedApparatuses);
+                              const updatedEntries = [...endocrineSystemEntries];
+                              updatedEntries[index].type = e.target.value;
+                              setEndocrineSystemEntries(updatedEntries);
                             }}
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                           >
-                            <option value="">Select apparatus</option>
-                            <option value="Levonorgestrel IUD">Levonorgestrel IUD</option>
-                            <option value="Copper IUD">Copper IUD</option>
-                            <option value="Subdermal Implant">Subdermal Implant</option>
-                            <option value="Transdermal Patch">Transdermal Patch</option>
-                            <option value="Vaginal Ring">Vaginal Ring</option>
-                            <option value="Combined Oral Contraceptive">Combined Oral Contraceptive</option>
-                            <option value="Progestin-Only Pill">Progestin-Only Pill</option>
-                            <option value="Depot Injection">Depot Injection</option>
-                            <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                            <option value="">Select condition</option>
+                            <option value="Diabetes Mellitus Type 1">Diabetes Mellitus Type 1</option>
+                            <option value="Diabetes Mellitus Type 2">Diabetes Mellitus Type 2</option>
+                            <option value="Hypothyroidism">Hypothyroidism</option>
+                            <option value="Hyperthyroidism">Hyperthyroidism</option>
+                            <option value="Adrenal Insufficiency">Adrenal Insufficiency</option>
+                            <option value="Cushing's Syndrome">Cushing's Syndrome</option>
+                            <option value="Polycystic Ovary Syndrome">Polycystic Ovary Syndrome</option>
+                            <option value="Hypopituitarism">Hypopituitarism</option>
+                            <option value="Hormone Therapy">Hormone Therapy</option>
                             <option value="Other">Other</option>
                           </select>
                         </div>
@@ -4555,28 +4555,28 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <div className="flex-1">
                         <input
                           type="text"
-                          value={apparatus.type === "Other" ? apparatus.notes.split('|')[1] || '' : apparatus.notes}
+                          value={entry.type === "Other" ? entry.notes.split('|')[1] || '' : entry.notes}
                           onChange={(e) => {
-                            const updatedApparatuses = [...hormonalApparatuses];
-                            if (apparatus.type === "Other") {
-                              const parts = apparatus.notes.split('|');
+                            const updatedEntries = [...endocrineSystemEntries];
+                            if (entry.type === "Other") {
+                              const parts = entry.notes.split('|');
                               parts[1] = e.target.value;
-                              updatedApparatuses[index].notes = parts.join('|');
+                              updatedEntries[index].notes = parts.join('|');
                             } else {
-                              updatedApparatuses[index].notes = e.target.value;
+                              updatedEntries[index].notes = e.target.value;
                             }
-                            setHormonalApparatuses(updatedApparatuses);
+                            setEndocrineSystemEntries(updatedEntries);
                           }}
-                          placeholder="Notes (brand, duration, effects, etc.)"
+                          placeholder="Notes (medications, treatment, effects, etc.)"
                           className="w-full text-sm p-2 border border-gray-300 rounded-md"
                         />
                       </div>
                       
                       <button
                         onClick={() => {
-                          const updatedApparatuses = [...hormonalApparatuses];
-                          updatedApparatuses.splice(index, 1);
-                          setHormonalApparatuses(updatedApparatuses);
+                          const updatedEntries = [...endocrineSystemEntries];
+                          updatedEntries.splice(index, 1);
+                          setEndocrineSystemEntries(updatedEntries);
                         }}
                         className="p-2 text-red-500 hover:text-red-700"
                         aria-label="Remove"
@@ -4586,55 +4586,55 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   ))}
                   
-                  {/* Add new Hormonal Apparatus */}
-                  <div className="flex items-center gap-2 mb-2" id="new-hormonal-apparatus-container">
+                  {/* Add new Endocrine System Entry */}
+                  <div className="flex items-center gap-2 mb-2" id="new-endocrine-system-container">
                     <select
-                      id="hormonal-apparatus-type"
+                      id="endocrine-system-type"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                       defaultValue=""
                       onChange={(e) => {
-                        const container = document.getElementById('new-hormonal-apparatus-container');
-                        const customInput = document.getElementById('hormonal-apparatus-custom');
+                        const container = document.getElementById('new-endocrine-system-container');
+                        const customInput = document.getElementById('endocrine-system-custom');
                         
                         if (e.target.value === 'Other' && container && !customInput) {
                           // Insert custom input after select
                           const customField = document.createElement('input');
-                          customField.id = 'hormonal-apparatus-custom';
+                          customField.id = 'endocrine-system-custom';
                           customField.type = 'text';
-                          customField.placeholder = 'Specify apparatus';
+                          customField.placeholder = 'Specify condition';
                           customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
-                          container.insertBefore(customField, document.getElementById('hormonal-apparatus-notes'));
+                          container.insertBefore(customField, document.getElementById('endocrine-system-notes'));
                         } else if (e.target.value !== 'Other' && customInput) {
                           customInput.remove();
                         }
                       }}
                     >
-                      <option value="" disabled>Select apparatus</option>
-                      <option value="Levonorgestrel IUD">Levonorgestrel IUD</option>
-                      <option value="Copper IUD">Copper IUD</option>
-                      <option value="Subdermal Implant">Subdermal Implant</option>
-                      <option value="Transdermal Patch">Transdermal Patch</option>
-                      <option value="Vaginal Ring">Vaginal Ring</option>
-                      <option value="Combined Oral Contraceptive">Combined Oral Contraceptive</option>
-                      <option value="Progestin-Only Pill">Progestin-Only Pill</option>
-                      <option value="Depot Injection">Depot Injection</option>
-                      <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                      <option value="" disabled>Select condition</option>
+                      <option value="Diabetes Mellitus Type 1">Diabetes Mellitus Type 1</option>
+                      <option value="Diabetes Mellitus Type 2">Diabetes Mellitus Type 2</option>
+                      <option value="Hypothyroidism">Hypothyroidism</option>
+                      <option value="Hyperthyroidism">Hyperthyroidism</option>
+                      <option value="Adrenal Insufficiency">Adrenal Insufficiency</option>
+                      <option value="Cushing's Syndrome">Cushing's Syndrome</option>
+                      <option value="Polycystic Ovary Syndrome">Polycystic Ovary Syndrome</option>
+                      <option value="Hypopituitarism">Hypopituitarism</option>
+                      <option value="Hormone Therapy">Hormone Therapy</option>
                       <option value="Other">Other</option>
                     </select>
                     
                     <input
                       type="text"
-                      id="hormonal-apparatus-notes"
-                      placeholder="Notes (brand, duration, effects, etc.)"
+                      id="endocrine-system-notes"
+                      placeholder="Notes (medications, treatment, effects, etc.)"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                     />
                     
                     <button
                       className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                       onClick={() => {
-                        const typeSelect = document.getElementById('hormonal-apparatus-type') as HTMLSelectElement;
-                        const notesInput = document.getElementById('hormonal-apparatus-notes') as HTMLInputElement;
-                        const customInput = document.getElementById('hormonal-apparatus-custom') as HTMLInputElement;
+                        const typeSelect = document.getElementById('endocrine-system-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('endocrine-system-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('endocrine-system-custom') as HTMLInputElement;
                         
                         if (typeSelect && typeSelect.value) {
                           let type = typeSelect.value;
@@ -4646,8 +4646,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             notes = `${customInput.value}|${notes}`;
                           }
                           
-                          setHormonalApparatuses([
-                            ...hormonalApparatuses,
+                          setEndocrineSystemEntries([
+                            ...endocrineSystemEntries,
                             {
                               type,
                               notes

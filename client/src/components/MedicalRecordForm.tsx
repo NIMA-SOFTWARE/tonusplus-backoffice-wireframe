@@ -1008,46 +1008,38 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         <div className="flex items-end gap-2">
                           {allowCustomEntry ? (
                             <div className="flex flex-grow gap-2">
-                              <div className="flex-grow">
+                              <div className="w-full">
                                 <div className="mb-1 text-xs text-gray-500">{selectLabel}</div>
-                                <input
-                                  type="text"
-                                  placeholder={`Enter ${title.toLowerCase()} details`}
-                                  className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                                  onKeyDown={(e) => {
-                                    if (e.key === 'Enter' && e.currentTarget.value.trim()) {
-                                      setEntries([
-                                        ...entries,
-                                        {
-                                          location: e.currentTarget.value.trim(),
-                                          year: '',
-                                          observation: ''
-                                        }
-                                      ]);
-                                      e.currentTarget.value = '';
-                                    }
-                                  }}
-                                />
-                              </div>
-                              <button
-                                className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 mt-5"
-                                onClick={(e) => {
-                                  const input = e.currentTarget.previousSibling?.querySelector('input');
-                                  if (input && input.value.trim()) {
-                                    setEntries([
-                                      ...entries,
-                                      {
-                                        location: input.value.trim(),
-                                        year: '',
-                                        observation: ''
+                                <div className="flex gap-2">
+                                  <input
+                                    type="text"
+                                    id={`${title.toLowerCase().replace(/\s+/g, '-')}-input`}
+                                    placeholder={`Enter ${title.toLowerCase()} details`}
+                                    className="flex-grow text-sm p-2 border border-gray-300 rounded-md"
+                                  />
+                                  <button
+                                    className="px-3 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
+                                    onClick={() => {
+                                      const inputId = `${title.toLowerCase().replace(/\s+/g, '-')}-input`;
+                                      const input = document.getElementById(inputId) as HTMLInputElement;
+                                      
+                                      if (input && input.value.trim()) {
+                                        setEntries([
+                                          ...entries,
+                                          {
+                                            location: input.value.trim(),
+                                            year: '',
+                                            observation: ''
+                                          }
+                                        ]);
+                                        input.value = '';
                                       }
-                                    ]);
-                                    input.value = '';
-                                  }
-                                }}
-                              >
-                                Add
-                              </button>
+                                    }}
+                                  >
+                                    Add
+                                  </button>
+                                </div>
+                              </div>
                             </div>
                           ) : (
                             <div className="flex-grow">
@@ -1064,7 +1056,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         observation: '' 
                                       }
                                     ]);
-                                    e.target.value = ''; // Reset select after adding
+                                    // Reset select but delay to avoid React state update issues
+                                    setTimeout(() => {
+                                      e.target.value = '';
+                                    }, 10);
                                   }
                                 }}
                               >

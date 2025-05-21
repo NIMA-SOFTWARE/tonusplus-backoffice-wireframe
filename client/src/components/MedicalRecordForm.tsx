@@ -2625,60 +2625,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
-              {/* Eye System: Visual Disorders and Diseases */}
-              <div className="space-y-4 mt-6">
-                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  Eye System: Visual Disorders and Diseases
-                </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Visual Aid</h5>
-                  
-                  {/* Eyewear options */}
-                  <div className="flex flex-col space-y-4 mb-4">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="wearing-glasses"
-                        checked={wearingGlasses}
-                        onChange={(e) => setWearingGlasses(e.target.checked)}
-                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
-                      />
-                      <label htmlFor="wearing-glasses" className="text-sm text-gray-700">
-                        Wearing glasses
-                      </label>
-                    </div>
-                    
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        id="wearing-contact-lenses"
-                        checked={wearingContactLenses}
-                        onChange={(e) => setWearingContactLenses(e.target.checked)}
-                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
-                      />
-                      <label htmlFor="wearing-contact-lenses" className="text-sm text-gray-700">
-                        Wearing contact lenses
-                      </label>
-                    </div>
-                  </div>
-                  
-                  {/* Visual disorders textarea */}
-                  <div className="mb-4">
-                    <label htmlFor="visual-disorders" className="block text-sm font-medium text-gray-700 mb-2">
-                      Visual Disorders and Additional Information
-                    </label>
-                    <textarea
-                      id="visual-disorders"
-                      value={visualDisorders}
-                      onChange={(e) => setVisualDisorders(e.target.value)}
-                      placeholder="Enter information about myopia, astigmatism, hyperopia, glaucoma, cataracts, etc."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-20"
-                      rows={3}
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
-              
               {/* Diseases or Dysfunctions of the urogenital system */}
               <div className="space-y-4 mt-6">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
@@ -3197,6 +3143,60 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         For time span, enter periods like "6 months," "2 years," etc.
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Eye System: Visual Disorders and Diseases */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Eye System: Visual Disorders and Diseases
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Visual Aid</h5>
+                  
+                  {/* Eyewear options */}
+                  <div className="flex flex-col space-y-4 mb-4">
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="wearing-glasses"
+                        checked={wearingGlasses}
+                        onChange={(e) => setWearingGlasses(e.target.checked)}
+                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="wearing-glasses" className="text-sm text-gray-700">
+                        Wearing glasses
+                      </label>
+                    </div>
+                    
+                    <div className="flex items-center">
+                      <input
+                        type="checkbox"
+                        id="wearing-contact-lenses"
+                        checked={wearingContactLenses}
+                        onChange={(e) => setWearingContactLenses(e.target.checked)}
+                        className="mr-2 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                      />
+                      <label htmlFor="wearing-contact-lenses" className="text-sm text-gray-700">
+                        Wearing contact lenses
+                      </label>
+                    </div>
+                  </div>
+                  
+                  {/* Visual disorders textarea */}
+                  <div className="mb-4">
+                    <label htmlFor="visual-disorders" className="block text-sm font-medium text-gray-700 mb-2">
+                      Visual Disorders and Additional Information
+                    </label>
+                    <textarea
+                      id="visual-disorders"
+                      value={visualDisorders}
+                      onChange={(e) => setVisualDisorders(e.target.value)}
+                      placeholder="Enter information about myopia, astigmatism, hyperopia, glaucoma, cataracts, etc."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-20"
+                      rows={3}
+                    ></textarea>
                   </div>
                 </div>
               </div>

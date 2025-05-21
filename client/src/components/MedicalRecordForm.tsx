@@ -48,6 +48,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [hourlyInterval, setHourlyInterval] = useState('');
   const [activitiesWorsen, setActivitiesWorsen] = useState('');
   const [activitiesRelieve, setActivitiesRelieve] = useState('');
+  const [evolution, setEvolution] = useState('');
+  const [evolutionOther, setEvolutionOther] = useState('');
+  const [treatment, setTreatment] = useState('');
+  const [triggeringReason, setTriggeringReason] = useState('');
+  const [ongoingTherapies, setOngoingTherapies] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -765,7 +770,83 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-
+                  {/* Evolution - Single select with text for other */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Evolution</label>
+                    <div className="flex flex-col space-y-2">
+                      <select 
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        value={evolution}
+                        onChange={(e) => setEvolution(e.target.value)}
+                      >
+                        <option value="">Select evolution type</option>
+                        <option value="rapid">Rapid</option>
+                        <option value="sudden">Sudden</option>
+                        <option value="intermittent">Intermittent</option>
+                        <option value="other">Other (please specify)</option>
+                      </select>
+                      
+                      {evolution === 'other' && (
+                        <input 
+                          type="text"
+                          value={evolutionOther}
+                          onChange={(e) => setEvolutionOther(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Please specify evolution"
+                        />
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Treatment - Textarea */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Treatment</label>
+                    <VoiceEnabledInput
+                      value={treatment}
+                      onChange={setTreatment}
+                      placeholder="Enter current treatment details..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      isTextarea={true}
+                      rows={3}
+                      voiceEnabled={voiceInputEnabled}
+                    />
+                  </div>
+                  
+                  {/* Triggering reason - Textarea */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Triggering reason (stated by the patient)</label>
+                    <VoiceEnabledInput
+                      value={triggeringReason}
+                      onChange={setTriggeringReason}
+                      placeholder="Enter what patient believes caused the issue..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      isTextarea={true}
+                      rows={3}
+                      voiceEnabled={voiceInputEnabled}
+                    />
+                  </div>
+                  
+                  {/* Other ongoing therapies - Multiple select with tags */}
+                  <div>
+                    <TagSelectionInput
+                      label="Other ongoing therapies"
+                      placeholder="Select ongoing therapies..."
+                      options={[
+                        "Kinesiotherapy",
+                        "Physiotherapy",
+                        "Osteopathy",
+                        "Care therapy",
+                        "Acupuncture",
+                        "Balneotherapy",
+                        "Massage",
+                        "Bowen"
+                      ]}
+                      selectedTags={ongoingTherapies}
+                      onTagsChange={setOngoingTherapies}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                    />
+                  </div>
                   
                   {/* Activities that worsen pain */}
                   <div>

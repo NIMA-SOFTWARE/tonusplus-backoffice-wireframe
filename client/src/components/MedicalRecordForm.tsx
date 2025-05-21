@@ -146,6 +146,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [wearingContactLenses, setWearingContactLenses] = useState<boolean>(false);
   const [visualDisorders, setVisualDisorders] = useState<string>('');
   
+  // Interface and state for eye conditions
+  interface EyeCondition {
+    condition: string;
+    eye: string; // "Right (Dx)", "Left (Sx)", or "Both"
+    observation: string;
+  }
+  const [eyeConditions, setEyeConditions] = useState<EyeCondition[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3184,16 +3192,217 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Visual disorders textarea */}
+                  {/* Eye Conditions */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Eye Conditions
+                    </label>
+                    
+                    {/* Existing eye conditions */}
+                    {eyeConditions.map((condition, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-2">
+                        <select
+                          value={condition.condition}
+                          onChange={(e) => {
+                            const updatedConditions = [...eyeConditions];
+                            updatedConditions[index].condition = e.target.value;
+                            setEyeConditions(updatedConditions);
+                          }}
+                          className="text-sm p-2 border border-gray-300 rounded-md w-40"
+                        >
+                          <option value="">Select condition</option>
+                          <option value="Myopia">Myopia (nearsightedness)</option>
+                          <option value="Hyperopia">Hyperopia (farsightedness)</option>
+                          <option value="Astigmatism">Astigmatism</option>
+                          <option value="Presbyopia">Presbyopia</option>
+                          <option value="Glaucoma">Glaucoma</option>
+                          <option value="Cataract">Cataract</option>
+                          <option value="Macular Degeneration">Macular Degeneration</option>
+                          <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
+                          <option value="Amblyopia">Amblyopia (lazy eye)</option>
+                          <option value="Strabismus">Strabismus (crossed eyes)</option>
+                          <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
+                          <option value="Other">Other</option>
+                        </select>
+                        
+                        {condition.condition === "Other" && (
+                          <input
+                            type="text"
+                            value={condition.observation.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedConditions = [...eyeConditions];
+                              const parts = condition.observation.split('|');
+                              parts[0] = e.target.value;
+                              updatedConditions[index].observation = parts.join('|');
+                              setEyeConditions(updatedConditions);
+                            }}
+                            placeholder="Specify condition"
+                            className="text-sm p-2 border border-gray-300 rounded-md w-40"
+                          />
+                        )}
+                        
+                        <select
+                          value={condition.eye}
+                          onChange={(e) => {
+                            const updatedConditions = [...eyeConditions];
+                            updatedConditions[index].eye = e.target.value;
+                            setEyeConditions(updatedConditions);
+                          }}
+                          className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                        >
+                          <option value="">Select eye</option>
+                          <option value="Right (Dx)">Right eye (Dx)</option>
+                          <option value="Left (Sx)">Left eye (Sx)</option>
+                          <option value="Both">Both eyes</option>
+                        </select>
+                        
+                        <input
+                          type="text"
+                          value={condition.condition === "Other" 
+                            ? (condition.observation.split('|')[1] || '') 
+                            : condition.observation}
+                          onChange={(e) => {
+                            const updatedConditions = [...eyeConditions];
+                            if (condition.condition === "Other") {
+                              const parts = condition.observation.split('|');
+                              parts[1] = e.target.value;
+                              updatedConditions[index].observation = parts.join('|');
+                            } else {
+                              updatedConditions[index].observation = e.target.value;
+                            }
+                            setEyeConditions(updatedConditions);
+                          }}
+                          placeholder="Additional notes"
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                        
+                        <button
+                          onClick={() => {
+                            const updatedConditions = [...eyeConditions];
+                            updatedConditions.splice(index, 1);
+                            setEyeConditions(updatedConditions);
+                          }}
+                          className="p-2 text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Add new eye condition */}
+                    <div className="flex items-center gap-2 mb-2" id="new-eye-condition-container">
+                      <select
+                        id="eye-condition-type"
+                        className="text-sm p-2 border border-gray-300 rounded-md w-40"
+                        defaultValue=""
+                        onChange={(e) => {
+                          const container = document.getElementById('new-eye-condition-container');
+                          const customInput = document.getElementById('eye-condition-custom');
+                          
+                          if (e.target.value === 'Other' && container && !customInput) {
+                            // Create custom input field
+                            const customField = document.createElement('input');
+                            customField.id = 'eye-condition-custom';
+                            customField.type = 'text';
+                            customField.placeholder = 'Specify condition';
+                            customField.className = 'text-sm p-2 border border-gray-300 rounded-md w-40';
+                            
+                            // Insert after the select
+                            container.insertBefore(customField, document.getElementById('eye-condition-eye'));
+                          } else if (e.target.value !== 'Other' && customInput) {
+                            customInput.remove();
+                          }
+                        }}
+                      >
+                        <option value="" disabled>Select condition</option>
+                        <option value="Myopia">Myopia (nearsightedness)</option>
+                        <option value="Hyperopia">Hyperopia (farsightedness)</option>
+                        <option value="Astigmatism">Astigmatism</option>
+                        <option value="Presbyopia">Presbyopia</option>
+                        <option value="Glaucoma">Glaucoma</option>
+                        <option value="Cataract">Cataract</option>
+                        <option value="Macular Degeneration">Macular Degeneration</option>
+                        <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
+                        <option value="Amblyopia">Amblyopia (lazy eye)</option>
+                        <option value="Strabismus">Strabismus (crossed eyes)</option>
+                        <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      
+                      <select
+                        id="eye-condition-eye"
+                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                        defaultValue=""
+                      >
+                        <option value="" disabled>Select eye</option>
+                        <option value="Right (Dx)">Right eye (Dx)</option>
+                        <option value="Left (Sx)">Left eye (Sx)</option>
+                        <option value="Both">Both eyes</option>
+                      </select>
+                      
+                      <input
+                        type="text"
+                        id="eye-condition-notes"
+                        placeholder="Additional notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      
+                      <button
+                        className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                        onClick={() => {
+                          const typeSelect = document.getElementById('eye-condition-type') as HTMLSelectElement;
+                          const eyeSelect = document.getElementById('eye-condition-eye') as HTMLSelectElement;
+                          const notesInput = document.getElementById('eye-condition-notes') as HTMLInputElement;
+                          const customInput = document.getElementById('eye-condition-custom') as HTMLInputElement;
+                          
+                          if (typeSelect && typeSelect.value && eyeSelect && eyeSelect.value) {
+                            let condition = typeSelect.value;
+                            let eye = eyeSelect.value;
+                            let observation = notesInput ? notesInput.value : '';
+                            
+                            // If "Other" is selected, use the custom input value
+                            if (condition === "Other" && customInput && customInput.value) {
+                              // Store the custom condition in the observation field with a separator
+                              observation = `${customInput.value}|${observation}`;
+                            }
+                            
+                            setEyeConditions([
+                              ...eyeConditions,
+                              {
+                                condition,
+                                eye,
+                                observation
+                              }
+                            ]);
+                            
+                            // Reset inputs
+                            typeSelect.selectedIndex = 0;
+                            eyeSelect.selectedIndex = 0;
+                            if (notesInput) notesInput.value = '';
+                            
+                            // Remove custom input if it exists
+                            if (customInput) {
+                              customInput.remove();
+                            }
+                          }
+                        }}
+                      >
+                        Add
+                      </button>
+                    </div>
+                  </div>
+                  
+                  {/* Additional notes textarea */}
                   <div className="mb-4">
                     <label htmlFor="visual-disorders" className="block text-sm font-medium text-gray-700 mb-2">
-                      Visual Disorders and Additional Information
+                      Additional Eye Information
                     </label>
                     <textarea
                       id="visual-disorders"
                       value={visualDisorders}
                       onChange={(e) => setVisualDisorders(e.target.value)}
-                      placeholder="Enter information about myopia, astigmatism, hyperopia, glaucoma, cataracts, etc."
+                      placeholder="Enter any additional information about the client's vision"
                       className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-20"
                       rows={3}
                     ></textarea>

@@ -186,6 +186,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [stomatognaticConditions, setStomatognaticConditions] = useState<StomatognaticCondition[]>([]);
   
+  // State for client's bite type
+  const [biteType, setBiteType] = useState("");
+  const [biteNotes, setBiteNotes] = useState("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3872,6 +3876,56 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Angle's Occlusal Classification</h5>
+                  
+                  {/* Bite Type Input */}
+                  <div className="mb-4">
+                    <label htmlFor="bite-type" className="block text-sm font-medium text-gray-700 mb-2">
+                      Client's Bite Type
+                    </label>
+                    <select
+                      id="bite-type"
+                      value={biteType}
+                      onChange={(e) => setBiteType(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md mb-2"
+                    >
+                      <option value="">Select bite type</option>
+                      <option value="Normal Bite">Normal Bite</option>
+                      <option value="Overbite">Overbite</option>
+                      <option value="Underbite">Underbite</option>
+                      <option value="Crossbite">Crossbite</option>
+                      <option value="Open Bite">Open Bite</option>
+                      <option value="Deep Bite">Deep Bite</option>
+                      <option value="Edge-to-Edge Bite">Edge-to-Edge Bite</option>
+                      <option value="Crowded Bite">Crowded Bite</option>
+                      <option value="Spaced Bite">Spaced Bite</option>
+                      <option value="Protrusive Bite">Protrusive Bite</option>
+                      <option value="Retrusive Bite">Retrusive Bite</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    {biteType === "Other" && (
+                      <input
+                        type="text"
+                        placeholder="Specify bite type"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md mb-2"
+                        onChange={(e) => setBiteType(`Other: ${e.target.value}`)}
+                      />
+                    )}
+                    <div className="mt-2">
+                      <label htmlFor="bite-notes" className="block text-sm font-medium text-gray-700 mb-1">
+                        Additional Bite Notes
+                      </label>
+                      <textarea
+                        id="bite-notes"
+                        placeholder="Enter additional notes about client's bite"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-20"
+                        rows={2}
+                        value={biteNotes}
+                        onChange={(e) => setBiteNotes(e.target.value)}
+                      ></textarea>
+                    </div>
+                  </div>
+                  
+                  <div className="border-t border-gray-200 my-4"></div>
                   
                   {/* Existing Stomatognatic conditions */}
                   {stomatognaticConditions.map((condition, index) => (

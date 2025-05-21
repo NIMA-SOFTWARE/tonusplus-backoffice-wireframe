@@ -1,7 +1,8 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
+import { Button } from "@/components/ui/button";
 import { Participant } from '@shared/schema';
 import { format } from 'date-fns';
 
@@ -20,15 +21,15 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   sessionTime
 }) => {
   return (
-    <div className="bg-white p-6 rounded-lg shadow-lg max-w-5xl mx-auto">
-      <div className="mb-6">
-        <div className="flex justify-between items-center">
+    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-5xl mx-auto">
+      <div className="mb-4">
+        <div className="flex justify-between items-start">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-800">
               Medical Record - {participant.name}
             </h2>
             {sessionDate && sessionTime && (
-              <p className="text-sm text-gray-500 mt-1">
+              <p className="text-xs md:text-sm text-gray-500 mt-1">
                 Session: {sessionDate} at {sessionTime}
               </p>
             )}
@@ -36,180 +37,121 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         </div>
       </div>
       
-      <Tabs defaultValue="personal" className="w-full">
-        <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-8">
-          <TabsTrigger 
-            value="personal"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Personal Data
-          </TabsTrigger>
-          <TabsTrigger 
-            value="professional"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Professional Data
-          </TabsTrigger>
-          <TabsTrigger 
-            value="reason"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Reason for Participation
-          </TabsTrigger>
-          <TabsTrigger 
-            value="local-anamnesis"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Local Anamnesis
-          </TabsTrigger>
-          <TabsTrigger 
-            value="generic-anamnesis"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Generic Anamnesis
-          </TabsTrigger>
-          <TabsTrigger 
-            value="clinical-history"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Clinical History
-          </TabsTrigger>
-          <TabsTrigger 
-            value="examination"
-            className="text-sm md:text-base py-3 px-2"
-          >
-            Objective Examination
-          </TabsTrigger>
-        </TabsList>
-        
+      <Accordion type="single" collapsible className="w-full mb-4">
         {/* Section 1: Personal Data */}
-        <TabsContent value="personal">
-          <Card>
-            <CardHeader>
-              <CardTitle>Personal Data</CardTitle>
-              <CardDescription>
-                Personal information about the customer
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="personal-data">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Personal Data
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">Personal Information</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 Personal data section will be auto-completed from the customer's profile
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 2: Professional Data */}
-        <TabsContent value="professional">
-          <Card>
-            <CardHeader>
-              <CardTitle>Professional Data</CardTitle>
-              <CardDescription>
-                Professional information and work history
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="professional-data">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Professional Data
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">Professional Information</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain professional data fields
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 3: Main Reason for Participation */}
-        <TabsContent value="reason">
-          <Card>
-            <CardHeader>
-              <CardTitle>Reason for Participation</CardTitle>
-              <CardDescription>
-                Main reasons and symptoms for participating in this session
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="participation-reason">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Reason for Participation
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">Main Reasons and Symptoms</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain fields for documenting reasons for participation
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 4: Local Anamnesis */}
-        <TabsContent value="local-anamnesis">
-          <Card>
-            <CardHeader>
-              <CardTitle>Local Anamnesis</CardTitle>
-              <CardDescription>
-                History of Present Illness (HPI)
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="local-anamnesis">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Local Anamnesis
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">History of Present Illness (HPI)</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain fields for documenting the history of present illness
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 5: Generic Anamnesis */}
-        <TabsContent value="generic-anamnesis">
-          <Card>
-            <CardHeader>
-              <CardTitle>Generic Anamnesis</CardTitle>
-              <CardDescription>
-                General medical history information
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="generic-anamnesis">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Generic Anamnesis
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">General Medical History</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain fields for general medical history
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 6: Specific Clinical History */}
-        <TabsContent value="clinical-history">
-          <Card>
-            <CardHeader>
-              <CardTitle>Specific Clinical History</CardTitle>
-              <CardDescription>
-                Detailed clinical history information
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="clinical-history">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Specific Clinical History
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">Detailed Clinical History</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain fields for specific clinical history
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
         
         {/* Section 7: Objective Examination */}
-        <TabsContent value="examination">
-          <Card>
-            <CardHeader>
-              <CardTitle>Objective Examination</CardTitle>
-              <CardDescription>
-                Physical examination findings
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
+        <AccordionItem value="objective-examination">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            Objective Examination
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <h3 className="font-medium text-gray-700">Physical Examination Findings</h3>
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
                 This section will contain fields for objective examination findings
               </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
       
-      <div className="mt-8 flex justify-end space-x-4">
-        <button 
-          type="button" 
+      <div className="mt-6 flex justify-end">
+        <Button 
+          variant="outline" 
           onClick={onClose}
-          className="px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          className="px-4 py-2 h-10"
         >
           Close
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -90,6 +90,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [anatomicalAnomalies, setAnatomicalAnomalies] = useState<AnatomicalAnomaly[]>([]);
   
+  // Interface and state for circulatory/respiratory pathologies
+  interface Pathology {
+    type: string;
+    notes: string;
+  }
+  const [pathologies, setPathologies] = useState<Pathology[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -1889,8 +1896,133 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           <AccordionContent>
             <div className="p-4 space-y-4">
               <h3 className="font-medium text-gray-700">Detailed Clinical History</h3>
+              
+              {/* Pathologies or Dysfunctions of the circulatory and respiratory systems */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Pathologies or Dysfunctions of the Circulatory and Respiratory Systems
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Pathologies</h5>
+                  
+                  {/* Existing pathologies */}
+                  {pathologies.map((pathology, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      <select
+                        value={pathology.type}
+                        onChange={(e) => {
+                          const updatedPathologies = [...pathologies];
+                          updatedPathologies[index].type = e.target.value;
+                          setPathologies(updatedPathologies);
+                        }}
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      >
+                        <option value="">Select pathology</option>
+                        <option value="Hypertension">Hypertension</option>
+                        <option value="Hypotension">Hypotension</option>
+                        <option value="Arrhythmia">Arrhythmia</option>
+                        <option value="Coronary artery disease">Coronary artery disease</option>
+                        <option value="Heart failure">Heart failure</option>
+                        <option value="Valvular heart disease">Valvular heart disease</option>
+                        <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                        <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                        <option value="Asthma">Asthma</option>
+                        <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                        <option value="Emphysema">Emphysema</option>
+                        <option value="Bronchitis">Bronchitis</option>
+                        <option value="Pneumonia">Pneumonia</option>
+                        <option value="Pleural effusion">Pleural effusion</option>
+                        <option value="Pulmonary embolism">Pulmonary embolism</option>
+                        <option value="Sleep apnea">Sleep apnea</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <input
+                        type="text"
+                        value={pathology.notes}
+                        onChange={(e) => {
+                          const updatedPathologies = [...pathologies];
+                          updatedPathologies[index].notes = e.target.value;
+                          setPathologies(updatedPathologies);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedPathologies = [...pathologies];
+                          updatedPathologies.splice(index, 1);
+                          setPathologies(updatedPathologies);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new pathology */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <select
+                      id="pathology-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Select pathology</option>
+                      <option value="Hypertension">Hypertension</option>
+                      <option value="Hypotension">Hypotension</option>
+                      <option value="Arrhythmia">Arrhythmia</option>
+                      <option value="Coronary artery disease">Coronary artery disease</option>
+                      <option value="Heart failure">Heart failure</option>
+                      <option value="Valvular heart disease">Valvular heart disease</option>
+                      <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                      <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                      <option value="Asthma">Asthma</option>
+                      <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                      <option value="Emphysema">Emphysema</option>
+                      <option value="Bronchitis">Bronchitis</option>
+                      <option value="Pneumonia">Pneumonia</option>
+                      <option value="Pleural effusion">Pleural effusion</option>
+                      <option value="Pulmonary embolism">Pulmonary embolism</option>
+                      <option value="Sleep apnea">Sleep apnea</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <input
+                      type="text"
+                      id="pathology-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('pathology-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('pathology-notes') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          setPathologies([
+                            ...pathologies,
+                            {
+                              type: typeSelect.value,
+                              notes: notesInput ? notesInput.value : ''
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Other clinical history fields will go here */}
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain fields for specific clinical history
+                Additional clinical history fields will be added as needed
               </div>
             </div>
           </AccordionContent>

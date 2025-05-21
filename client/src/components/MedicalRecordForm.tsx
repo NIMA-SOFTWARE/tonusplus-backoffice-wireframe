@@ -117,6 +117,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [urogenitalDiseases, setUrogenitalDiseases] = useState<UrogenitalDisease[]>([]);
   
+  // State for gender
+  const [isFemale, setIsFemale] = useState<boolean>(false);
+  
   // State for menstrual cycle frequency (in days)
   const [menstrualCycleFrequency, setMenstrualCycleFrequency] = useState<string>('');
   
@@ -2784,31 +2787,44 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </button>
                   </div>
                   
-                  {/* Menstrual Cycle Input */}
-                  <div className="mt-6 mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      MENSTRUAL CYCLE
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        id="menstrual-cycle-frequency"
-                        min="0"
-                        step="1"
-                        value={menstrualCycleFrequency}
-                        onChange={(e) => setMenstrualCycleFrequency(e.target.value)}
-                        placeholder="Enter frequency"
-                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
-                      />
-                      <span className="ml-2 text-sm text-gray-600">days</span>
+                  {/* Menstrual Cycle Input - Only shown for females */}
+                  {isFemale && (
+                    <div className="mt-6 mb-4">
+                      <div className="flex items-center">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          MENSTRUAL CYCLE
+                        </label>
+                        <span className="ml-2 text-xs text-blue-600 inline-block px-2 py-1 bg-blue-50 rounded">
+                          Female-specific information
+                        </span>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          type="number"
+                          id="menstrual-cycle-frequency"
+                          min="0"
+                          step="1"
+                          value={menstrualCycleFrequency}
+                          onChange={(e) => setMenstrualCycleFrequency(e.target.value)}
+                          placeholder="Enter frequency"
+                          className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                        />
+                        <span className="ml-2 text-sm text-gray-600">days</span>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
-                  {/* Pregnancy Information */}
+                  {/* Pregnancy Information - Only shown for females */}
+                  {isFemale && (
                   <div className="mt-6 mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      PREGNANCY INFORMATION
-                    </label>
+                    <div className="flex items-center">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        PREGNANCY INFORMATION
+                      </label>
+                      <span className="ml-2 text-xs text-blue-600 inline-block px-2 py-1 bg-blue-50 rounded">
+                        Female-specific information
+                      </span>
+                    </div>
                     
                     {/* Number of children */}
                     <div className="flex items-center mb-4">
@@ -2966,6 +2982,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </div>
                     </div>
                   </div>
+                  )}
                   
                   {/* Weight Changes in Recent Years */}
                   <div className="mt-6 mb-4">

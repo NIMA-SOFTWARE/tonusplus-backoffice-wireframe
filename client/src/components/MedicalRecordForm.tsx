@@ -4292,48 +4292,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   ORIENTATION OF TEETH IN DIFFERENT SECTORS
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <p className="text-sm text-gray-700 italic mb-4">
+                  <p className="text-sm text-gray-700 italic">
                     This section is for reference only - no inputs required
                   </p>
-                  
-                  {/* Teeth Orientation Chart */}
-                  <div className="overflow-x-auto">
-                    <table className="w-full border-collapse border border-gray-300 text-center text-sm">
-                      <thead>
-                        <tr>
-                          <th className="border border-gray-300 bg-gray-100 p-2 font-bold text-center" colSpan={6}>
-                            ORIENTAREA DINȚILOR IN DIFERITE SECTOARE
-                          </th>
-                        </tr>
-                        <tr>
-                          <th className="border border-gray-300 bg-gray-50 p-2">POST Dreapta</th>
-                          <th className="border border-gray-300 bg-gray-50 p-2">MEDIAL Dreapta</th>
-                          <th className="border border-gray-300 bg-gray-50 p-2">ANTERIOR Dreapta</th>
-                          <th className="border border-gray-300 bg-gray-50 p-2">POSTERIOR Stanga</th>
-                          <th className="border border-gray-300 bg-gray-50 p-2">MEDIAL Stanga</th>
-                          <th className="border border-gray-300 bg-gray-50 p-2">ANTERIOR Stanga</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        <tr>
-                          <td className="border border-gray-300 p-3"></td>
-                          <td className="border border-gray-300 p-3"></td>
-                          <td className="border border-gray-300 p-3"></td>
-                          <td className="border border-gray-300 p-3"></td>
-                          <td className="border border-gray-300 p-3"></td>
-                          <td className="border border-gray-300 p-3"></td>
-                        </tr>
-                        <tr>
-                          <td className="border border-gray-300 p-3">POST Dreapta</td>
-                          <td className="border border-gray-300 p-3">MEDIAL Dreapta</td>
-                          <td className="border border-gray-300 p-3">ANTERIOR Dreapta</td>
-                          <td className="border border-gray-300 p-3">POSTERIOR Stanga</td>
-                          <td className="border border-gray-300 p-3">MEDIAL Stanga</td>
-                          <td className="border border-gray-300 p-3">ANTERIOR Stanga</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
                 </div>
               </div>
 

@@ -256,7 +256,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [instrumentalExams, setInstrumentalExams] = useState<InstrumentalExam[]>([]);
   
   // State for Orthostatism
-  const [orthostatismNotes, setOrthostatismNotes] = useState("");
+  const [bassaniDx, setBassaniDx] = useState<string[]>([]);
+  const [bassaniSx, setBassaniSx] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -5886,17 +5887,125 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Postural Assessment</h5>
                   
                   <div className="mt-4">
-                    <label htmlFor="orthostatism-notes" className="block text-sm font-medium text-gray-700 mb-1">
-                      Observations
-                    </label>
-                    <textarea
-                      id="orthostatism-notes"
-                      value={orthostatismNotes}
-                      onChange={(e) => setOrthostatismNotes(e.target.value)}
-                      placeholder="Enter observations about the patient's posture, standing position, weight distribution, etc."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      rows={6}
-                    ></textarea>
+                    <label className="block text-sm font-medium text-gray-700 mb-3">BASSANI</label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {/* Dx (Right) Dropdown */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Dx (Right)
+                        </label>
+                        <div className="relative">
+                          <select
+                            multiple
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md h-40"
+                            value={bassaniDx}
+                            onChange={(e) => {
+                              const selectedOptions = Array.from(
+                                e.target.selectedOptions,
+                                (option) => option.value
+                              );
+                              setBassaniDx(selectedOptions);
+                            }}
+                          >
+                            <option value="C1">C1</option>
+                            <option value="C2">C2</option>
+                            <option value="C3">C3</option>
+                            <option value="C4">C4</option>
+                            <option value="C5">C5</option>
+                            <option value="C6">C6</option>
+                            <option value="C7">C7</option>
+                            <option value="T1">T1</option>
+                            <option value="T2">T2</option>
+                            <option value="T3">T3</option>
+                            <option value="T4">T4</option>
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple options</p>
+                        </div>
+                        
+                        {/* Selected values display */}
+                        {bassaniDx.length > 0 && (
+                          <div className="mt-2">
+                            <label className="block text-xs text-gray-500 mb-1">Selected values:</label>
+                            <div className="flex flex-wrap gap-1">
+                              {bassaniDx.map((value) => (
+                                <span 
+                                  key={value} 
+                                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded flex items-center"
+                                >
+                                  {value}
+                                  <button
+                                    type="button"
+                                    className="ml-1 text-blue-600 hover:text-blue-800"
+                                    onClick={() => setBassaniDx(bassaniDx.filter(v => v !== value))}
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Sx (Left) Dropdown */}
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Sx (Left)
+                        </label>
+                        <div className="relative">
+                          <select
+                            multiple
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md h-40"
+                            value={bassaniSx}
+                            onChange={(e) => {
+                              const selectedOptions = Array.from(
+                                e.target.selectedOptions,
+                                (option) => option.value
+                              );
+                              setBassaniSx(selectedOptions);
+                            }}
+                          >
+                            <option value="C1">C1</option>
+                            <option value="C2">C2</option>
+                            <option value="C3">C3</option>
+                            <option value="C4">C4</option>
+                            <option value="C5">C5</option>
+                            <option value="C6">C6</option>
+                            <option value="C7">C7</option>
+                            <option value="T1">T1</option>
+                            <option value="T2">T2</option>
+                            <option value="T3">T3</option>
+                            <option value="T4">T4</option>
+                          </select>
+                          <p className="text-xs text-gray-500 mt-1">Hold Ctrl/Cmd to select multiple options</p>
+                        </div>
+                        
+                        {/* Selected values display */}
+                        {bassaniSx.length > 0 && (
+                          <div className="mt-2">
+                            <label className="block text-xs text-gray-500 mb-1">Selected values:</label>
+                            <div className="flex flex-wrap gap-1">
+                              {bassaniSx.map((value) => (
+                                <span 
+                                  key={value} 
+                                  className="bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded flex items-center"
+                                >
+                                  {value}
+                                  <button
+                                    type="button"
+                                    className="ml-1 text-blue-600 hover:text-blue-800"
+                                    onClick={() => setBassaniSx(bassaniSx.filter(v => v !== value))}
+                                  >
+                                    ×
+                                  </button>
+                                </span>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

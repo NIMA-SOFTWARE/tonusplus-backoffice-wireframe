@@ -245,28 +245,36 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       
                       <div>
                         <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Training Types</label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
-                          {['Running', 'Weight Training', 'Swimming', 'Cycling', 'Team Sports', 'Pilates', 'Yoga', 'HIIT', 'Walking'].map((type) => (
-                            <div key={type} className="flex items-center">
-                              <input 
-                                type="checkbox" 
-                                id={`training-${type.toLowerCase().replace(' ', '-')}`}
-                                className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
-                              />
-                              <label 
-                                htmlFor={`training-${type.toLowerCase().replace(' ', '-')}`}
-                                className="ml-2 text-sm text-gray-700"
-                              >
-                                {type}
-                              </label>
-                            </div>
-                          ))}
+                        <div className="relative">
+                          <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10">
+                            <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
+                              Running <button className="ml-1 text-purple-500 hover:text-purple-700">×</button>
+                            </span>
+                            <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
+                              Swimming <button className="ml-1 text-purple-500 hover:text-purple-700">×</button>
+                            </span>
+                            <span className="inline-flex items-center px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded">
+                              Pilates <button className="ml-1 text-purple-500 hover:text-purple-700">×</button>
+                            </span>
+                            <input 
+                              type="text" 
+                              placeholder="Add training type..." 
+                              className="flex-1 min-w-[100px] outline-none text-sm"
+                            />
+                          </div>
+                          <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Running</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Weight Training</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Swimming</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Cycling</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Team Sports</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Pilates</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Yoga</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">HIIT</div>
+                            <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Walking</div>
+                            <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new training type</div>
+                          </div>
                         </div>
-                        <input
-                          type="text"
-                          placeholder="Other training types..."
-                          className="w-full mt-2 text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        />
                       </div>
                     </div>
                   </div>

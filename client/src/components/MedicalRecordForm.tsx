@@ -160,9 +160,200 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">Professional Information</h3>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain professional data fields
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <h3 className="font-medium text-gray-700 mb-4">Professional Information</h3>
+                
+                <div className="space-y-6">
+                  {/* Profession Dropdown with Search */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Profession</label>
+                    <div className="relative">
+                      <input 
+                        type="text"
+                        placeholder="Search or enter profession..."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Physical Therapist</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Doctor</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Nurse</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Teacher</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Engineer</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Office Worker</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Construction Worker</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Driver</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Student</div>
+                        <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new profession</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Active Training Section */}
+                  <div className="space-y-3">
+                    <div className="flex items-center">
+                      <input 
+                        type="checkbox" 
+                        id="is-active"
+                        className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                      />
+                      <label 
+                        htmlFor="is-active"
+                        className="ml-2 text-sm text-gray-700"
+                      >
+                        Is actively training
+                      </label>
+                    </div>
+                    
+                    {/* These fields will be conditionally shown when checkbox is checked */}
+                    <div className="pl-6 pt-2 space-y-4 border-l-2 border-gray-200">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Trainings per week</label>
+                        <input
+                          type="number"
+                          min="0"
+                          placeholder="Number of trainings"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                      
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Training Types</label>
+                        <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                          {['Running', 'Weight Training', 'Swimming', 'Cycling', 'Team Sports', 'Pilates', 'Yoga', 'HIIT', 'Walking'].map((type) => (
+                            <div key={type} className="flex items-center">
+                              <input 
+                                type="checkbox" 
+                                id={`training-${type.toLowerCase().replace(' ', '-')}`}
+                                className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                              />
+                              <label 
+                                htmlFor={`training-${type.toLowerCase().replace(' ', '-')}`}
+                                className="ml-2 text-sm text-gray-700"
+                              >
+                                {type}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="Other training types..."
+                          className="w-full mt-2 text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Activities */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Activities</label>
+                    <div className="relative">
+                      <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10">
+                        <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                          Walking the dog <button className="ml-1 text-blue-500 hover:text-blue-700">×</button>
+                        </span>
+                        <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
+                          Gardening <button className="ml-1 text-blue-500 hover:text-blue-700">×</button>
+                        </span>
+                        <input 
+                          type="text" 
+                          placeholder="Add activity..." 
+                          className="flex-1 min-w-[100px] outline-none text-sm"
+                        />
+                      </div>
+                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Gardening</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">House cleaning</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Shopping</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Walking the dog</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Child care</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Sedentary Lifestyle */}
+                  <div className="flex items-center">
+                    <input 
+                      type="checkbox" 
+                      id="is-sedentary"
+                      className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
+                    />
+                    <label 
+                      htmlFor="is-sedentary"
+                      className="ml-2 text-sm text-gray-700"
+                    >
+                      Has a sedentary lifestyle
+                    </label>
+                  </div>
+                  
+                  {/* Daily Driving Hours */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Driving Hours</label>
+                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                      <option value="">Select hours</option>
+                      <option value="less-than-1">Less than 1 hour</option>
+                      <option value="1-2">1-2 hours</option>
+                      <option value="2-4">2-4 hours</option>
+                      <option value="4-6">4-6 hours</option>
+                      <option value="more-than-6">More than 6 hours</option>
+                    </select>
+                  </div>
+                  
+                  {/* Daily Computer Hours */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Computer Hours</label>
+                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                      <option value="">Select hours</option>
+                      <option value="less-than-1">Less than 1 hour</option>
+                      <option value="1-2">1-2 hours</option>
+                      <option value="2-4">2-4 hours</option>
+                      <option value="4-6">4-6 hours</option>
+                      <option value="6-8">6-8 hours</option>
+                      <option value="more-than-8">More than 8 hours</option>
+                    </select>
+                  </div>
+                  
+                  {/* Work Type */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Work Type</label>
+                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                      <option value="">Select work type</option>
+                      <option value="hard">Hard (physical labor, high exertion)</option>
+                      <option value="medium">Medium (mix of physical and sedentary)</option>
+                      <option value="easy">Easy (mostly sedentary)</option>
+                    </select>
+                  </div>
+                  
+                  {/* Sports */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Sports</label>
+                    <div className="relative">
+                      <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10">
+                        <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-800 text-xs rounded">
+                          Swimming <button className="ml-1 text-green-500 hover:text-green-700">×</button>
+                        </span>
+                        <input 
+                          type="text" 
+                          placeholder="Add sport..." 
+                          className="flex-1 min-w-[100px] outline-none text-sm"
+                        />
+                      </div>
+                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Soccer</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Basketball</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Tennis</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Swimming</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Volleyball</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Golf</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Running</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Cycling</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Hiking</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Martial Arts</div>
+                        <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new sport</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </AccordionContent>

@@ -432,57 +432,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     ></textarea>
                   </div>
                   
-                  {/* Pain Intensity */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain Intensity (0-10)</label>
-                    <div className="flex items-center space-x-2">
-                      <input 
-                        type="range" 
-                        min="0" 
-                        max="10" 
-                        step="1"
-                        defaultValue="0"
-                        className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                      />
-                      <span className="text-sm font-medium text-gray-700 w-8 text-center">0</span>
-                    </div>
-                    <div className="flex justify-between mt-1 px-1">
-                      <span className="text-xs text-gray-500">No pain</span>
-                      <span className="text-xs text-gray-500">Worst pain</span>
-                    </div>
-                  </div>
-                  
-                  {/* Duration of Symptoms */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Duration of Symptoms</label>
-                    <select className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                      <option value="">Select duration</option>
-                      <option value="days">Days</option>
-                      <option value="weeks">Weeks</option>
-                      <option value="months">Months</option>
-                      <option value="years">Years</option>
-                    </select>
-                  </div>
-                  
-                  {/* Activities that Worsen Symptoms */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Activities that Worsen Symptoms</label>
-                    <textarea
-                      rows={2}
-                      placeholder="List activities that make symptoms worse..."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    ></textarea>
-                  </div>
-                  
-                  {/* Activities that Improve Symptoms */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Activities that Improve Symptoms</label>
-                    <textarea
-                      rows={2}
-                      placeholder="List activities that make symptoms better..."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    ></textarea>
-                  </div>
+
                 </div>
               </div>
             </div>

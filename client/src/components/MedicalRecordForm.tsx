@@ -124,6 +124,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   interface Pregnancy {
     type: string; // 'term', 'ectopic', 'abortion'
     year: string;
+    weightGain: string; // in kg
     notes: string;
   }
   const [pregnancies, setPregnancies] = useState<Pregnancy[]>([]);
@@ -2849,6 +2850,22 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             }}
                             className="text-sm p-2 border border-gray-300 rounded-md w-20"
                           />
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              placeholder="Weight gain"
+                              value={pregnancy.weightGain}
+                              min="0"
+                              step="0.1"
+                              onChange={(e) => {
+                                const updatedPregnancies = [...pregnancies];
+                                updatedPregnancies[index].weightGain = e.target.value;
+                                setPregnancies(updatedPregnancies);
+                              }}
+                              className="text-sm p-2 border border-gray-300 rounded-md w-24"
+                            />
+                            <span className="text-xs text-gray-500 ml-1">kg</span>
+                          </div>
                           <input
                             type="text"
                             placeholder="Notes"
@@ -2892,6 +2909,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           placeholder="Year"
                           className="text-sm p-2 border border-gray-300 rounded-md w-20"
                         />
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            id="pregnancy-weight-gain"
+                            min="0"
+                            step="0.1"
+                            placeholder="Weight gain"
+                            className="text-sm p-2 border border-gray-300 rounded-md w-24"
+                          />
+                          <span className="text-xs text-gray-500 ml-1">kg</span>
+                        </div>
                         <input
                           type="text"
                           id="pregnancy-notes"
@@ -2903,6 +2931,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           onClick={() => {
                             const typeSelect = document.getElementById('pregnancy-type') as HTMLSelectElement;
                             const yearInput = document.getElementById('pregnancy-year') as HTMLInputElement;
+                            const weightGainInput = document.getElementById('pregnancy-weight-gain') as HTMLInputElement;
                             const notesInput = document.getElementById('pregnancy-notes') as HTMLInputElement;
                             
                             if (typeSelect && typeSelect.value) {
@@ -2911,6 +2940,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 {
                                   type: typeSelect.value,
                                   year: yearInput ? yearInput.value : '',
+                                  weightGain: weightGainInput ? weightGainInput.value : '',
                                   notes: notesInput ? notesInput.value : ''
                                 }
                               ]);
@@ -2918,6 +2948,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                               // Reset inputs
                               typeSelect.selectedIndex = 0;
                               if (yearInput) yearInput.value = '';
+                              if (weightGainInput) weightGainInput.value = '';
                               if (notesInput) notesInput.value = '';
                             }
                           }}

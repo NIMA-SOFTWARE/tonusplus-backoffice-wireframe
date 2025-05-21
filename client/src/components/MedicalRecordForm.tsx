@@ -7,7 +7,8 @@ import { Participant } from '@shared/schema';
 import { format } from 'date-fns';
 import { 
   User, FileText, Target, Activity, 
-  Clipboard, History, Stethoscope, Search, Mic
+  Clipboard, History, Stethoscope, Search, Mic,
+  Dumbbell
 } from 'lucide-react';
 import VoiceEnabledInput from './VoiceEnabledInput';
 import VoiceInputButton from './VoiceInputButton';
@@ -547,7 +548,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
                         onChange={(e) => {
                           // Targeting the next sibling element for toggling visibility
-                          const trainingFields = e.target.closest('.space-y-3').querySelector('.training-fields');
+                          const parentEl = e.target.closest('.space-y-3');
+                          if (!parentEl) return;
+                          const trainingFields = parentEl.querySelector('.training-fields');
                           if (trainingFields) {
                             if (e.target.checked) {
                               trainingFields.classList.remove('hidden');
@@ -6645,10 +6648,15 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
 
         {/* EXERCISES */}
         <AccordionItem value="exercises">
-          <AccordionTrigger className="text-lg font-semibold uppercase">EXERCISES</AccordionTrigger>
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <Dumbbell className="mr-2 h-5 w-5 text-green-500" />
+              <span>Exercises</span>
+            </div>
+          </AccordionTrigger>
           <AccordionContent>
-            <div className="p-4">
-              <div className="bg-white rounded-lg p-6">
+            <div className="p-4 space-y-4">
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                 <div className="space-y-6">
                   {/* Exercise Selection */}
                   <div>

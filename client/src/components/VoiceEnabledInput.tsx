@@ -11,6 +11,7 @@ interface VoiceEnabledInputProps {
   rows?: number;
   id?: string;
   disabled?: boolean;
+  voiceEnabled?: boolean;
 }
 
 const VoiceEnabledInput: React.FC<VoiceEnabledInputProps> = ({
@@ -22,7 +23,8 @@ const VoiceEnabledInput: React.FC<VoiceEnabledInputProps> = ({
   isTextarea = false,
   rows = 3,
   id,
-  disabled = false
+  disabled = false,
+  voiceEnabled = false
 }) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -87,12 +89,14 @@ const VoiceEnabledInput: React.FC<VoiceEnabledInputProps> = ({
       )}
       <div className="relative">
         {renderInput()}
-        <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-          <VoiceInputButton
-            onTranscriptionComplete={handleTranscription}
-            disabled={disabled}
-          />
-        </div>
+        {voiceEnabled && (
+          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+            <VoiceInputButton
+              onTranscriptionComplete={handleTranscription}
+              disabled={disabled}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

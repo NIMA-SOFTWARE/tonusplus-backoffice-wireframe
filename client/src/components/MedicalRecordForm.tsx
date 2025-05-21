@@ -3871,7 +3871,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   STOMATOGNATIC APPLIANCE
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Stomatognatic Conditions</h5>
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Angle's Occlusal Classification</h5>
                   
                   {/* Existing Stomatognatic conditions */}
                   {stomatognaticConditions.map((condition, index) => (
@@ -3887,25 +3887,25 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             }}
                             className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
                           >
-                            <option value="">Select condition</option>
-                            <option value="Occlusal Guard">Occlusal Guard</option>
-                            <option value="Night Guard">Night Guard</option>
-                            <option value="Dental Splint">Dental Splint</option>
-                            <option value="TMJ Appliance">TMJ Appliance</option>
-                            <option value="Dental Braces">Dental Braces</option>
-                            <option value="Orthodontic Retainer">Orthodontic Retainer</option>
-                            <option value="Dental Implant">Dental Implant</option>
-                            <option value="Dentures (Complete)">Dentures (Complete)</option>
-                            <option value="Dentures (Partial)">Dentures (Partial)</option>
-                            <option value="Mouth Guard">Mouth Guard</option>
-                            <option value="Sleep Apnea Device">Sleep Apnea Device</option>
-                            <option value="Anti-Snoring Device">Anti-Snoring Device</option>
-                            <option value="Mandibular Advancement Device">Mandibular Advancement Device</option>
+                            <option value="">Select classification</option>
+                            <option value="Class I (Neutrocclusion)">Class I (Neutrocclusion)</option>
+                            <option value="Class II Division 1">Class II Division 1</option>
+                            <option value="Class II Division 2">Class II Division 2</option>
+                            <option value="Class III (Mesiocclusion)">Class III (Mesiocclusion)</option>
+                            <option value="Class II Subdivision">Class II Subdivision</option>
+                            <option value="Class III Subdivision">Class III Subdivision</option>
+                            <option value="Normal Occlusion">Normal Occlusion</option>
+                            <option value="Overjet">Overjet</option>
+                            <option value="Overbite">Overbite</option>
+                            <option value="Crossbite">Crossbite</option>
+                            <option value="Open Bite">Open Bite</option>
+                            <option value="Deep Bite">Deep Bite</option>
+                            <option value="Edge-to-Edge Bite">Edge-to-Edge Bite</option>
                             <option value="Other">Other</option>
                           </select>
                           <input
                             type="text"
-                            placeholder="Specify condition"
+                            placeholder="Specify classification"
                             className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                             value={condition.notes.split('|')[0] || ''}
                             onChange={(e) => {
@@ -3928,42 +3928,45 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             }}
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                           >
-                            <option value="">Select condition</option>
-                            <option value="Occlusal Guard">Occlusal Guard</option>
-                            <option value="Night Guard">Night Guard</option>
-                            <option value="Dental Splint">Dental Splint</option>
-                            <option value="TMJ Appliance">TMJ Appliance</option>
-                            <option value="Dental Braces">Dental Braces</option>
-                            <option value="Orthodontic Retainer">Orthodontic Retainer</option>
-                            <option value="Dental Implant">Dental Implant</option>
-                            <option value="Dentures (Complete)">Dentures (Complete)</option>
-                            <option value="Dentures (Partial)">Dentures (Partial)</option>
-                            <option value="Mouth Guard">Mouth Guard</option>
-                            <option value="Sleep Apnea Device">Sleep Apnea Device</option>
-                            <option value="Anti-Snoring Device">Anti-Snoring Device</option>
-                            <option value="Mandibular Advancement Device">Mandibular Advancement Device</option>
+                            <option value="">Select classification</option>
+                            <option value="Class I (Neutrocclusion)">Class I (Neutrocclusion)</option>
+                            <option value="Class II Division 1">Class II Division 1</option>
+                            <option value="Class II Division 2">Class II Division 2</option>
+                            <option value="Class III (Mesiocclusion)">Class III (Mesiocclusion)</option>
+                            <option value="Class II Subdivision">Class II Subdivision</option>
+                            <option value="Class III Subdivision">Class III Subdivision</option>
+                            <option value="Normal Occlusion">Normal Occlusion</option>
+                            <option value="Overjet">Overjet</option>
+                            <option value="Overbite">Overbite</option>
+                            <option value="Crossbite">Crossbite</option>
+                            <option value="Open Bite">Open Bite</option>
+                            <option value="Deep Bite">Deep Bite</option>
+                            <option value="Edge-to-Edge Bite">Edge-to-Edge Bite</option>
                             <option value="Other">Other</option>
                           </select>
                         </div>
                       )}
                       
-                      <input
-                        type="text"
-                        value={condition.type === "Other" ? condition.notes.split('|')[1] || '' : condition.notes}
-                        onChange={(e) => {
-                          const updatedConditions = [...stomatognaticConditions];
-                          if (condition.type === "Other") {
-                            const parts = condition.notes.split('|');
-                            parts[1] = e.target.value;
-                            updatedConditions[index].notes = parts.join('|');
-                          } else {
-                            updatedConditions[index].notes = e.target.value;
-                          }
-                          setStomatognaticConditions(updatedConditions);
-                        }}
-                        placeholder="Notes"
-                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      />
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={condition.type === "Other" ? condition.notes.split('|')[1] || '' : condition.notes}
+                          onChange={(e) => {
+                            const updatedConditions = [...stomatognaticConditions];
+                            if (condition.type === "Other") {
+                              const parts = condition.notes.split('|');
+                              parts[1] = e.target.value;
+                              updatedConditions[index].notes = parts.join('|');
+                            } else {
+                              updatedConditions[index].notes = e.target.value;
+                            }
+                            setStomatognaticConditions(updatedConditions);
+                          }}
+                          placeholder="Notes"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
                       <button
                         onClick={() => {
                           const updatedConditions = [...stomatognaticConditions];
@@ -3993,7 +3996,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           const customField = document.createElement('input');
                           customField.id = 'stomatognatic-custom';
                           customField.type = 'text';
-                          customField.placeholder = 'Specify condition';
+                          customField.placeholder = 'Specify classification';
                           customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
                           container.insertBefore(customField, document.getElementById('stomatognatic-notes'));
                         } else if (e.target.value !== 'Other' && customInput) {
@@ -4001,20 +4004,20 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         }
                       }}
                     >
-                      <option value="" disabled>Select condition</option>
-                      <option value="Occlusal Guard">Occlusal Guard</option>
-                      <option value="Night Guard">Night Guard</option>
-                      <option value="Dental Splint">Dental Splint</option>
-                      <option value="TMJ Appliance">TMJ Appliance</option>
-                      <option value="Dental Braces">Dental Braces</option>
-                      <option value="Orthodontic Retainer">Orthodontic Retainer</option>
-                      <option value="Dental Implant">Dental Implant</option>
-                      <option value="Dentures (Complete)">Dentures (Complete)</option>
-                      <option value="Dentures (Partial)">Dentures (Partial)</option>
-                      <option value="Mouth Guard">Mouth Guard</option>
-                      <option value="Sleep Apnea Device">Sleep Apnea Device</option>
-                      <option value="Anti-Snoring Device">Anti-Snoring Device</option>
-                      <option value="Mandibular Advancement Device">Mandibular Advancement Device</option>
+                      <option value="" disabled>Select classification</option>
+                      <option value="Class I (Neutrocclusion)">Class I (Neutrocclusion)</option>
+                      <option value="Class II Division 1">Class II Division 1</option>
+                      <option value="Class II Division 2">Class II Division 2</option>
+                      <option value="Class III (Mesiocclusion)">Class III (Mesiocclusion)</option>
+                      <option value="Class II Subdivision">Class II Subdivision</option>
+                      <option value="Class III Subdivision">Class III Subdivision</option>
+                      <option value="Normal Occlusion">Normal Occlusion</option>
+                      <option value="Overjet">Overjet</option>
+                      <option value="Overbite">Overbite</option>
+                      <option value="Crossbite">Crossbite</option>
+                      <option value="Open Bite">Open Bite</option>
+                      <option value="Deep Bite">Deep Bite</option>
+                      <option value="Edge-to-Edge Bite">Edge-to-Edge Bite</option>
                       <option value="Other">Other</option>
                     </select>
                     

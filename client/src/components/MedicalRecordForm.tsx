@@ -554,9 +554,88 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">History of Present Illness (HPI)</h3>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain fields for documenting the history of present illness
+              <h3 className="font-medium text-gray-700 mb-4">History of Present Illness (HPI)</h3>
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-4">
+                
+                {/* Pain Onset and Characteristics */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain Onset and Characteristics</label>
+                  <div className="relative">
+                    <textarea
+                      placeholder="Describe when and how the pain/symptoms started..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-20"
+                    ></textarea>
+                    {voiceInputEnabled && (
+                      <div className="absolute right-2 top-4">
+                        <VoiceInputButton 
+                          onTranscriptionComplete={(text) => {
+                            // Would store state in a real implementation
+                            const textarea = document.activeElement as HTMLTextAreaElement;
+                            if (textarea && textarea.tagName === 'TEXTAREA') {
+                              const currentValue = textarea.value;
+                              textarea.value = currentValue ? `${currentValue} ${text}` : text;
+                              // Trigger change event
+                              const event = new Event('input', { bubbles: true });
+                              textarea.dispatchEvent(event);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Pain Aggravating Factors */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain Aggravating Factors</label>
+                  <div className="relative">
+                    <textarea
+                      placeholder="List activities or positions that make symptoms worse..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-20"
+                    ></textarea>
+                    {voiceInputEnabled && (
+                      <div className="absolute right-2 top-4">
+                        <VoiceInputButton 
+                          onTranscriptionComplete={(text) => {
+                            const textarea = document.activeElement as HTMLTextAreaElement;
+                            if (textarea && textarea.tagName === 'TEXTAREA') {
+                              const currentValue = textarea.value;
+                              textarea.value = currentValue ? `${currentValue} ${text}` : text;
+                              const event = new Event('input', { bubbles: true });
+                              textarea.dispatchEvent(event);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+                
+                {/* Pain Relieving Factors */}
+                <div>
+                  <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain Relieving Factors</label>
+                  <div className="relative">
+                    <textarea
+                      placeholder="List activities or treatments that alleviate symptoms..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-20"
+                    ></textarea>
+                    {voiceInputEnabled && (
+                      <div className="absolute right-2 top-4">
+                        <VoiceInputButton 
+                          onTranscriptionComplete={(text) => {
+                            const textarea = document.activeElement as HTMLTextAreaElement;
+                            if (textarea && textarea.tagName === 'TEXTAREA') {
+                              const currentValue = textarea.value;
+                              textarea.value = currentValue ? `${currentValue} ${text}` : text;
+                              const event = new Event('input', { bubbles: true });
+                              textarea.dispatchEvent(event);
+                            }
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           </AccordionContent>

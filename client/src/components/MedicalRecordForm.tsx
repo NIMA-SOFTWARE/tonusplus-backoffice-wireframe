@@ -204,6 +204,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for Orthodontic History
   const [orthodonticHistory, setOrthodonticHistory] = useState("");
   
+  // State for Hormone Device
+  interface HormoneDevice {
+    type: string;
+    notes: string;
+  }
+  const [hormoneDevices, setHormoneDevices] = useState<HormoneDevice[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4467,6 +4474,192 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-32"
                       rows={6}
                     ></textarea>
+                  </div>
+                </div>
+              </div>
+              
+              {/* HORMONE DEVICE Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  HORMONE DEVICE
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Hormone Devices</h5>
+                  
+                  {/* Existing Hormone Devices */}
+                  {hormoneDevices.map((device, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {device.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={device.type}
+                            onChange={(e) => {
+                              const updatedDevices = [...hormoneDevices];
+                              updatedDevices[index].type = e.target.value;
+                              setHormoneDevices(updatedDevices);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select device</option>
+                            <option value="Hormonal IUD">Hormonal IUD</option>
+                            <option value="Copper IUD">Copper IUD</option>
+                            <option value="Implant">Implant</option>
+                            <option value="Hormonal Patch">Hormonal Patch</option>
+                            <option value="Vaginal Ring">Vaginal Ring</option>
+                            <option value="Birth Control Pills">Birth Control Pills</option>
+                            <option value="Contraceptive Injection">Contraceptive Injection</option>
+                            <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify device"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={device.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedDevices = [...hormoneDevices];
+                              const parts = device.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedDevices[index].notes = parts.join('|');
+                              setHormoneDevices(updatedDevices);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex-1">
+                          <select
+                            value={device.type}
+                            onChange={(e) => {
+                              const updatedDevices = [...hormoneDevices];
+                              updatedDevices[index].type = e.target.value;
+                              setHormoneDevices(updatedDevices);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select device</option>
+                            <option value="Hormonal IUD">Hormonal IUD</option>
+                            <option value="Copper IUD">Copper IUD</option>
+                            <option value="Implant">Implant</option>
+                            <option value="Hormonal Patch">Hormonal Patch</option>
+                            <option value="Vaginal Ring">Vaginal Ring</option>
+                            <option value="Birth Control Pills">Birth Control Pills</option>
+                            <option value="Contraceptive Injection">Contraceptive Injection</option>
+                            <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      )}
+                      
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={device.type === "Other" ? device.notes.split('|')[1] || '' : device.notes}
+                          onChange={(e) => {
+                            const updatedDevices = [...hormoneDevices];
+                            if (device.type === "Other") {
+                              const parts = device.notes.split('|');
+                              parts[1] = e.target.value;
+                              updatedDevices[index].notes = parts.join('|');
+                            } else {
+                              updatedDevices[index].notes = e.target.value;
+                            }
+                            setHormoneDevices(updatedDevices);
+                          }}
+                          placeholder="Notes (brand, duration, effects, etc.)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          const updatedDevices = [...hormoneDevices];
+                          updatedDevices.splice(index, 1);
+                          setHormoneDevices(updatedDevices);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new Hormone Device */}
+                  <div className="flex items-center gap-2 mb-2" id="new-hormone-device-container">
+                    <select
+                      id="hormone-device-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-hormone-device-container');
+                        const customInput = document.getElementById('hormone-device-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'hormone-device-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify device';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('hormone-device-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select device</option>
+                      <option value="Hormonal IUD">Hormonal IUD</option>
+                      <option value="Copper IUD">Copper IUD</option>
+                      <option value="Implant">Implant</option>
+                      <option value="Hormonal Patch">Hormonal Patch</option>
+                      <option value="Vaginal Ring">Vaginal Ring</option>
+                      <option value="Birth Control Pills">Birth Control Pills</option>
+                      <option value="Contraceptive Injection">Contraceptive Injection</option>
+                      <option value="Hormone Replacement Therapy">Hormone Replacement Therapy</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    
+                    <input
+                      type="text"
+                      id="hormone-device-notes"
+                      placeholder="Notes (brand, duration, effects, etc.)"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('hormone-device-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('hormone-device-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('hormone-device-custom') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          let type = typeSelect.value;
+                          let notes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, use the custom input value
+                          if (type === "Other" && customInput && customInput.value) {
+                            // Store the custom value in the notes field with a separator
+                            notes = `${customInput.value}|${notes}`;
+                          }
+                          
+                          setHormoneDevices([
+                            ...hormoneDevices,
+                            {
+                              type,
+                              notes
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                          if (customInput) customInput.remove();
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
                   </div>
                 </div>
               </div>

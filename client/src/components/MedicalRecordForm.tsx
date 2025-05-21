@@ -5585,6 +5585,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Medical Tests and Examinations</h5>
                   
+                  {/* ORTHOSTATISM Section */}
+                  <div className="mt-6 border-t pt-4">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">ORTHOSTATISM</h5>
+                  </div>
+                  
                   {/* Existing Instrumental Exams */}
                   {instrumentalExams.map((exam: InstrumentalExam, index: number) => (
                     <div key={index} className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200">

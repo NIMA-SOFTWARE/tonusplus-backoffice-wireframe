@@ -1056,10 +1056,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         observation: '' 
                                       }
                                     ]);
-                                    // Reset select but delay to avoid React state update issues
-                                    setTimeout(() => {
-                                      e.target.value = '';
-                                    }, 10);
+                                    // Better way to reset select without focus issues
+                                    e.target.selectedIndex = 0;
                                   }
                                 }}
                               >

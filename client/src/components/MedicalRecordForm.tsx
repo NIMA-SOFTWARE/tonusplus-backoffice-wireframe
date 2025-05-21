@@ -739,29 +739,30 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Pain duration */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain duration (minutes)</label>
-                    <input 
-                      type="number" 
-                      min="0"
-                      value={painDurationMinutes}
-                      onChange={(e) => setPainDurationMinutes(parseInt(e.target.value) || 0)}
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="Duration in minutes"
-                    />
-                  </div>
-                  
-                  {/* Hourly interval */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Hourly interval</label>
-                    <input 
-                      type="text"
-                      value={hourlyInterval}
-                      onChange={(e) => setHourlyInterval(e.target.value)}
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      placeholder="e.g., Every 2 hours"
-                    />
+                  {/* Pain duration and Hourly interval on same line */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain duration (minutes)</label>
+                      <input 
+                        type="number" 
+                        min="0"
+                        value={painDurationMinutes}
+                        onChange={(e) => setPainDurationMinutes(parseInt(e.target.value) || 0)}
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Duration in minutes"
+                      />
+                    </div>
+                    
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Hourly interval</label>
+                      <input 
+                        type="text"
+                        value={hourlyInterval}
+                        onChange={(e) => setHourlyInterval(e.target.value)}
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="e.g., Every 2 hours"
+                      />
+                    </div>
                   </div>
                   
 

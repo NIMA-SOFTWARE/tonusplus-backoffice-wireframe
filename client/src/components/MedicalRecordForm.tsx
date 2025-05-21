@@ -1143,112 +1143,101 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         <div>
                           <h5 className="text-sm font-medium text-gray-700 mb-3">Muscle Tears</h5>
                           
-                          {/* List of muscle tears */}
-                          <div className="space-y-3 mb-4">
-                            {muscleTears.map((tear, index) => (
-                              <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-                                <div className="flex justify-between items-center mb-2">
-                                  <div className="font-medium text-gray-700">{tear.location}</div>
-                                  <button
-                                    onClick={() => {
-                                      const updatedTears = [...muscleTears];
-                                      updatedTears.splice(index, 1);
-                                      setMuscleTears(updatedTears);
-                                    }}
-                                    className="text-red-500 hover:text-red-700"
-                                    aria-label="Remove"
-                                  >
-                                    ✕
-                                  </button>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Year</label>
-                                    <input
-                                      type="text"
-                                      value={tear.year}
-                                      onChange={(e) => {
-                                        const updatedTears = [...muscleTears];
-                                        updatedTears[index].year = e.target.value;
-                                        setMuscleTears(updatedTears);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Observation</label>
-                                    <input
-                                      type="text"
-                                      value={tear.observation}
-                                      onChange={(e) => {
-                                        const updatedTears = [...muscleTears];
-                                        updatedTears[index].observation = e.target.value;
-                                        setMuscleTears(updatedTears);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          {/* Add new muscle tear */}
-                          <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
-                            <h6 className="text-xs font-semibold text-gray-600 mb-2">Add New Muscle Tear</h6>
-                            <div className="grid grid-cols-3 gap-2 mb-2">
-                              <div>
-                                <input
-                                  type="text"
-                                  id="muscle-tear-name"
-                                  placeholder="Muscle name"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="muscle-tear-year"
-                                  placeholder="Year"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="muscle-tear-observation"
-                                  placeholder="Observation"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex justify-end">
-                              <button
-                                className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                                onClick={() => {
-                                  const nameInput = document.getElementById('muscle-tear-name') as HTMLInputElement;
-                                  const yearInput = document.getElementById('muscle-tear-year') as HTMLInputElement;
-                                  const obsInput = document.getElementById('muscle-tear-observation') as HTMLInputElement;
-                                  
-                                  if (nameInput && nameInput.value.trim()) {
-                                    setMuscleTears([
-                                      ...muscleTears,
-                                      {
-                                        location: nameInput.value.trim(),
-                                        year: yearInput ? yearInput.value : '',
-                                        observation: obsInput ? obsInput.value : '',
-                                      }
-                                    ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
-                                  }
+                          {/* Existing muscle tears */}
+                          {muscleTears.map((tear, index) => (
+                            <div key={index} className="flex items-center gap-2 mb-2">
+                              <input
+                                type="text"
+                                value={tear.location}
+                                onChange={(e) => {
+                                  const updatedTears = [...muscleTears];
+                                  updatedTears[index].location = e.target.value;
+                                  setMuscleTears(updatedTears);
                                 }}
+                                placeholder="Muscle name"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={tear.year}
+                                onChange={(e) => {
+                                  const updatedTears = [...muscleTears];
+                                  updatedTears[index].year = e.target.value;
+                                  setMuscleTears(updatedTears);
+                                }}
+                                placeholder="Year"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={tear.observation}
+                                onChange={(e) => {
+                                  const updatedTears = [...muscleTears];
+                                  updatedTears[index].observation = e.target.value;
+                                  setMuscleTears(updatedTears);
+                                }}
+                                placeholder="Observation"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <button
+                                onClick={() => {
+                                  const updatedTears = [...muscleTears];
+                                  updatedTears.splice(index, 1);
+                                  setMuscleTears(updatedTears);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove"
                               >
-                                Add
+                                ✕
                               </button>
                             </div>
+                          ))}
+                          
+                          {/* Add new muscle tear - just inputs in a row */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <input
+                              type="text"
+                              id="muscle-tear-name"
+                              placeholder="Muscle name"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="muscle-tear-year"
+                              placeholder="Year"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="muscle-tear-observation"
+                              placeholder="Observation"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <button
+                              className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                              onClick={() => {
+                                const nameInput = document.getElementById('muscle-tear-name') as HTMLInputElement;
+                                const yearInput = document.getElementById('muscle-tear-year') as HTMLInputElement;
+                                const obsInput = document.getElementById('muscle-tear-observation') as HTMLInputElement;
+                                
+                                if (nameInput && nameInput.value.trim()) {
+                                  setMuscleTears([
+                                    ...muscleTears,
+                                    {
+                                      location: nameInput.value.trim(),
+                                      year: yearInput ? yearInput.value : '',
+                                      observation: obsInput ? obsInput.value : '',
+                                    }
+                                  ]);
+                                  
+                                  if (nameInput) nameInput.value = '';
+                                  if (yearInput) yearInput.value = '';
+                                  if (obsInput) obsInput.value = '';
+                                }
+                              }}
+                            >
+                              Add
+                            </button>
                           </div>
                         </div>
                         
@@ -1257,112 +1246,101 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         <div>
                           <h5 className="text-sm font-medium text-gray-700 mb-3">Tendon Ruptures</h5>
                           
-                          {/* List of tendon ruptures */}
-                          <div className="space-y-3 mb-4">
-                            {tendonRuptures.map((rupture, index) => (
-                              <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-                                <div className="flex justify-between items-center mb-2">
-                                  <div className="font-medium text-gray-700">{rupture.location}</div>
-                                  <button
-                                    onClick={() => {
-                                      const updatedRuptures = [...tendonRuptures];
-                                      updatedRuptures.splice(index, 1);
-                                      setTendonRuptures(updatedRuptures);
-                                    }}
-                                    className="text-red-500 hover:text-red-700"
-                                    aria-label="Remove"
-                                  >
-                                    ✕
-                                  </button>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Year</label>
-                                    <input
-                                      type="text"
-                                      value={rupture.year}
-                                      onChange={(e) => {
-                                        const updatedRuptures = [...tendonRuptures];
-                                        updatedRuptures[index].year = e.target.value;
-                                        setTendonRuptures(updatedRuptures);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Observation</label>
-                                    <input
-                                      type="text"
-                                      value={rupture.observation}
-                                      onChange={(e) => {
-                                        const updatedRuptures = [...tendonRuptures];
-                                        updatedRuptures[index].observation = e.target.value;
-                                        setTendonRuptures(updatedRuptures);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          {/* Add new tendon rupture */}
-                          <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
-                            <h6 className="text-xs font-semibold text-gray-600 mb-2">Add New Tendon Rupture</h6>
-                            <div className="grid grid-cols-3 gap-2 mb-2">
-                              <div>
-                                <input
-                                  type="text"
-                                  id="tendon-rupture-name"
-                                  placeholder="Tendon name"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="tendon-rupture-year"
-                                  placeholder="Year"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="tendon-rupture-observation"
-                                  placeholder="Observation"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex justify-end">
-                              <button
-                                className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                                onClick={() => {
-                                  const nameInput = document.getElementById('tendon-rupture-name') as HTMLInputElement;
-                                  const yearInput = document.getElementById('tendon-rupture-year') as HTMLInputElement;
-                                  const obsInput = document.getElementById('tendon-rupture-observation') as HTMLInputElement;
-                                  
-                                  if (nameInput && nameInput.value.trim()) {
-                                    setTendonRuptures([
-                                      ...tendonRuptures,
-                                      {
-                                        location: nameInput.value.trim(),
-                                        year: yearInput ? yearInput.value : '',
-                                        observation: obsInput ? obsInput.value : '',
-                                      }
-                                    ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
-                                  }
+                          {/* Existing tendon ruptures */}
+                          {tendonRuptures.map((rupture, index) => (
+                            <div key={index} className="flex items-center gap-2 mb-2">
+                              <input
+                                type="text"
+                                value={rupture.location}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...tendonRuptures];
+                                  updatedRuptures[index].location = e.target.value;
+                                  setTendonRuptures(updatedRuptures);
                                 }}
+                                placeholder="Tendon name"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={rupture.year}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...tendonRuptures];
+                                  updatedRuptures[index].year = e.target.value;
+                                  setTendonRuptures(updatedRuptures);
+                                }}
+                                placeholder="Year"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={rupture.observation}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...tendonRuptures];
+                                  updatedRuptures[index].observation = e.target.value;
+                                  setTendonRuptures(updatedRuptures);
+                                }}
+                                placeholder="Observation"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <button
+                                onClick={() => {
+                                  const updatedRuptures = [...tendonRuptures];
+                                  updatedRuptures.splice(index, 1);
+                                  setTendonRuptures(updatedRuptures);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove"
                               >
-                                Add
+                                ✕
                               </button>
                             </div>
+                          ))}
+                          
+                          {/* Add new tendon rupture - just inputs in a row */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <input
+                              type="text"
+                              id="tendon-rupture-name"
+                              placeholder="Tendon name"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="tendon-rupture-year"
+                              placeholder="Year"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="tendon-rupture-observation"
+                              placeholder="Observation"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <button
+                              className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                              onClick={() => {
+                                const nameInput = document.getElementById('tendon-rupture-name') as HTMLInputElement;
+                                const yearInput = document.getElementById('tendon-rupture-year') as HTMLInputElement;
+                                const obsInput = document.getElementById('tendon-rupture-observation') as HTMLInputElement;
+                                
+                                if (nameInput && nameInput.value.trim()) {
+                                  setTendonRuptures([
+                                    ...tendonRuptures,
+                                    {
+                                      location: nameInput.value.trim(),
+                                      year: yearInput ? yearInput.value : '',
+                                      observation: obsInput ? obsInput.value : '',
+                                    }
+                                  ]);
+                                  
+                                  if (nameInput) nameInput.value = '';
+                                  if (yearInput) yearInput.value = '';
+                                  if (obsInput) obsInput.value = '';
+                                }
+                              }}
+                            >
+                              Add
+                            </button>
                           </div>
                         </div>
                         
@@ -1371,112 +1349,101 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         <div>
                           <h5 className="text-sm font-medium text-gray-700 mb-3">Ligament Ruptures</h5>
                           
-                          {/* List of ligament ruptures */}
-                          <div className="space-y-3 mb-4">
-                            {ligamentRuptures.map((rupture, index) => (
-                              <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
-                                <div className="flex justify-between items-center mb-2">
-                                  <div className="font-medium text-gray-700">{rupture.location}</div>
-                                  <button
-                                    onClick={() => {
-                                      const updatedRuptures = [...ligamentRuptures];
-                                      updatedRuptures.splice(index, 1);
-                                      setLigamentRuptures(updatedRuptures);
-                                    }}
-                                    className="text-red-500 hover:text-red-700"
-                                    aria-label="Remove"
-                                  >
-                                    ✕
-                                  </button>
-                                </div>
-                                <div className="grid grid-cols-2 gap-2">
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Year</label>
-                                    <input
-                                      type="text"
-                                      value={rupture.year}
-                                      onChange={(e) => {
-                                        const updatedRuptures = [...ligamentRuptures];
-                                        updatedRuptures[index].year = e.target.value;
-                                        setLigamentRuptures(updatedRuptures);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className="block text-xs text-gray-500 mb-1">Observation</label>
-                                    <input
-                                      type="text"
-                                      value={rupture.observation}
-                                      onChange={(e) => {
-                                        const updatedRuptures = [...ligamentRuptures];
-                                        updatedRuptures[index].observation = e.target.value;
-                                        setLigamentRuptures(updatedRuptures);
-                                      }}
-                                      className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                    />
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                          
-                          {/* Add new ligament rupture */}
-                          <div className="p-3 bg-gray-50 rounded-md border border-gray-200">
-                            <h6 className="text-xs font-semibold text-gray-600 mb-2">Add New Ligament Rupture</h6>
-                            <div className="grid grid-cols-3 gap-2 mb-2">
-                              <div>
-                                <input
-                                  type="text"
-                                  id="ligament-rupture-name"
-                                  placeholder="Ligament name"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="ligament-rupture-year"
-                                  placeholder="Year"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                              <div>
-                                <input
-                                  type="text"
-                                  id="ligament-rupture-observation"
-                                  placeholder="Observation"
-                                  className="w-full text-sm p-1 border border-gray-300 rounded-md"
-                                />
-                              </div>
-                            </div>
-                            <div className="flex justify-end">
-                              <button
-                                className="px-3 py-1 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                                onClick={() => {
-                                  const nameInput = document.getElementById('ligament-rupture-name') as HTMLInputElement;
-                                  const yearInput = document.getElementById('ligament-rupture-year') as HTMLInputElement;
-                                  const obsInput = document.getElementById('ligament-rupture-observation') as HTMLInputElement;
-                                  
-                                  if (nameInput && nameInput.value.trim()) {
-                                    setLigamentRuptures([
-                                      ...ligamentRuptures,
-                                      {
-                                        location: nameInput.value.trim(),
-                                        year: yearInput ? yearInput.value : '',
-                                        observation: obsInput ? obsInput.value : '',
-                                      }
-                                    ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
-                                  }
+                          {/* Existing ligament ruptures */}
+                          {ligamentRuptures.map((rupture, index) => (
+                            <div key={index} className="flex items-center gap-2 mb-2">
+                              <input
+                                type="text"
+                                value={rupture.location}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...ligamentRuptures];
+                                  updatedRuptures[index].location = e.target.value;
+                                  setLigamentRuptures(updatedRuptures);
                                 }}
+                                placeholder="Ligament name"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={rupture.year}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...ligamentRuptures];
+                                  updatedRuptures[index].year = e.target.value;
+                                  setLigamentRuptures(updatedRuptures);
+                                }}
+                                placeholder="Year"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <input
+                                type="text"
+                                value={rupture.observation}
+                                onChange={(e) => {
+                                  const updatedRuptures = [...ligamentRuptures];
+                                  updatedRuptures[index].observation = e.target.value;
+                                  setLigamentRuptures(updatedRuptures);
+                                }}
+                                placeholder="Observation"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              />
+                              <button
+                                onClick={() => {
+                                  const updatedRuptures = [...ligamentRuptures];
+                                  updatedRuptures.splice(index, 1);
+                                  setLigamentRuptures(updatedRuptures);
+                                }}
+                                className="p-2 text-red-500 hover:text-red-700"
+                                aria-label="Remove"
                               >
-                                Add
+                                ✕
                               </button>
                             </div>
+                          ))}
+                          
+                          {/* Add new ligament rupture - just inputs in a row */}
+                          <div className="flex items-center gap-2 mb-2">
+                            <input
+                              type="text"
+                              id="ligament-rupture-name"
+                              placeholder="Ligament name"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="ligament-rupture-year"
+                              placeholder="Year"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <input
+                              type="text"
+                              id="ligament-rupture-observation"
+                              placeholder="Observation"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+                            <button
+                              className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                              onClick={() => {
+                                const nameInput = document.getElementById('ligament-rupture-name') as HTMLInputElement;
+                                const yearInput = document.getElementById('ligament-rupture-year') as HTMLInputElement;
+                                const obsInput = document.getElementById('ligament-rupture-observation') as HTMLInputElement;
+                                
+                                if (nameInput && nameInput.value.trim()) {
+                                  setLigamentRuptures([
+                                    ...ligamentRuptures,
+                                    {
+                                      location: nameInput.value.trim(),
+                                      year: yearInput ? yearInput.value : '',
+                                      observation: obsInput ? obsInput.value : '',
+                                    }
+                                  ]);
+                                  
+                                  if (nameInput) nameInput.value = '';
+                                  if (yearInput) yearInput.value = '';
+                                  if (obsInput) obsInput.value = '';
+                                }
+                              }}
+                            >
+                              Add
+                            </button>
                           </div>
                         </div>
                         

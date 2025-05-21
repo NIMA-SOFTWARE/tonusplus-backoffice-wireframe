@@ -54,6 +54,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [triggeringReason, setTriggeringReason] = useState('');
   const [ongoingTherapies, setOngoingTherapies] = useState<string[]>([]);
   
+  // Generic Anamnesis state
+  interface FractureEntry {
+    location: string;
+    year: string;
+    observation: string;
+  }
+  const [fractures, setFractures] = useState<FractureEntry[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -914,8 +922,107 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
                   Trauma and Diseases/Dysfunctions of the Musculoskeletal System
                 </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  {/* This is where we'll add inputs later */}
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-6">
+                  {/* Fractures multi-select with year and observation */}
+                  <div>
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">Fractures</h5>
+                    
+                    {/* Selected fractures list with year and observation */}
+                    <div className="space-y-3 mb-4">
+                      {fractures.map((fracture, index) => (
+                        <div key={index} className="p-3 bg-white rounded-md border border-gray-200 shadow-sm">
+                          <div className="flex justify-between items-start">
+                            <div className="font-medium text-gray-700">{fracture.location}</div>
+                            <button
+                              onClick={() => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures.splice(index, 1);
+                                setFractures(updatedFractures);
+                              }}
+                              className="text-red-500 hover:text-red-700"
+                              aria-label="Remove fracture"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                          
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            <div>
+                              <label className="block text-xs text-gray-500 mb-1">Year</label>
+                              <input
+                                type="text"
+                                value={fracture.year}
+                                onChange={(e) => {
+                                  const updatedFractures = [...fractures];
+                                  updatedFractures[index].year = e.target.value;
+                                  setFractures(updatedFractures);
+                                }}
+                                className="w-full text-sm p-1 border border-gray-300 rounded-md"
+                              />
+                            </div>
+                            <div>
+                              <label className="block text-xs text-gray-500 mb-1">Observation</label>
+                              <input
+                                type="text"
+                                value={fracture.observation}
+                                onChange={(e) => {
+                                  const updatedFractures = [...fractures];
+                                  updatedFractures[index].observation = e.target.value;
+                                  setFractures(updatedFractures);
+                                }}
+                                className="w-full text-sm p-1 border border-gray-300 rounded-md"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    
+                    {/* Fracture location selector */}
+                    <div className="flex items-end gap-2">
+                      <div className="flex-grow">
+                        <div className="mb-1 text-xs text-gray-500">Add new fracture location</div>
+                        <select
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          onChange={(e) => {
+                            if (e.target.value) {
+                              setFractures([
+                                ...fractures,
+                                { 
+                                  location: e.target.value, 
+                                  year: '', 
+                                  observation: '' 
+                                }
+                              ]);
+                              e.target.value = ''; // Reset select after adding
+                            }
+                          }}
+                        >
+                          <option value="">Select fracture location</option>
+                          <option value="Humerus">Humerus</option>
+                          <option value="Radius">Radius</option>
+                          <option value="Cubitus">Cubitus</option>
+                          <option value="Olecranon">Olecranon</option>
+                          <option value="Carpals">Carpals</option>
+                          <option value="Costal">Costal</option>
+                          <option value="Vertebra">Vertebra</option>
+                          <option value="Pelvis">Pelvis</option>
+                          <option value="Coccyx">Coccyx</option>
+                          <option value="Femoral neck">Femoral neck</option>
+                          <option value="Femur">Femur</option>
+                          <option value="Tibial plateau">Tibial plateau</option>
+                          <option value="Tibia">Tibia</option>
+                          <option value="Fibula">Fibula</option>
+                          <option value="Internal malleolus">Internal malleolus</option>
+                          <option value="External malleolus">External malleolus</option>
+                          <option value="Bimalleolar">Bimalleolar</option>
+                          <option value="Tarsals">Tarsals</option>
+                          <option value="Halcus">Halcus</option>
+                          <option value="Other">Other (specify in observation)</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
               

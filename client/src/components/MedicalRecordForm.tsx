@@ -104,6 +104,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [digestiveDiseases, setDigestiveDiseases] = useState<DigestiveDisease[]>([]);
   
+  // State for stool form options
+  const [stoolForms, setStoolForms] = useState<string[]>([]);
+  
   // Interface and state for urogenital system diseases/dysfunctions
   interface UrogenitalDisease {
     type: string;
@@ -2264,6 +2267,84 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Digestive Conditions</h5>
+                  
+                  {/* Stool Form multiple select */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Stool Form
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {["Aerated", "Dense", "Liquid", "Watery", "Undigested pieces", "Greasy film"].map((form) => (
+                        <div key={form} className="flex items-center">
+                          <input
+                            type="checkbox"
+                            id={`stool-${form.toLowerCase().replace(/\s+/g, '-')}`}
+                            checked={stoolForms.includes(form)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setStoolForms([...stoolForms, form]);
+                              } else {
+                                setStoolForms(stoolForms.filter(f => f !== form));
+                              }
+                            }}
+                            className="mr-1 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                          />
+                          <label
+                            htmlFor={`stool-${form.toLowerCase().replace(/\s+/g, '-')}`}
+                            className="text-sm text-gray-700 mr-3"
+                          >
+                            {form}
+                          </label>
+                        </div>
+                      ))}
+
+                      {/* Other option with custom input */}
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          id="stool-other"
+                          checked={stoolForms.some(form => form.startsWith("Other:"))}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              // Add a placeholder that will be replaced when the user types something
+                              setStoolForms([...stoolForms, "Other:"]);
+                              // Focus on the input field
+                              setTimeout(() => {
+                                const otherInput = document.getElementById('stool-other-input') as HTMLInputElement;
+                                if (otherInput) otherInput.focus();
+                              }, 0);
+                            } else {
+                              // Remove any "Other:" entries
+                              setStoolForms(stoolForms.filter(f => !f.startsWith("Other:")));
+                            }
+                          }}
+                          className="mr-1 h-4 w-4 text-indigo-600 rounded border-gray-300"
+                        />
+                        <label htmlFor="stool-other" className="text-sm text-gray-700 mr-2">
+                          Other:
+                        </label>
+                        <input
+                          type="text"
+                          id="stool-other-input"
+                          placeholder="Specify"
+                          disabled={!stoolForms.some(form => form.startsWith("Other:"))}
+                          value={
+                            stoolForms.find(form => form.startsWith("Other:"))?.substring(6) || ""
+                          }
+                          onChange={(e) => {
+                            const otherValue = e.target.value;
+                            // Replace the existing "Other:" entry with the new value
+                            setStoolForms(
+                              stoolForms.map(form => 
+                                form.startsWith("Other:") ? `Other:${otherValue}` : form
+                              )
+                            );
+                          }}
+                          className="ml-1 text-sm p-1 border border-gray-300 rounded-md w-40"
+                        />
+                      </div>
+                    </div>
+                  </div>
                   
                   {/* Existing digestive diseases */}
                   {digestiveDiseases.map((disease, index) => (

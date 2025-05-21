@@ -1231,6 +1231,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                   const obsInput = document.getElementById('muscle-tear-observation') as HTMLInputElement;
                                   
                                   if (nameInput && nameInput.value.trim()) {
+                                    // Add the entry but don't clear fields
                                     setMuscleTears([
                                       ...muscleTears,
                                       {
@@ -1239,10 +1240,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         observation: obsInput ? obsInput.value : '',
                                       }
                                     ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
                                   }
                                 }}
                               >
@@ -1345,6 +1342,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                   const obsInput = document.getElementById('tendon-rupture-observation') as HTMLInputElement;
                                   
                                   if (nameInput && nameInput.value.trim()) {
+                                    // Add the entry but don't clear fields
                                     setTendonRuptures([
                                       ...tendonRuptures,
                                       {
@@ -1353,10 +1351,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         observation: obsInput ? obsInput.value : '',
                                       }
                                     ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
                                   }
                                 }}
                               >
@@ -1459,6 +1453,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                   const obsInput = document.getElementById('ligament-rupture-observation') as HTMLInputElement;
                                   
                                   if (nameInput && nameInput.value.trim()) {
+                                    // Add the entry but don't clear fields
                                     setLigamentRuptures([
                                       ...ligamentRuptures,
                                       {
@@ -1467,10 +1462,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                         observation: obsInput ? obsInput.value : '',
                                       }
                                     ]);
-                                    
-                                    if (nameInput) nameInput.value = '';
-                                    if (yearInput) yearInput.value = '';
-                                    if (obsInput) obsInput.value = '';
                                   }
                                 }}
                               >

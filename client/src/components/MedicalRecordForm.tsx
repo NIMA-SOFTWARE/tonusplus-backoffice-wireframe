@@ -172,6 +172,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
     notes: "" 
   });
   
+  // State for ENT (Ear, Nose, Throat) conditions
+  interface ENTCondition {
+    type: string;
+    notes: string;
+  }
+  const [entConditions, setENTConditions] = useState<ENTCondition[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -3169,6 +3176,213 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         For time span, enter periods like "6 months," "2 years," etc.
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* ENT SPHERE: Ear, Nose, Throat Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ENT SPHERE: Ear, Nose, Throat Conditions
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">ENT Conditions</h5>
+                  
+                  {/* Existing ENT conditions */}
+                  {entConditions.map((condition, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {condition.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={condition.type}
+                            onChange={(e) => {
+                              const updatedConditions = [...entConditions];
+                              updatedConditions[index].type = e.target.value;
+                              setENTConditions(updatedConditions);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Tinnitus">Tinnitus</option>
+                            <option value="Hearing Loss">Hearing Loss</option>
+                            <option value="Vertigo">Vertigo</option>
+                            <option value="Meniere's Disease">Meniere's Disease</option>
+                            <option value="Ear Infection">Ear Infection</option>
+                            <option value="Otosclerosis">Otosclerosis</option>
+                            <option value="Sinusitis">Sinusitis</option>
+                            <option value="Rhinitis">Rhinitis</option>
+                            <option value="Nasal Polyps">Nasal Polyps</option>
+                            <option value="Deviated Septum">Deviated Septum</option>
+                            <option value="Tonsillitis">Tonsillitis</option>
+                            <option value="Laryngitis">Laryngitis</option>
+                            <option value="Pharyngitis">Pharyngitis</option>
+                            <option value="Vocal Cord Nodules">Vocal Cord Nodules</option>
+                            <option value="TMJ Disorder">TMJ Disorder</option>
+                            <option value="Sleep Apnea">Sleep Apnea</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify condition"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={condition.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedConditions = [...entConditions];
+                              const parts = condition.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedConditions[index].notes = parts.join('|');
+                              setENTConditions(updatedConditions);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex-1">
+                          <select
+                            value={condition.type}
+                            onChange={(e) => {
+                              const updatedConditions = [...entConditions];
+                              updatedConditions[index].type = e.target.value;
+                              setENTConditions(updatedConditions);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select condition</option>
+                            <option value="Tinnitus">Tinnitus</option>
+                            <option value="Hearing Loss">Hearing Loss</option>
+                            <option value="Vertigo">Vertigo</option>
+                            <option value="Meniere's Disease">Meniere's Disease</option>
+                            <option value="Ear Infection">Ear Infection</option>
+                            <option value="Otosclerosis">Otosclerosis</option>
+                            <option value="Sinusitis">Sinusitis</option>
+                            <option value="Rhinitis">Rhinitis</option>
+                            <option value="Nasal Polyps">Nasal Polyps</option>
+                            <option value="Deviated Septum">Deviated Septum</option>
+                            <option value="Tonsillitis">Tonsillitis</option>
+                            <option value="Laryngitis">Laryngitis</option>
+                            <option value="Pharyngitis">Pharyngitis</option>
+                            <option value="Vocal Cord Nodules">Vocal Cord Nodules</option>
+                            <option value="TMJ Disorder">TMJ Disorder</option>
+                            <option value="Sleep Apnea">Sleep Apnea</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      )}
+                      
+                      <input
+                        type="text"
+                        value={condition.type === "Other" ? condition.notes.split('|')[1] || '' : condition.notes}
+                        onChange={(e) => {
+                          const updatedConditions = [...entConditions];
+                          if (condition.type === "Other") {
+                            const parts = condition.notes.split('|');
+                            parts[1] = e.target.value;
+                            updatedConditions[index].notes = parts.join('|');
+                          } else {
+                            updatedConditions[index].notes = e.target.value;
+                          }
+                          setENTConditions(updatedConditions);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedConditions = [...entConditions];
+                          updatedConditions.splice(index, 1);
+                          setENTConditions(updatedConditions);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new ENT condition */}
+                  <div className="flex items-center gap-2 mb-2" id="new-ent-container">
+                    <select
+                      id="ent-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-ent-container');
+                        const customInput = document.getElementById('ent-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'ent-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify condition';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('ent-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select condition</option>
+                      <option value="Tinnitus">Tinnitus</option>
+                      <option value="Hearing Loss">Hearing Loss</option>
+                      <option value="Vertigo">Vertigo</option>
+                      <option value="Meniere's Disease">Meniere's Disease</option>
+                      <option value="Ear Infection">Ear Infection</option>
+                      <option value="Otosclerosis">Otosclerosis</option>
+                      <option value="Sinusitis">Sinusitis</option>
+                      <option value="Rhinitis">Rhinitis</option>
+                      <option value="Nasal Polyps">Nasal Polyps</option>
+                      <option value="Deviated Septum">Deviated Septum</option>
+                      <option value="Tonsillitis">Tonsillitis</option>
+                      <option value="Laryngitis">Laryngitis</option>
+                      <option value="Pharyngitis">Pharyngitis</option>
+                      <option value="Vocal Cord Nodules">Vocal Cord Nodules</option>
+                      <option value="TMJ Disorder">TMJ Disorder</option>
+                      <option value="Sleep Apnea">Sleep Apnea</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    
+                    <input
+                      type="text"
+                      id="ent-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('ent-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('ent-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('ent-custom') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          let type = typeSelect.value;
+                          let notes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, use the custom input value
+                          if (type === "Other" && customInput && customInput.value) {
+                            // Store the custom value in the notes field with a separator
+                            notes = `${customInput.value}|${notes}`;
+                          }
+                          
+                          setENTConditions([
+                            ...entConditions,
+                            {
+                              type,
+                              notes
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                          if (customInput) customInput.remove();
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
                   </div>
                 </div>
               </div>

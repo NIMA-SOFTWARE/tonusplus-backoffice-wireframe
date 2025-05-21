@@ -6303,103 +6303,96 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <option value="Rigid (injustice)">Rigid (injustice)</option>
                     </select>
                   </div>
-                </div>
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-
-        {/* SEATED POSITION */}
-        <AccordionItem value="seated-position">
-          <AccordionTrigger className="text-lg font-semibold">SEATED POSITION</AccordionTrigger>
-          <AccordionContent>
-            <div className="p-4">
-              <div className="bg-white rounded-lg p-6">
-                <div className="space-y-6">
-                  {/* TFS Section */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">TFS</label>
-                    <div className="flex items-center space-x-4">
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="seated-tfs"
-                          value="Dx"
-                          checked={seatedTfs === "Dx"}
-                          onChange={() => setSeatedTfs("Dx")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Dx</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="seated-tfs"
-                          value="Sx"
-                          checked={seatedTfs === "Sx"}
-                          onChange={() => setSeatedTfs("Sx")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Sx</span>
-                      </label>
+                  
+                  {/* Seated Position Section */}
+                  <div className="mt-8 pt-5 border-t-2 border-blue-200">
+                    <h5 className="text-md font-medium text-blue-700 mb-4">Seated Position</h5>
+                    
+                    {/* TFS Section */}
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">TFS</label>
+                      <div className="flex items-center space-x-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="seated-tfs"
+                            value="Dx"
+                            checked={seatedTfs === "Dx"}
+                            onChange={() => setSeatedTfs("Dx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Dx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="seated-tfs"
+                            value="Sx"
+                            checked={seatedTfs === "Sx"}
+                            onChange={() => setSeatedTfs("Sx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Sx</span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Inferior Sacral Angle Section */}
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Inferior Sacral Angle</label>
-                    <div className="flex items-center space-x-4">
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="inferior-sacral-angle"
-                          value="Dx"
-                          checked={inferiorSacralAngle === "Dx"}
-                          onChange={() => setInferiorSacralAngle("Dx")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Dx</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="inferior-sacral-angle"
-                          value="Sx"
-                          checked={inferiorSacralAngle === "Sx"}
-                          onChange={() => setInferiorSacralAngle("Sx")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Sx</span>
-                      </label>
+                    {/* Inferior Sacral Angle Section */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Inferior Sacral Angle</label>
+                      <div className="flex items-center space-x-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="inferior-sacral-angle"
+                            value="Dx"
+                            checked={inferiorSacralAngle === "Dx"}
+                            onChange={() => setInferiorSacralAngle("Dx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Dx</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="inferior-sacral-angle"
+                            value="Sx"
+                            checked={inferiorSacralAngle === "Sx"}
+                            onChange={() => setInferiorSacralAngle("Sx")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Sx</span>
+                        </label>
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Bending Test Section */}
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <label className="block text-sm font-medium text-gray-700 mb-3">Bending Test</label>
-                    <div className="flex flex-col space-y-2">
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="seated-bending-test"
-                          value="Maintain gibbosity"
-                          checked={seatedBendingTest === "Maintain gibbosity"}
-                          onChange={() => setSeatedBendingTest("Maintain gibbosity")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Maintain gibbosity</span>
-                      </label>
-                      <label className="inline-flex items-center">
-                        <input
-                          type="radio"
-                          name="seated-bending-test"
-                          value="Cancel gibbosity"
-                          checked={seatedBendingTest === "Cancel gibbosity"}
-                          onChange={() => setSeatedBendingTest("Cancel gibbosity")}
-                          className="h-4 w-4 text-blue-600"
-                        />
-                        <span className="ml-2 text-sm text-gray-700">Cancel gibbosity</span>
-                      </label>
+                    {/* Bending Test Section */}
+                    <div className="mt-6 pt-4 border-t border-gray-200">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Bending Test</label>
+                      <div className="flex flex-col space-y-2">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="seated-bending-test"
+                            value="Maintain gibbosity"
+                            checked={seatedBendingTest === "Maintain gibbosity"}
+                            onChange={() => setSeatedBendingTest("Maintain gibbosity")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Maintain gibbosity</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="seated-bending-test"
+                            value="Cancel gibbosity"
+                            checked={seatedBendingTest === "Cancel gibbosity"}
+                            onChange={() => setSeatedBendingTest("Cancel gibbosity")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Cancel gibbosity</span>
+                        </label>
+                      </div>
                     </div>
                   </div>
                 </div>

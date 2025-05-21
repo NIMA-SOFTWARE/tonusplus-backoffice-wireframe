@@ -387,66 +387,49 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           <AccordionContent>
             <div className="p-4 space-y-4">
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                <h3 className="font-medium text-gray-700 mb-4">Main Reasons and Symptoms</h3>
+
                 
                 <div className="space-y-6">
-                  {/* Main Goals */}
+                  {/* Stated reason (readonly from patient profile) */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Main Goals</label>
-                    <div className="grid grid-cols-3 gap-2 mb-3">
-                      {['Pain relief', 'Mobility improvement', 'Strengthening', 'Posture correction', 'Performance enhancement', 'Rehabilitation'].map((goal) => (
-                        <div key={goal} className="flex items-center">
-                          <input 
-                            type="checkbox" 
-                            id={`goal-${goal.toLowerCase().replace(' ', '-')}`}
-                            className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
-                          />
-                          <label 
-                            htmlFor={`goal-${goal.toLowerCase().replace(' ', '-')}`}
-                            className="ml-2 text-sm text-gray-700"
-                          >
-                            {goal}
-                          </label>
-                        </div>
-                      ))}
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Stated reason (from patient profile)</label>
+                    <div className="w-full text-sm p-3 bg-gray-100 border border-gray-300 rounded-md text-gray-700">
+                      Persistent lower back pain and limited mobility after sedentary work
                     </div>
-                    <input
-                      type="text"
-                      placeholder="Other goals..."
-                      className="w-full mt-2 text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    />
                   </div>
                   
-                  {/* Primary Concern */}
+                  {/* Main reason with search */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Primary Concern</label>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Main reason</label>
+                    <div className="relative">
+                      <input 
+                        type="text"
+                        placeholder="Search medical symptoms..."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      />
+                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Chronic lower back pain</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Reduced mobility</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Neck and shoulder tension</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Joint stiffness</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Postural problems</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Recovery from injury</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Core strength weakness</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Balance issues</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Sciatica</div>
+                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Scoliosis management</div>
+                        <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new symptom</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Other reasons as textarea */}
+                  <div>
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Other reasons</label>
                     <textarea
-                      rows={3}
-                      placeholder="Describe the patient's primary concern or symptoms..."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Additional information about the patient's reasons for participation..."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-24"
                     ></textarea>
-                  </div>
-                  
-                  {/* Pain Areas */}
-                  <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Pain Areas</label>
-                    <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
-                      {['Neck', 'Shoulders', 'Upper back', 'Lower back', 'Pelvis', 'Hips', 'Knees', 'Ankles', 'Feet', 'Arms', 'Hands', 'Chest'].map((area) => (
-                        <div key={area} className="flex items-center">
-                          <input 
-                            type="checkbox" 
-                            id={`pain-${area.toLowerCase().replace(' ', '-')}`}
-                            className="h-4 w-4 border-gray-300 rounded text-blue-600 focus:ring-blue-500"
-                          />
-                          <label 
-                            htmlFor={`pain-${area.toLowerCase().replace(' ', '-')}`}
-                            className="ml-2 text-sm text-gray-700"
-                          >
-                            {area}
-                          </label>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                   
                   {/* Pain Intensity */}

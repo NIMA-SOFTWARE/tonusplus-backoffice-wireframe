@@ -255,6 +255,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [instrumentalExams, setInstrumentalExams] = useState<InstrumentalExam[]>([]);
   
+  // State for Orthostatism
+  const [orthostatismNotes, setOrthostatismNotes] = useState("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -5870,6 +5873,30 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </button>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* ORTHOSTATISM Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ORTHOSTATISM
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Postural Assessment</h5>
+                  
+                  <div className="mt-4">
+                    <label htmlFor="orthostatism-notes" className="block text-sm font-medium text-gray-700 mb-1">
+                      Observations
+                    </label>
+                    <textarea
+                      id="orthostatism-notes"
+                      value={orthostatismNotes}
+                      onChange={(e) => setOrthostatismNotes(e.target.value)}
+                      placeholder="Enter observations about the patient's posture, standing position, weight distribution, etc."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      rows={6}
+                    ></textarea>
                   </div>
                 </div>
               </div>

@@ -5577,8 +5577,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              <h3 className="font-medium text-gray-700">Physical Examination Findings</h3>
-              
               {/* INSTRUMENTAL EXAMS Section */}
               <div className="space-y-4 mt-6">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
@@ -5760,9 +5758,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 text-center text-zinc-500 italic">
-                This section will contain fields for objective examination findings
               </div>
             </div>
           </AccordionContent>

@@ -1714,28 +1714,59 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   {/* Existing anatomical anomalies */}
                   {anatomicalAnomalies.map((anomaly, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
-                      <input
-                        type="text"
+                      <select
                         value={anomaly.location}
                         onChange={(e) => {
                           const updatedAnomalies = [...anatomicalAnomalies];
                           updatedAnomalies[index].location = e.target.value;
                           setAnatomicalAnomalies(updatedAnomalies);
                         }}
-                        placeholder="Location"
                         className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      />
-                      <input
-                        type="text"
+                      >
+                        <option value="">Select location</option>
+                        <option value="Back">Back</option>
+                        <option value="Spine">Spine</option>
+                        <option value="Shoulder">Shoulder</option>
+                        <option value="Arm">Arm</option>
+                        <option value="Elbow">Elbow</option>
+                        <option value="Forearm">Forearm</option>
+                        <option value="Wrist">Wrist</option>
+                        <option value="Hand">Hand</option>
+                        <option value="Fingers">Fingers</option>
+                        <option value="Hip">Hip</option>
+                        <option value="Thigh">Thigh</option>
+                        <option value="Knee">Knee</option>
+                        <option value="Calf">Calf</option>
+                        <option value="Ankle">Ankle</option>
+                        <option value="Foot">Foot</option>
+                        <option value="Toes">Toes</option>
+                        <option value="Other">Other</option>
+                      </select>
+                      <select
                         value={anomaly.type}
                         onChange={(e) => {
                           const updatedAnomalies = [...anatomicalAnomalies];
                           updatedAnomalies[index].type = e.target.value;
                           setAnatomicalAnomalies(updatedAnomalies);
                         }}
-                        placeholder="Type"
                         className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                      />
+                      >
+                        <option value="">Select type</option>
+                        <option value="Scoliosis">Scoliosis</option>
+                        <option value="Kyphosis">Kyphosis</option>
+                        <option value="Lordosis">Lordosis</option>
+                        <option value="Leg length discrepancy">Leg length discrepancy</option>
+                        <option value="Pelvic tilt">Pelvic tilt</option>
+                        <option value="Flat feet">Flat feet</option>
+                        <option value="High arch">High arch</option>
+                        <option value="Knock knees">Knock knees</option>
+                        <option value="Bow legs">Bow legs</option>
+                        <option value="Limited range of motion">Limited range of motion</option>
+                        <option value="Joint hypermobility">Joint hypermobility</option>
+                        <option value="Congenital anomaly">Congenital anomaly</option>
+                        <option value="Postural deviation">Postural deviation</option>
+                        <option value="Other">Other</option>
+                      </select>
                       <input
                         type="text"
                         value={anomaly.observation}
@@ -1763,18 +1794,51 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   
                   {/* Add new anatomical anomaly */}
                   <div className="flex items-center gap-2 mb-2">
-                    <input
-                      type="text"
+                    <select
                       id="anomaly-location"
-                      placeholder="Location"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                    />
-                    <input
-                      type="text"
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Select location</option>
+                      <option value="Back">Back</option>
+                      <option value="Spine">Spine</option>
+                      <option value="Shoulder">Shoulder</option>
+                      <option value="Arm">Arm</option>
+                      <option value="Elbow">Elbow</option>
+                      <option value="Forearm">Forearm</option>
+                      <option value="Wrist">Wrist</option>
+                      <option value="Hand">Hand</option>
+                      <option value="Fingers">Fingers</option>
+                      <option value="Hip">Hip</option>
+                      <option value="Thigh">Thigh</option>
+                      <option value="Knee">Knee</option>
+                      <option value="Calf">Calf</option>
+                      <option value="Ankle">Ankle</option>
+                      <option value="Foot">Foot</option>
+                      <option value="Toes">Toes</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <select
                       id="anomaly-type"
-                      placeholder="Type"
                       className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                    />
+                      defaultValue=""
+                    >
+                      <option value="" disabled>Select type</option>
+                      <option value="Scoliosis">Scoliosis</option>
+                      <option value="Kyphosis">Kyphosis</option>
+                      <option value="Lordosis">Lordosis</option>
+                      <option value="Leg length discrepancy">Leg length discrepancy</option>
+                      <option value="Pelvic tilt">Pelvic tilt</option>
+                      <option value="Flat feet">Flat feet</option>
+                      <option value="High arch">High arch</option>
+                      <option value="Knock knees">Knock knees</option>
+                      <option value="Bow legs">Bow legs</option>
+                      <option value="Limited range of motion">Limited range of motion</option>
+                      <option value="Joint hypermobility">Joint hypermobility</option>
+                      <option value="Congenital anomaly">Congenital anomaly</option>
+                      <option value="Postural deviation">Postural deviation</option>
+                      <option value="Other">Other</option>
+                    </select>
                     <input
                       type="text"
                       id="anomaly-observation"

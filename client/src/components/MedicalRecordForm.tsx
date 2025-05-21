@@ -120,6 +120,15 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for menstrual cycle frequency (in days)
   const [menstrualCycleFrequency, setMenstrualCycleFrequency] = useState<string>('');
   
+  // State for pregnancy information
+  interface Pregnancy {
+    type: string; // 'term', 'ectopic', 'abortion'
+    year: string;
+    notes: string;
+  }
+  const [pregnancies, setPregnancies] = useState<Pregnancy[]>([]);
+  const [childrenCount, setChildrenCount] = useState<string>('');
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -2783,6 +2792,139 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         className="text-sm p-2 border border-gray-300 rounded-md w-32"
                       />
                       <span className="ml-2 text-sm text-gray-600">days</span>
+                    </div>
+                  </div>
+                  
+                  {/* Pregnancy Information */}
+                  <div className="mt-6 mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      PREGNANCY INFORMATION
+                    </label>
+                    
+                    {/* Number of children */}
+                    <div className="flex items-center mb-4">
+                      <label htmlFor="children-count" className="text-sm text-gray-700 mr-2 w-44">
+                        Number of children born:
+                      </label>
+                      <input
+                        type="number"
+                        id="children-count"
+                        min="0"
+                        step="1"
+                        value={childrenCount}
+                        onChange={(e) => setChildrenCount(e.target.value)}
+                        className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                      />
+                    </div>
+                    
+                    {/* Pregnancies list */}
+                    <div className="mb-3">
+                      <div className="text-sm text-gray-700 mb-2">Pregnancy history:</div>
+                      
+                      {/* Existing pregnancies */}
+                      {pregnancies.map((pregnancy, index) => (
+                        <div key={index} className="flex items-center gap-2 mb-2">
+                          <select
+                            value={pregnancy.type}
+                            onChange={(e) => {
+                              const updatedPregnancies = [...pregnancies];
+                              updatedPregnancies[index].type = e.target.value;
+                              setPregnancies(updatedPregnancies);
+                            }}
+                            className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                          >
+                            <option value="">Select type</option>
+                            <option value="term">Term</option>
+                            <option value="ectopic">Ectopic</option>
+                            <option value="abortion">Abortion</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Year"
+                            value={pregnancy.year}
+                            onChange={(e) => {
+                              const updatedPregnancies = [...pregnancies];
+                              updatedPregnancies[index].year = e.target.value;
+                              setPregnancies(updatedPregnancies);
+                            }}
+                            className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                          />
+                          <input
+                            type="text"
+                            placeholder="Notes"
+                            value={pregnancy.notes}
+                            onChange={(e) => {
+                              const updatedPregnancies = [...pregnancies];
+                              updatedPregnancies[index].notes = e.target.value;
+                              setPregnancies(updatedPregnancies);
+                            }}
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                          <button
+                            onClick={() => {
+                              const updatedPregnancies = [...pregnancies];
+                              updatedPregnancies.splice(index, 1);
+                              setPregnancies(updatedPregnancies);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                      
+                      {/* Add new pregnancy */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <select
+                          id="pregnancy-type"
+                          className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Select type</option>
+                          <option value="term">Term</option>
+                          <option value="ectopic">Ectopic</option>
+                          <option value="abortion">Abortion</option>
+                        </select>
+                        <input
+                          type="text"
+                          id="pregnancy-year"
+                          placeholder="Year"
+                          className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                        />
+                        <input
+                          type="text"
+                          id="pregnancy-notes"
+                          placeholder="Notes"
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                        <button
+                          className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          onClick={() => {
+                            const typeSelect = document.getElementById('pregnancy-type') as HTMLSelectElement;
+                            const yearInput = document.getElementById('pregnancy-year') as HTMLInputElement;
+                            const notesInput = document.getElementById('pregnancy-notes') as HTMLInputElement;
+                            
+                            if (typeSelect && typeSelect.value) {
+                              setPregnancies([
+                                ...pregnancies,
+                                {
+                                  type: typeSelect.value,
+                                  year: yearInput ? yearInput.value : '',
+                                  notes: notesInput ? notesInput.value : ''
+                                }
+                              ]);
+                              
+                              // Reset inputs
+                              typeSelect.selectedIndex = 0;
+                              if (yearInput) yearInput.value = '';
+                              if (notesInput) notesInput.value = '';
+                            }
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

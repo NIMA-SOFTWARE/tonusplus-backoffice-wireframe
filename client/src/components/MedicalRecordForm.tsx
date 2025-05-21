@@ -48,7 +48,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [hourlyInterval, setHourlyInterval] = useState('');
   const [activitiesWorsen, setActivitiesWorsen] = useState('');
   const [activitiesRelieve, setActivitiesRelieve] = useState('');
-  const [dailyActivities, setDailyActivities] = useState<string[]>([]);
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -765,26 +764,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     />
                   </div>
                   
-                  {/* Daily Activities - Tag selection with search */}
-                  <div>
-                    <TagSelectionInput
-                      label="Daily Activities"
-                      placeholder="Search or add activities..."
-                      options={[
-                        "Walking", "Running", "Swimming", "Cycling", "Yoga", "Pilates", 
-                        "Weight training", "Sitting for long periods", "Standing for long periods",
-                        "Office work", "Manual labor", "Driving", "Cooking", "Cleaning",
-                        "Gardening", "Playing sports", "Child care", "Elderly care",
-                        "Computer work", "Desk work", "Construction", "Heavy lifting",
-                        "Repetitive movements", "Public speaking", "Teaching", "Serving customers",
-                        "Music practice", "Art/crafts", "Reading", "Writing"
-                      ]}
-                      selectedTags={dailyActivities}
-                      onTagsChange={setDailyActivities}
-                      allowCustomTags={true}
-                      voiceEnabled={voiceInputEnabled}
-                    />
-                  </div>
+
                   
                   {/* Activities that worsen pain */}
                   <div>

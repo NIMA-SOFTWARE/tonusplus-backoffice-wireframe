@@ -2574,26 +2574,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Urogenital Conditions</h5>
                   
-                  {/* Menstrual Cycle Input */}
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      MENSTRUAL CYCLE
-                    </label>
-                    <div className="flex items-center">
-                      <input
-                        type="number"
-                        id="menstrual-cycle-frequency"
-                        min="0"
-                        step="1"
-                        value={menstrualCycleFrequency}
-                        onChange={(e) => setMenstrualCycleFrequency(e.target.value)}
-                        placeholder="Enter frequency"
-                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
-                      />
-                      <span className="ml-2 text-sm text-gray-600">days</span>
-                    </div>
-                  </div>
-                  
                   {/* Existing urogenital diseases */}
                   {urogenitalDiseases.map((disease, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
@@ -2784,6 +2764,26 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     >
                       Add
                     </button>
+                  </div>
+                  
+                  {/* Menstrual Cycle Input */}
+                  <div className="mt-6 mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      MENSTRUAL CYCLE
+                    </label>
+                    <div className="flex items-center">
+                      <input
+                        type="number"
+                        id="menstrual-cycle-frequency"
+                        min="0"
+                        step="1"
+                        value={menstrualCycleFrequency}
+                        onChange={(e) => setMenstrualCycleFrequency(e.target.value)}
+                        placeholder="Enter frequency"
+                        className="text-sm p-2 border border-gray-300 rounded-md w-32"
+                      />
+                      <span className="ml-2 text-sm text-gray-600">days</span>
+                    </div>
                   </div>
                 </div>
               </div>

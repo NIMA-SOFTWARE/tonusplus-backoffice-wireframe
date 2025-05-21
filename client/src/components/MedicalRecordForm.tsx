@@ -258,6 +258,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for Orthostatism
   const [bassaniDx, setBassaniDx] = useState<string[]>([]);
   const [bassaniSx, setBassaniSx] = useState<string[]>([]);
+  const [tfe, setTfe] = useState<"Dx" | "Sx" | "">("");
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -5917,6 +5918,68 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         allowCustomTags={false}
                         voiceEnabled={voiceInputEnabled}
                       />
+                    </div>
+                  </div>
+                  
+                  {/* TFE Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">TFE</label>
+                    
+                    <div className="flex flex-col space-y-4">
+                      <div className="flex flex-wrap gap-4">
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="tfe-dx"
+                            name="tfe"
+                            value="Dx"
+                            checked={tfe === "Dx"}
+                            onChange={() => setTfe("Dx")}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <label htmlFor="tfe-dx" className="ml-2 block text-sm text-gray-700">
+                            Dx (Right)
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="tfe-sx"
+                            name="tfe"
+                            value="Sx"
+                            checked={tfe === "Sx"}
+                            onChange={() => setTfe("Sx")}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <label htmlFor="tfe-sx" className="ml-2 block text-sm text-gray-700">
+                            Sx (Left)
+                          </label>
+                        </div>
+                        
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id="tfe-none"
+                            name="tfe"
+                            value=""
+                            checked={tfe === ""}
+                            onChange={() => setTfe("")}
+                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                          />
+                          <label htmlFor="tfe-none" className="ml-2 block text-sm text-gray-700">
+                            None
+                          </label>
+                        </div>
+                      </div>
+                      
+                      {tfe && (
+                        <div className="pl-4 border-l-2 border-blue-200">
+                          <p className="text-sm text-blue-700">
+                            TFE: <strong>{tfe}</strong>
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

@@ -10,6 +10,7 @@ import {
   Clipboard, History, Stethoscope, Search, Mic
 } from 'lucide-react';
 import VoiceEnabledInput from './VoiceEnabledInput';
+import VoiceInputButton from './VoiceInputButton';
 
 interface MedicalRecordFormProps {
   participant: Participant;
@@ -30,6 +31,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [mainReason, setMainReason] = useState('');
   const [searchSymptomTerm, setSearchSymptomTerm] = useState('');
   const [showSymptomSearch, setShowSymptomSearch] = useState(false);
+  
+  // Voice-to-text state
+  const [voiceInputEnabled, setVoiceInputEnabled] = useState(false);
+  
+  // Toggle voice input functionality
+  const toggleVoiceInput = () => {
+    setVoiceInputEnabled(!voiceInputEnabled);
+  };
   
   // Toggle symptom search dropdown
   const handleSearchFocus = () => setShowSymptomSearch(true);
@@ -57,6 +66,18 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
               </p>
             )}
           </div>
+          
+          {/* Voice input toggle button */}
+          <button 
+            type="button"
+            onClick={toggleVoiceInput}
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-sm ${
+              voiceInputEnabled ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700'
+            }`}
+          >
+            <Mic className="h-4 w-4" />
+            {voiceInputEnabled ? 'Voice Input ON' : 'Voice Input OFF'}
+          </button>
         </div>
       </div>
       
@@ -425,7 +446,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         <div className="relative flex-1">
                           <input 
                             type="text"
-                            placeholder="Search or speak medical symptoms..."
+                            placeholder="Search medical symptoms..."
                             value={searchSymptomTerm}
                             onChange={(e) => setSearchSymptomTerm(e.target.value)}
                             onFocus={handleSearchFocus}
@@ -436,13 +457,15 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             <Search className="h-4 w-4 text-gray-400" />
                           </div>
                         </div>
-                        <VoiceInputButton 
-                          onTranscriptionComplete={(text) => {
-                            setSearchSymptomTerm(text);
-                            setShowSymptomSearch(true);
-                          }}
-                          className="ml-2" 
-                        />
+                        {voiceInputEnabled && (
+                          <VoiceInputButton 
+                            onTranscriptionComplete={(text) => {
+                              setSearchSymptomTerm(text);
+                              setShowSymptomSearch(true);
+                            }}
+                            className="ml-2" 
+                          />
+                        )}
                       </div>
                       
                       {/* Selected main reason display */}
@@ -491,17 +514,27 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Other reasons as textarea with voice input */}
+                  {/* Other reasons as textarea */}
                   <div>
-                    <VoiceEnabledInput
-                      label="Other reasons"
-                      value={otherReasons}
-                      onChange={setOtherReasons}
-                      placeholder="Additional information about the patient's reasons for participation..."
-                      isTextarea={true}
-                      rows={4}
-                      id="other-reasons"
-                    />
+                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Other reasons</label>
+                    <div className="relative">
+                      <textarea
+                        value={otherReasons}
+                        onChange={(e) => setOtherReasons(e.target.value)}
+                        placeholder="Additional information about the patient's reasons for participation..."
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-h-24"
+                      ></textarea>
+                      {voiceInputEnabled && (
+                        <div className="absolute right-2 top-4">
+                          <VoiceInputButton 
+                            onTranscriptionComplete={(text) => {
+                              const newValue = otherReasons ? `${otherReasons} ${text}` : text;
+                              setOtherReasons(newValue);
+                            }}
+                          />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
 

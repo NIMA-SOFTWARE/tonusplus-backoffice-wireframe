@@ -3203,7 +3203,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     
                     {/* Existing eye conditions */}
                     {eyeConditions.map((condition, index) => (
-                      <div key={index} className="space-y-3 mb-4 p-3 border border-gray-200 rounded-lg bg-white">
+                      <div key={index} className="mb-2 p-2 border border-gray-200 rounded-lg bg-white">
                         <div className="flex items-center gap-2">
                           <select
                             value={condition.condition}
@@ -3212,20 +3212,20 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                               updatedConditions[index].condition = e.target.value;
                               setEyeConditions(updatedConditions);
                             }}
-                            className="text-sm p-2 border border-gray-300 rounded-md w-64"
+                            className="text-sm p-1.5 border border-gray-300 rounded-md w-40"
                           >
                             <option value="">Select condition</option>
-                            <option value="Myopia">Myopia (nearsightedness)</option>
-                            <option value="Hyperopia">Hyperopia (farsightedness)</option>
+                            <option value="Myopia">Myopia</option>
+                            <option value="Hyperopia">Hyperopia</option>
                             <option value="Astigmatism">Astigmatism</option>
                             <option value="Presbyopia">Presbyopia</option>
                             <option value="Glaucoma">Glaucoma</option>
                             <option value="Cataract">Cataract</option>
-                            <option value="Macular Degeneration">Macular Degeneration</option>
-                            <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
-                            <option value="Amblyopia">Amblyopia (lazy eye)</option>
-                            <option value="Strabismus">Strabismus (crossed eyes)</option>
-                            <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
+                            <option value="Macular Degeneration">Macular Degen.</option>
+                            <option value="Diabetic Retinopathy">Diabetic Retin.</option>
+                            <option value="Amblyopia">Amblyopia</option>
+                            <option value="Strabismus">Strabismus</option>
+                            <option value="Dry Eye Syndrome">Dry Eye</option>
                             <option value="Other">Other</option>
                           </select>
                           
@@ -3240,106 +3240,77 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 updatedConditions[index].observation = parts.join('|');
                                 setEyeConditions(updatedConditions);
                               }}
-                              placeholder="Specify condition"
-                              className="text-sm p-2 border border-gray-300 rounded-md flex-1"
+                              placeholder="Custom"
+                              className="text-sm p-1.5 border border-gray-300 rounded-md w-20"
                             />
                           )}
                           
-                          <button
-                            onClick={() => {
-                              const updatedConditions = [...eyeConditions];
-                              updatedConditions.splice(index, 1);
-                              setEyeConditions(updatedConditions);
-                            }}
-                            className="p-2 text-red-500 hover:text-red-700 ml-auto"
-                            aria-label="Remove"
-                          >
-                            ✕
-                          </button>
-                        </div>
-                        
-                        {/* Right eye controls */}
-                        <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-blue-400 bg-blue-50 rounded-r-md">
-                          <div className="flex items-center mr-2">
-                            <input
-                              type="checkbox"
-                              id={`right-eye-${index}`}
-                              checked={condition.rightEye}
-                              onChange={(e) => {
-                                const updatedConditions = [...eyeConditions];
-                                updatedConditions[index].rightEye = e.target.checked;
-                                setEyeConditions(updatedConditions);
-                              }}
-                              className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300"
-                            />
-                            <label htmlFor={`right-eye-${index}`} className="text-sm font-medium text-gray-700">
-                              Right eye (Dx)
-                            </label>
-                          </div>
-                          
-                          {condition.rightEye && (
-                            <div className="flex items-center gap-2 ml-4">
-                              <label htmlFor={`right-eye-angle-${index}`} className="text-xs text-gray-600">
-                                Angle:
+                          <div className="flex items-center" title="Right eye (Dx)">
+                            <div className="flex items-center bg-blue-50 border border-blue-200 rounded-l-md px-1">
+                              <input
+                                type="checkbox"
+                                id={`right-eye-${index}`}
+                                checked={condition.rightEye}
+                                onChange={(e) => {
+                                  const updatedConditions = [...eyeConditions];
+                                  updatedConditions[index].rightEye = e.target.checked;
+                                  setEyeConditions(updatedConditions);
+                                }}
+                                className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                              />
+                              <label htmlFor={`right-eye-${index}`} className="text-sm text-blue-700 font-medium mx-1">
+                                Dx
                               </label>
+                            </div>
+                            
+                            {condition.rightEye && (
                               <input
                                 type="text"
-                                id={`right-eye-angle-${index}`}
                                 value={condition.rightEyeAngle}
                                 onChange={(e) => {
                                   const updatedConditions = [...eyeConditions];
                                   updatedConditions[index].rightEyeAngle = e.target.value;
                                   setEyeConditions(updatedConditions);
                                 }}
-                                placeholder="e.g., 180°"
-                                className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                                placeholder="Angle"
+                                className="text-sm p-1 border-y border-r border-gray-300 rounded-r-md w-16"
                               />
-                            </div>
-                          )}
-                        </div>
-                        
-                        {/* Left eye controls */}
-                        <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-red-400 bg-red-50 rounded-r-md">
-                          <div className="flex items-center mr-2">
-                            <input
-                              type="checkbox"
-                              id={`left-eye-${index}`}
-                              checked={condition.leftEye}
-                              onChange={(e) => {
-                                const updatedConditions = [...eyeConditions];
-                                updatedConditions[index].leftEye = e.target.checked;
-                                setEyeConditions(updatedConditions);
-                              }}
-                              className="mr-2 h-4 w-4 text-red-600 rounded border-gray-300"
-                            />
-                            <label htmlFor={`left-eye-${index}`} className="text-sm font-medium text-gray-700">
-                              Left eye (Sx)
-                            </label>
+                            )}
                           </div>
                           
-                          {condition.leftEye && (
-                            <div className="flex items-center gap-2 ml-4">
-                              <label htmlFor={`left-eye-angle-${index}`} className="text-xs text-gray-600">
-                                Angle:
+                          <div className="flex items-center" title="Left eye (Sx)">
+                            <div className="flex items-center bg-red-50 border border-red-200 rounded-l-md px-1">
+                              <input
+                                type="checkbox"
+                                id={`left-eye-${index}`}
+                                checked={condition.leftEye}
+                                onChange={(e) => {
+                                  const updatedConditions = [...eyeConditions];
+                                  updatedConditions[index].leftEye = e.target.checked;
+                                  setEyeConditions(updatedConditions);
+                                }}
+                                className="h-4 w-4 text-red-600 rounded border-gray-300"
+                              />
+                              <label htmlFor={`left-eye-${index}`} className="text-sm text-red-700 font-medium mx-1">
+                                Sx
                               </label>
+                            </div>
+                            
+                            {condition.leftEye && (
                               <input
                                 type="text"
-                                id={`left-eye-angle-${index}`}
                                 value={condition.leftEyeAngle}
                                 onChange={(e) => {
                                   const updatedConditions = [...eyeConditions];
                                   updatedConditions[index].leftEyeAngle = e.target.value;
                                   setEyeConditions(updatedConditions);
                                 }}
-                                placeholder="e.g., 180°"
-                                className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                                placeholder="Angle"
+                                className="text-sm p-1 border-y border-r border-gray-300 rounded-r-md w-16"
                               />
-                            </div>
-                          )}
-                        </div>
-                        
-                        {/* Additional notes */}
-                        <div className="pt-2">
+                            )}
+                          </div>
+                          
                           <input
                             type="text"
                             value={condition.condition === "Other" 
@@ -3356,19 +3327,31 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                               }
                               setEyeConditions(updatedConditions);
                             }}
-                            placeholder="Additional notes"
-                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            placeholder="Notes"
+                            className="flex-1 text-sm p-1.5 border border-gray-300 rounded-md min-w-20"
                           />
+                          
+                          <button
+                            onClick={() => {
+                              const updatedConditions = [...eyeConditions];
+                              updatedConditions.splice(index, 1);
+                              setEyeConditions(updatedConditions);
+                            }}
+                            className="p-1 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
                         </div>
                       </div>
                     ))}
                     
                     {/* Add new eye condition */}
-                    <div className="space-y-3 p-3 border border-gray-200 rounded-lg bg-white">
-                      <div className="flex items-center gap-2" id="new-eye-condition-container">
+                    <div className="p-2 border border-gray-200 rounded-lg bg-white">
+                      <div className="flex items-center gap-2">
                         <select
                           id="eye-condition-type"
-                          className="text-sm p-2 border border-gray-300 rounded-md w-64"
+                          className="text-sm p-1.5 border border-gray-300 rounded-md w-40"
                           defaultValue=""
                           onChange={(e) => {
                             const customContainer = document.getElementById('custom-condition-container');
@@ -3378,8 +3361,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                   <input
                                     type="text"
                                     id="custom-condition-input"
-                                    placeholder="Specify condition"
-                                    className="text-sm p-2 border border-gray-300 rounded-md flex-1"
+                                    placeholder="Custom"
+                                    class="text-sm p-1.5 border border-gray-300 rounded-md w-20"
                                   />
                                 `;
                               } else {
@@ -3389,88 +3372,69 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           }}
                         >
                           <option value="" disabled>Select condition</option>
-                          <option value="Myopia">Myopia (nearsightedness)</option>
-                          <option value="Hyperopia">Hyperopia (farsightedness)</option>
+                          <option value="Myopia">Myopia</option>
+                          <option value="Hyperopia">Hyperopia</option>
                           <option value="Astigmatism">Astigmatism</option>
                           <option value="Presbyopia">Presbyopia</option>
                           <option value="Glaucoma">Glaucoma</option>
                           <option value="Cataract">Cataract</option>
-                          <option value="Macular Degeneration">Macular Degeneration</option>
-                          <option value="Diabetic Retinopathy">Diabetic Retinopathy</option>
-                          <option value="Amblyopia">Amblyopia (lazy eye)</option>
-                          <option value="Strabismus">Strabismus (crossed eyes)</option>
-                          <option value="Dry Eye Syndrome">Dry Eye Syndrome</option>
+                          <option value="Macular Degeneration">Macular Degen.</option>
+                          <option value="Diabetic Retinopathy">Diabetic Retin.</option>
+                          <option value="Amblyopia">Amblyopia</option>
+                          <option value="Strabismus">Strabismus</option>
+                          <option value="Dry Eye Syndrome">Dry Eye</option>
                           <option value="Other">Other</option>
                         </select>
                         
                         <div id="custom-condition-container"></div>
-                      </div>
-                      
-                      {/* Right eye controls */}
-                      <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-blue-400 bg-blue-50 rounded-r-md">
-                        <div className="flex items-center mr-2">
-                          <input
-                            type="checkbox"
-                            id="new-right-eye"
-                            className="mr-2 h-4 w-4 text-blue-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="new-right-eye" className="text-sm font-medium text-gray-700">
-                            Right eye (Dx)
-                          </label>
-                        </div>
                         
-                        <div className="flex items-center gap-2 ml-4" id="right-angle-container">
-                          <label htmlFor="new-right-eye-angle" className="text-xs text-gray-600">
-                            Angle:
-                          </label>
+                        <div className="flex items-center" title="Right eye (Dx)">
+                          <div className="flex items-center bg-blue-50 border border-blue-200 rounded-l-md px-1">
+                            <input
+                              type="checkbox"
+                              id="new-right-eye"
+                              className="h-4 w-4 text-blue-600 rounded border-gray-300"
+                            />
+                            <label htmlFor="new-right-eye" className="text-sm text-blue-700 font-medium mx-1">
+                              Dx
+                            </label>
+                          </div>
                           <input
                             type="text"
                             id="new-right-eye-angle"
-                            placeholder="e.g., 180°"
-                            className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                            placeholder="Angle"
+                            className="text-sm p-1 border-y border-r border-gray-300 rounded-r-md w-16"
                           />
-                        </div>
-                      </div>
-                      
-                      {/* Left eye controls */}
-                      <div className="flex flex-wrap items-center gap-2 p-2 border-l-4 border-red-400 bg-red-50 rounded-r-md">
-                        <div className="flex items-center mr-2">
-                          <input
-                            type="checkbox"
-                            id="new-left-eye"
-                            className="mr-2 h-4 w-4 text-red-600 rounded border-gray-300"
-                          />
-                          <label htmlFor="new-left-eye" className="text-sm font-medium text-gray-700">
-                            Left eye (Sx)
-                          </label>
                         </div>
                         
-                        <div className="flex items-center gap-2 ml-4" id="left-angle-container">
-                          <label htmlFor="new-left-eye-angle" className="text-xs text-gray-600">
-                            Angle:
-                          </label>
+                        <div className="flex items-center" title="Left eye (Sx)">
+                          <div className="flex items-center bg-red-50 border border-red-200 rounded-l-md px-1">
+                            <input
+                              type="checkbox"
+                              id="new-left-eye"
+                              className="h-4 w-4 text-red-600 rounded border-gray-300"
+                            />
+                            <label htmlFor="new-left-eye" className="text-sm text-red-700 font-medium mx-1">
+                              Sx
+                            </label>
+                          </div>
                           <input
                             type="text"
                             id="new-left-eye-angle"
-                            placeholder="e.g., 180°"
-                            className="text-sm p-1 border border-gray-300 rounded-md w-20"
+                            placeholder="Angle"
+                            className="text-sm p-1 border-y border-r border-gray-300 rounded-r-md w-16"
                           />
                         </div>
-                      </div>
-                      
-                      {/* Additional notes */}
-                      <div>
+                        
                         <input
                           type="text"
                           id="new-eye-condition-notes"
-                          placeholder="Additional notes"
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          placeholder="Notes"
+                          className="flex-1 text-sm p-1.5 border border-gray-300 rounded-md min-w-20"
                         />
-                      </div>
-                      
-                      <div className="pt-2 text-right">
+                        
                         <button
-                          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          className="px-3 py-1.5 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                           onClick={() => {
                             const typeSelect = document.getElementById('eye-condition-type') as HTMLSelectElement;
                             const rightEyeCheckbox = document.getElementById('new-right-eye') as HTMLInputElement;
@@ -3519,7 +3483,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             }
                           }}
                         >
-                          Add Condition
+                          Add
                         </button>
                       </div>
                     </div>

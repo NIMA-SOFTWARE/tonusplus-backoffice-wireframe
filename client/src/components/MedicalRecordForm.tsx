@@ -130,6 +130,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [pregnancies, setPregnancies] = useState<Pregnancy[]>([]);
   const [childrenCount, setChildrenCount] = useState<string>('');
   
+  // State for weight changes in recent years
+  interface WeightChange {
+    amount: string; // in kg (can be positive for gain or negative for loss)
+    timeSpan: string; // in months/years
+    notes: string;
+  }
+  const [weightChanges, setWeightChanges] = useState<WeightChange[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -2956,6 +2964,129 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           Add
                         </button>
                       </div>
+                    </div>
+                  </div>
+                  
+                  {/* Weight Changes in Recent Years */}
+                  <div className="mt-6 mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      WEIGHT CHANGES IN RECENT YEARS
+                    </label>
+                    
+                    {/* Existing weight changes */}
+                    <div className="mb-3">
+                      {weightChanges.map((change, index) => (
+                        <div key={index} className="flex items-center gap-2 mb-2">
+                          <div className="flex items-center">
+                            <input
+                              type="number"
+                              value={change.amount}
+                              onChange={(e) => {
+                                const updatedChanges = [...weightChanges];
+                                updatedChanges[index].amount = e.target.value;
+                                setWeightChanges(updatedChanges);
+                              }}
+                              step="0.1"
+                              placeholder="±kg"
+                              className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                            />
+                            <span className="text-xs text-gray-500 ml-1">kg</span>
+                          </div>
+                          <div className="flex items-center">
+                            <input
+                              type="text"
+                              value={change.timeSpan}
+                              onChange={(e) => {
+                                const updatedChanges = [...weightChanges];
+                                updatedChanges[index].timeSpan = e.target.value;
+                                setWeightChanges(updatedChanges);
+                              }}
+                              placeholder="Time span"
+                              className="text-sm p-2 border border-gray-300 rounded-md w-28"
+                            />
+                          </div>
+                          <input
+                            type="text"
+                            value={change.notes}
+                            onChange={(e) => {
+                              const updatedChanges = [...weightChanges];
+                              updatedChanges[index].notes = e.target.value;
+                              setWeightChanges(updatedChanges);
+                            }}
+                            placeholder="Notes"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                          <button
+                            onClick={() => {
+                              const updatedChanges = [...weightChanges];
+                              updatedChanges.splice(index, 1);
+                              setWeightChanges(updatedChanges);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                      
+                      {/* Add new weight change */}
+                      <div className="flex items-center gap-2 mb-2">
+                        <div className="flex items-center">
+                          <input
+                            type="number"
+                            id="weight-change-amount"
+                            step="0.1"
+                            placeholder="±kg"
+                            className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                          />
+                          <span className="text-xs text-gray-500 ml-1">kg</span>
+                        </div>
+                        <div className="flex items-center">
+                          <input
+                            type="text"
+                            id="weight-change-timespan"
+                            placeholder="Time span"
+                            className="text-sm p-2 border border-gray-300 rounded-md w-28"
+                          />
+                        </div>
+                        <input
+                          type="text"
+                          id="weight-change-notes"
+                          placeholder="Notes (e.g., 'over 6 months', 'after diet change')"
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                        <button
+                          className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          onClick={() => {
+                            const amountInput = document.getElementById('weight-change-amount') as HTMLInputElement;
+                            const timeSpanInput = document.getElementById('weight-change-timespan') as HTMLInputElement;
+                            const notesInput = document.getElementById('weight-change-notes') as HTMLInputElement;
+                            
+                            if (amountInput && amountInput.value) {
+                              setWeightChanges([
+                                ...weightChanges,
+                                {
+                                  amount: amountInput.value,
+                                  timeSpan: timeSpanInput ? timeSpanInput.value : '',
+                                  notes: notesInput ? notesInput.value : ''
+                                }
+                              ]);
+                              
+                              // Reset inputs
+                              amountInput.value = '';
+                              if (timeSpanInput) timeSpanInput.value = '';
+                              if (notesInput) notesInput.value = '';
+                            }
+                          }}
+                        >
+                          Add
+                        </button>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Enter positive values for weight gain (e.g., "5.5") and negative values for weight loss (e.g., "-3.2").
+                        For time span, enter periods like "6 months," "2 years," etc.
+                      </p>
                     </div>
                   </div>
                 </div>

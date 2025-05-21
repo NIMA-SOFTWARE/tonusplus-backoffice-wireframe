@@ -218,6 +218,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [nervousSystemDisorders, setNervousSystemDisorders] = useState<NervousSystemDisorder[]>([]);
   
+  // State for Other Systemic Disorders
+  interface OtherSystemicDisorder {
+    name: string;
+    notes: string;
+  }
+  const [otherSystemicDisorders, setOtherSystemicDisorders] = useState<OtherSystemicDisorder[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4857,6 +4864,106 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           typeSelect.selectedIndex = 0;
                           if (notesInput) notesInput.value = '';
                           if (customInput) customInput.remove();
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* OTHER SYSTEMIC AND KNOWN DISORDERS/DYSFUNCTIONS Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  OTHER SYSTEMIC AND KNOWN DISORDERS/DYSFUNCTIONS
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Other Health Conditions</h5>
+                  
+                  {/* Existing Other Systemic Disorders */}
+                  {otherSystemicDisorders.map((disorder: OtherSystemicDisorder, index: number) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={disorder.name}
+                          onChange={(e) => {
+                            const updatedDisorders = [...otherSystemicDisorders];
+                            updatedDisorders[index].name = e.target.value;
+                            setOtherSystemicDisorders(updatedDisorders);
+                          }}
+                          placeholder="Disorder/Dysfunction name"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={disorder.notes}
+                          onChange={(e) => {
+                            const updatedDisorders = [...otherSystemicDisorders];
+                            updatedDisorders[index].notes = e.target.value;
+                            setOtherSystemicDisorders(updatedDisorders);
+                          }}
+                          placeholder="Notes (symptoms, medications, treatment, etc.)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          const updatedDisorders = [...otherSystemicDisorders];
+                          updatedDisorders.splice(index, 1);
+                          setOtherSystemicDisorders(updatedDisorders);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new Other Systemic Disorder */}
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        id="other-disorder-name"
+                        placeholder="Disorder/Dysfunction name"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <div className="flex-1">
+                      <input
+                        type="text"
+                        id="other-disorder-notes"
+                        placeholder="Notes (symptoms, medications, treatment, etc.)"
+                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                    </div>
+                    
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const nameInput = document.getElementById('other-disorder-name') as HTMLInputElement;
+                        const notesInput = document.getElementById('other-disorder-notes') as HTMLInputElement;
+                        
+                        if (nameInput && nameInput.value.trim()) {
+                          setOtherSystemicDisorders([
+                            ...otherSystemicDisorders,
+                            {
+                              name: nameInput.value.trim(),
+                              notes: notesInput ? notesInput.value : ''
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          if (nameInput) nameInput.value = '';
+                          if (notesInput) notesInput.value = '';
                         }
                       }}
                     >

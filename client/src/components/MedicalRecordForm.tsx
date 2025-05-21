@@ -281,6 +281,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [priority, setPriority] = useState<"Ascendant" | "Descendant" | "Visceral" | "Mixed" | "">("");
   const [limitedInternalRotation, setLimitedInternalRotation] = useState<"M inf Sx" | "M inf Dx" | "">("");
   
+  // State for Conclusions
+  const [conclusionsNotes, setConclusionsNotes] = useState("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -6568,6 +6571,66 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           />
                           <span className="ml-2 text-sm text-gray-700">M inf Dx</span>
                         </label>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* CONCLUSIONS Section */}
+                  <div className="mt-8 pt-5 border-t-2 border-zinc-200">
+                    <h4 className="text-lg font-semibold text-gray-800 uppercase mb-4">
+                      CONCLUSIONS
+                    </h4>
+                    
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">General Notes</label>
+                      <div className="relative">
+                        <textarea
+                          value={conclusionsNotes}
+                          onChange={(e) => setConclusionsNotes(e.target.value)}
+                          placeholder="Enter your observations, conclusions, and additional notes about the examination..."
+                          className="w-full text-sm p-4 border border-gray-300 rounded-md min-h-[150px]"
+                          rows={6}
+                        />
+                        {voiceInputEnabled && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              // Start voice recognition for the conclusions textarea
+                              const recognition = new (window as any).webkitSpeechRecognition();
+                              recognition.lang = 'en-US';
+                              recognition.continuous = true;
+                              recognition.interimResults = false;
+                              
+                              recognition.onresult = (event: any) => {
+                                const transcript = event.results[event.results.length - 1][0].transcript;
+                                setConclusionsNotes(prevNotes => 
+                                  prevNotes ? prevNotes + ' ' + transcript : transcript
+                                );
+                              };
+                              
+                              recognition.start();
+                              
+                              // Add a stop button
+                              const stopButton = document.createElement('button');
+                              stopButton.textContent = 'Stop Dictation';
+                              stopButton.className = 'absolute bottom-2 right-14 px-3 py-1 bg-red-500 text-white text-sm rounded-md';
+                              stopButton.onclick = () => {
+                                recognition.stop();
+                                stopButton.remove();
+                              };
+                              
+                              const parent = document.activeElement?.parentNode;
+                              if (parent) {
+                                parent.appendChild(stopButton);
+                              }
+                            }}
+                            className="absolute top-2 right-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                            aria-label="Voice input"
+                            title="Use voice input"
+                          >
+                            🎤
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

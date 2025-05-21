@@ -141,6 +141,11 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [weightChanges, setWeightChanges] = useState<WeightChange[]>([]);
   
+  // State for eye system and visual disorders
+  const [wearingGlasses, setWearingGlasses] = useState<boolean>(false);
+  const [wearingContactLenses, setWearingContactLenses] = useState<boolean>(false);
+  const [visualDisorders, setVisualDisorders] = useState<string>('');
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);

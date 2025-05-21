@@ -21,8 +21,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   sessionTime
 }) => {
   return (
-    <div className="bg-white p-4 md:p-6 rounded-lg shadow-lg max-w-5xl mx-auto">
-      <div className="mb-4">
+    <div className="bg-white p-4 md:p-6 w-full h-full overflow-y-auto">
+      <div className="mb-4 border-b pb-4">
         <div className="flex justify-between items-start">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-gray-800">

@@ -265,6 +265,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [lateralFlexionDxStraightLine, setLateralFlexionDxStraightLine] = useState("");
   const [lateralFlexionSxAcutePoint, setLateralFlexionSxAcutePoint] = useState("");
   const [lateralFlexionSxStraightLine, setLateralFlexionSxStraightLine] = useState("");
+  const [headRotationDx, setHeadRotationDx] = useState("");
+  const [headRotationSx, setHeadRotationSx] = useState("");
   
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
@@ -6198,6 +6200,49 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             </button>
                           )}
                         </div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Head Rotation Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">Head Rotation</label>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Head Rotation Dx */}
+                      <div>
+                        <label htmlFor="head-rotation-dx" className="block text-sm font-medium text-gray-700 mb-1">
+                          Head Rotation Dx
+                        </label>
+                        <select
+                          id="head-rotation-dx"
+                          value={headRotationDx}
+                          onChange={(e) => setHeadRotationDx(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select an option</option>
+                          <option value="Limited">Limited</option>
+                          <option value="Compensated with lateral flexion">Compensated with lateral flexion</option>
+                          <option value="Compensated with anteduction">Compensated with anteduction</option>
+                        </select>
+                      </div>
+                      
+                      {/* Head Rotation Sx */}
+                      <div>
+                        <label htmlFor="head-rotation-sx" className="block text-sm font-medium text-gray-700 mb-1">
+                          Head Rotation Sx
+                        </label>
+                        <select
+                          id="head-rotation-sx"
+                          value={headRotationSx}
+                          onChange={(e) => setHeadRotationSx(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select an option</option>
+                          <option value="Limited">Limited</option>
+                          <option value="Compensated with lateral flexion">Compensated with lateral flexion</option>
+                          <option value="Compensated with anteduction">Compensated with anteduction</option>
+                        </select>
                       </div>
                     </div>
                   </div>

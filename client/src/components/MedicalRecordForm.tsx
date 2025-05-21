@@ -201,6 +201,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [teethOrientation, setTeethOrientation] = useState<TeethOrientationBySector>({});
   
+  // State for Orthodontic History
+  const [orthodonticHistory, setOrthodonticHistory] = useState("");
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4442,6 +4445,28 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </div>
                       </div>
                     </div>
+                  </div>
+                </div>
+              </div>
+              
+              {/* ORTHODONTIC HISTORY Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ORTHODONTIC HISTORY
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <div className="mb-4">
+                    <label htmlFor="orthodontic-history" className="block text-sm font-medium text-gray-700 mb-2">
+                      Orthodontic Treatment History
+                    </label>
+                    <textarea
+                      id="orthodontic-history"
+                      value={orthodonticHistory}
+                      onChange={(e) => setOrthodonticHistory(e.target.value)}
+                      placeholder="Enter details about previous orthodontic treatments, such as braces, retainers, palatal expanders, headgear, and any other interventions. Include durations, outcomes, and any notable complications."
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-32"
+                      rows={6}
+                    ></textarea>
                   </div>
                 </div>
               </div>

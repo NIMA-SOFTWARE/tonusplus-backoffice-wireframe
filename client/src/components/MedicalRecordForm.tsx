@@ -211,6 +211,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   }
   const [endocrineSystemEntries, setEndocrineSystemEntries] = useState<EndocrineSystem[]>([]);
   
+  // State for Nervous System Disorders
+  interface NervousSystemDisorder {
+    type: string;
+    notes: string;
+  }
+  const [nervousSystemDisorders, setNervousSystemDisorders] = useState<NervousSystemDisorder[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -4648,6 +4655,198 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           
                           setEndocrineSystemEntries([
                             ...endocrineSystemEntries,
+                            {
+                              type,
+                              notes
+                            }
+                          ]);
+                          
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = '';
+                          if (customInput) customInput.remove();
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              {/* DISEASES/DISORDERS OF THE NERVOUS SYSTEM Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  DISEASES/DISORDERS OF THE NERVOUS SYSTEM
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Neurological Disorders</h5>
+                  
+                  {/* Existing Nervous System Disorders */}
+                  {nervousSystemDisorders.map((disorder: NervousSystemDisorder, index: number) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {disorder.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={disorder.type}
+                            onChange={(e) => {
+                              const updatedDisorders = [...nervousSystemDisorders];
+                              updatedDisorders[index].type = e.target.value;
+                              setNervousSystemDisorders(updatedDisorders);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select disorder</option>
+                            <option value="Stroke/CVA">Stroke/CVA</option>
+                            <option value="Migraine">Migraine</option>
+                            <option value="Epilepsy">Epilepsy</option>
+                            <option value="Multiple Sclerosis">Multiple Sclerosis</option>
+                            <option value="Parkinson's Disease">Parkinson's Disease</option>
+                            <option value="Alzheimer's Disease">Alzheimer's Disease</option>
+                            <option value="Peripheral Neuropathy">Peripheral Neuropathy</option>
+                            <option value="Bell's Palsy">Bell's Palsy</option>
+                            <option value="Essential Tremor">Essential Tremor</option>
+                            <option value="Traumatic Brain Injury">Traumatic Brain Injury</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify disorder"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={disorder.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedDisorders = [...nervousSystemDisorders];
+                              const parts = disorder.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedDisorders[index].notes = parts.join('|');
+                              setNervousSystemDisorders(updatedDisorders);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex-1">
+                          <select
+                            value={disorder.type}
+                            onChange={(e) => {
+                              const updatedDisorders = [...nervousSystemDisorders];
+                              updatedDisorders[index].type = e.target.value;
+                              setNervousSystemDisorders(updatedDisorders);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select disorder</option>
+                            <option value="Stroke/CVA">Stroke/CVA</option>
+                            <option value="Migraine">Migraine</option>
+                            <option value="Epilepsy">Epilepsy</option>
+                            <option value="Multiple Sclerosis">Multiple Sclerosis</option>
+                            <option value="Parkinson's Disease">Parkinson's Disease</option>
+                            <option value="Alzheimer's Disease">Alzheimer's Disease</option>
+                            <option value="Peripheral Neuropathy">Peripheral Neuropathy</option>
+                            <option value="Bell's Palsy">Bell's Palsy</option>
+                            <option value="Essential Tremor">Essential Tremor</option>
+                            <option value="Traumatic Brain Injury">Traumatic Brain Injury</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      )}
+                      
+                      <div className="flex-1">
+                        <input
+                          type="text"
+                          value={disorder.type === "Other" ? disorder.notes.split('|')[1] || '' : disorder.notes}
+                          onChange={(e) => {
+                            const updatedDisorders = [...nervousSystemDisorders];
+                            if (disorder.type === "Other") {
+                              const parts = disorder.notes.split('|');
+                              parts[1] = e.target.value;
+                              updatedDisorders[index].notes = parts.join('|');
+                            } else {
+                              updatedDisorders[index].notes = e.target.value;
+                            }
+                            setNervousSystemDisorders(updatedDisorders);
+                          }}
+                          placeholder="Notes (symptoms, medications, treatment, etc.)"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+                      
+                      <button
+                        onClick={() => {
+                          const updatedDisorders = [...nervousSystemDisorders];
+                          updatedDisorders.splice(index, 1);
+                          setNervousSystemDisorders(updatedDisorders);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                  
+                  {/* Add new Nervous System Disorder */}
+                  <div className="flex items-center gap-2 mb-2" id="new-nervous-system-container">
+                    <select
+                      id="nervous-system-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById('new-nervous-system-container');
+                        const customInput = document.getElementById('nervous-system-custom');
+                        
+                        if (e.target.value === 'Other' && container && !customInput) {
+                          // Insert custom input after select
+                          const customField = document.createElement('input');
+                          customField.id = 'nervous-system-custom';
+                          customField.type = 'text';
+                          customField.placeholder = 'Specify disorder';
+                          customField.className = 'flex-1 text-sm p-2 border border-gray-300 rounded-md';
+                          container.insertBefore(customField, document.getElementById('nervous-system-notes'));
+                        } else if (e.target.value !== 'Other' && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>Select disorder</option>
+                      <option value="Stroke/CVA">Stroke/CVA</option>
+                      <option value="Migraine">Migraine</option>
+                      <option value="Epilepsy">Epilepsy</option>
+                      <option value="Multiple Sclerosis">Multiple Sclerosis</option>
+                      <option value="Parkinson's Disease">Parkinson's Disease</option>
+                      <option value="Alzheimer's Disease">Alzheimer's Disease</option>
+                      <option value="Peripheral Neuropathy">Peripheral Neuropathy</option>
+                      <option value="Bell's Palsy">Bell's Palsy</option>
+                      <option value="Essential Tremor">Essential Tremor</option>
+                      <option value="Traumatic Brain Injury">Traumatic Brain Injury</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    
+                    <input
+                      type="text"
+                      id="nervous-system-notes"
+                      placeholder="Notes (symptoms, medications, treatment, etc.)"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById('nervous-system-type') as HTMLSelectElement;
+                        const notesInput = document.getElementById('nervous-system-notes') as HTMLInputElement;
+                        const customInput = document.getElementById('nervous-system-custom') as HTMLInputElement;
+                        
+                        if (typeSelect && typeSelect.value) {
+                          let type = typeSelect.value;
+                          let notes = notesInput ? notesInput.value : '';
+                          
+                          // If "Other" is selected, use the custom input value
+                          if (type === "Other" && customInput && customInput.value) {
+                            // Store the custom value in the notes field with a separator
+                            notes = `${customInput.value}|${notes}`;
+                          }
+                          
+                          setNervousSystemDisorders([
+                            ...nervousSystemDisorders,
                             {
                               type,
                               notes

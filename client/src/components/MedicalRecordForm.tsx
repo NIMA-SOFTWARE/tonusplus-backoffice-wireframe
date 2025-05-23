@@ -2513,27 +2513,39 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     ),
                   )}
 
-                  {/* Add New Instrumental Exam */}
-                  <div className="mt-4 border-t pt-4">
-                    {/* Labels row */}
-                    <div className="flex w-full mb-1">
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">
-                          Exam Name
-                        </label>
+                  {/* Add New Button (always visible) */}
+                  <div className="flex justify-center">
+                    <button
+                      onClick={() => setShowNewInstrumentalExamForm(!showNewInstrumentalExamForm)}
+                      className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex items-center gap-2"
+                    >
+                      <span>+</span>
+                      <span>{showNewInstrumentalExamForm ? 'Cancel' : 'Add New Instrumental Exam'}</span>
+                    </button>
+                  </div>
+                  
+                  {/* Add New Instrumental Exam Form */}
+                  {showNewInstrumentalExamForm && (
+                    <div className="mt-4 border-t pt-4">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            Exam Name
+                          </label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            File Attachment
+                          </label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            Notes
+                          </label>
+                        </div>
+                        <div className="w-8"></div>
                       </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">
-                          File Attachment
-                        </label>
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">
-                          Notes
-                        </label>
-                      </div>
-                      <div className="w-8"></div>
-                    </div>
 
                     {/* Inputs row */}
                     <div className="flex w-full items-start">
@@ -2698,6 +2710,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 "new-exam-file",
                               ) as HTMLInputElement;
                               if (fileInput) fileInput.value = "";
+                              
+                              // Hide the form after adding
+                              setShowNewInstrumentalExamForm(false);
                             }
                           }}
                           aria-label="Add Exam"
@@ -2706,7 +2721,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </button>
                       </div>
                     </div>
-                  </div>
+                    </div>
+                  )}
                 </div>
               </div>
 

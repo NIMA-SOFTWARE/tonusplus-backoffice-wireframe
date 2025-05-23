@@ -476,12 +476,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 2: Professional Data */}
+        {/* Section 2: Details About Recurrent Activities */}
         <AccordionItem value="professional-data">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
               <FileText className="mr-2 h-5 w-5 text-green-500" />
-              <span>Professional Data</span>
+              <span>Details About Recurrent Activities</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>

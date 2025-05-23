@@ -294,6 +294,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for daily activities
   const [dailyActivities, setDailyActivities] = useState<string[]>([]);
   
+  // State for profession
+  const [profession, setProfession] = useState<string>('');
+  const [customProfession, setCustomProfession] = useState<string>('');
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -494,28 +498,40 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
             <div className="p-4 space-y-4">
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                 <div className="space-y-6">
-                  {/* Profession Dropdown with Search */}
+                  {/* Profession */}
                   <div>
                     <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Profession</label>
-                    <div className="relative">
-                      <input 
-                        type="text"
-                        placeholder="Search or enter profession..."
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                      />
-                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Physical Therapist</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Doctor</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Nurse</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Teacher</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Engineer</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Office Worker</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Construction Worker</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Driver</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Student</div>
-                        <div className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm">+ Add new profession</div>
+                    <select 
+                      value={profession}
+                      onChange={(e) => setProfession(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    >
+                      <option value="">Select profession</option>
+                      <option value="administrator">Administrator</option>
+                      <option value="engineer">Engineer</option>
+                      <option value="doctor">Doctor</option>
+                      <option value="it">IT</option>
+                      <option value="driver">Driver</option>
+                      <option value="medical-representative">Medical Representative</option>
+                      <option value="medical-assistant">Medical Assistant</option>
+                      <option value="waiter">Waiter</option>
+                      <option value="waitress">Waitress</option>
+                      <option value="performance-athlete">Performance Athlete</option>
+                      <option value="other">Other</option>
+                    </select>
+                    
+                    {/* Custom profession input when "Other" is selected */}
+                    {profession === 'other' && (
+                      <div className="mt-2">
+                        <input
+                          type="text"
+                          placeholder="Please specify profession..."
+                          value={customProfession}
+                          onChange={(e) => setCustomProfession(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        />
                       </div>
-                    </div>
+                    )}
                   </div>
                   
                   {/* Activities */}

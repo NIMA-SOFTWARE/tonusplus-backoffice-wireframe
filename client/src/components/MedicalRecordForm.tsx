@@ -6574,6 +6574,131 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                 </div>
+                
+                {/* Anatomical Anomalies sub-section */}
+                <div className="space-y-4 mt-6">
+                  <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                    Anatomical Anomalies (Location and Type)
+                  </h4>
+                  <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">Anatomical Anomalies</h5>
+                    
+                    {/* Existing anatomical anomalies */}
+                    {anatomicalAnomalies.map((anomaly, index) => (
+                      <div key={index} className="flex items-center gap-2 mb-2">
+                        <select
+                          value={anomaly.location}
+                          onChange={(e) => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies[index].location = e.target.value;
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select location</option>
+                          <option value="Back">Back</option>
+                          <option value="Spine">Spine</option>
+                          <option value="Shoulder">Shoulder</option>
+                          <option value="Arm">Arm</option>
+                          <option value="Elbow">Elbow</option>
+                          <option value="Forearm">Forearm</option>
+                          <option value="Wrist">Wrist</option>
+                          <option value="Hand">Hand</option>
+                          <option value="Fingers">Fingers</option>
+                          <option value="Hip">Hip</option>
+                          <option value="Thigh">Thigh</option>
+                          <option value="Knee">Knee</option>
+                          <option value="Calf">Calf</option>
+                          <option value="Ankle">Ankle</option>
+                          <option value="Foot">Foot</option>
+                          <option value="Toes">Toes</option>
+                          <option value="Other">Other</option>
+                        </select>
+
+                        <select
+                          value={anomaly.type}
+                          onChange={(e) => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies[index].type = e.target.value;
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select type</option>
+                          <option value="Scoliosis">Scoliosis</option>
+                          <option value="Kyphosis">Kyphosis</option>
+                          <option value="Lordosis">Lordosis</option>
+                          <option value="Cervical hyper-lordosis">Cervical hyper-lordosis</option>
+                          <option value="Thoracic hyper-kyphosis">Thoracic hyper-kyphosis</option>
+                          <option value="Lumbar hyper-lordosis">Lumbar hyper-lordosis</option>
+                          <option value="Cervical hypo-lordosis">Cervical hypo-lordosis</option>
+                          <option value="Thoracic hypo-kyphosis">Thoracic hypo-kyphosis</option>
+                          <option value="Lumbar hypo-lordosis">Lumbar hypo-lordosis</option>
+                          <option value="Flat back">Flat back</option>
+                          <option value="Round shoulders">Round shoulders</option>
+                          <option value="Forward head posture">Forward head posture</option>
+                          <option value="Pelvic tilt">Pelvic tilt</option>
+                          <option value="Leg length discrepancy">Leg length discrepancy</option>
+                          <option value="Genu valgum">Genu valgum</option>
+                          <option value="Genu varum">Genu varum</option>
+                          <option value="Flat feet">Flat feet</option>
+                          <option value="High arches">High arches</option>
+                          <option value="Other">Other</option>
+                        </select>
+
+                        <input
+                          type="text"
+                          value={anomaly.observation}
+                          onChange={(e) => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies[index].observation = e.target.value;
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          placeholder="Observation"
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                        
+                        <button
+                          onClick={() => {
+                            const updatedAnomalies = [...anatomicalAnomalies];
+                            updatedAnomalies.splice(index, 1);
+                            setAnatomicalAnomalies(updatedAnomalies);
+                          }}
+                          className="p-2 text-red-500 hover:text-red-700"
+                          aria-label="Remove"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    ))}
+                    
+                    {/* Show blank state if no anomalies */}
+                    {anatomicalAnomalies.length === 0 && (
+                      <div className="text-center py-6">
+                        <p className="text-gray-500 mb-4">No anatomical anomalies recorded</p>
+                      </div>
+                    )}
+                    
+                    {/* Always show "Add New" button */}
+                    <div className="text-center pt-2">
+                      <button
+                        onClick={() => {
+                          setAnatomicalAnomalies([
+                            ...anatomicalAnomalies,
+                            {
+                              location: '',
+                              type: '',
+                              observation: ''
+                            }
+                          ]);
+                        }}
+                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      >
+                        Add New
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </AccordionContent>

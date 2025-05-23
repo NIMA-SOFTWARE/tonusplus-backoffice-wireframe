@@ -95,6 +95,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
     shape: string;
   }>>([]);
 
+  // Orthodontic history state
+  const [orthodonticHistory, setOrthodonticHistory] = useState<Array<{
+    type: string;
+    notes: string;
+  }>>([]);
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -7948,6 +7954,159 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
               </div>
 
 
+
+              {/* ORTHODONTIC HISTORY Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ORTHODONTIC HISTORY
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">
+                    Orthodontic Treatment History
+                  </h5>
+
+                  {/* Existing orthodontic treatments */}
+                  {orthodonticHistory.map((treatment, index) => (
+                    <div
+                      key={index}
+                      className="mb-2 p-3 border border-gray-200 rounded-lg bg-white"
+                    >
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Treatment Type</label>
+                        </div>
+                        <div className="flex-2">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Treatment Type */}
+                        <div className="flex-1">
+                          <select
+                            value={treatment.type}
+                            onChange={(e) => {
+                              const updatedHistory = [...orthodonticHistory];
+                              updatedHistory[index].type = e.target.value;
+                              setOrthodonticHistory(updatedHistory);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select treatment</option>
+                            <option value="Fixed braces">Fixed braces</option>
+                            <option value="Removable braces">Removable braces</option>
+                            <option value="Palatal expander">Palatal expander</option>
+                            <option value="ALF">ALF</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-2">
+                          <textarea
+                            value={treatment.notes}
+                            onChange={(e) => {
+                              const updatedHistory = [...orthodonticHistory];
+                              updatedHistory[index].notes = e.target.value;
+                              setOrthodonticHistory(updatedHistory);
+                            }}
+                            placeholder="Duration, outcomes, complications, etc."
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+
+                        {/* Remove Button */}
+                        <div className="w-8 flex justify-center">
+                          <button
+                            onClick={() => {
+                              const updatedHistory = [...orthodonticHistory];
+                              updatedHistory.splice(index, 1);
+                              setOrthodonticHistory(updatedHistory);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add new orthodontic treatment */}
+                  <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                    {/* Labels row */}
+                    <div className="flex w-full mb-1">
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Treatment Type</label>
+                      </div>
+                      <div className="flex-2">
+                        <label className="block text-xs text-gray-500">Notes</label>
+                      </div>
+                      <div className="w-8"></div>
+                    </div>
+                    
+                    {/* Inputs row */}
+                    <div className="flex w-full items-start gap-2">
+                      {/* Treatment Type */}
+                      <div className="flex-1">
+                        <select
+                          id="new-orthodontic-type"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Select treatment</option>
+                          <option value="Fixed braces">Fixed braces</option>
+                          <option value="Removable braces">Removable braces</option>
+                          <option value="Palatal expander">Palatal expander</option>
+                          <option value="ALF">ALF</option>
+                        </select>
+                      </div>
+
+                      {/* Notes */}
+                      <div className="flex-2">
+                        <textarea
+                          id="new-orthodontic-notes"
+                          placeholder="Duration, outcomes, complications, etc."
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          rows={2}
+                        />
+                      </div>
+
+                      {/* Add Button */}
+                      <div className="w-8 flex justify-center">
+                        <button
+                          className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                          onClick={() => {
+                            const typeSelect = document.getElementById("new-orthodontic-type") as HTMLSelectElement;
+                            const notesInput = document.getElementById("new-orthodontic-notes") as HTMLTextAreaElement;
+
+                            if (typeSelect && typeSelect.value) {
+                              setOrthodonticHistory([
+                                ...orthodonticHistory,
+                                {
+                                  type: typeSelect.value,
+                                  notes: notesInput ? notesInput.value : "",
+                                },
+                              ]);
+
+                              // Reset inputs
+                              typeSelect.selectedIndex = 0;
+                              if (notesInput) notesInput.value = "";
+                            }
+                          }}
+                          aria-label="Add Treatment"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
               {/* ENDOCRINE SYSTEM Section */}
               <div className="space-y-4 mt-6">

@@ -81,6 +81,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [mandibularDeviation, setMandibularDeviation] = useState<string>("");
   const [mandibularDeviationNotes, setMandibularDeviationNotes] = useState<string>("");
 
+  // Open palate state
+  const [openPalate, setOpenPalate] = useState<string>("");
+  const [openPalateNotes, setOpenPalateNotes] = useState<string>("");
+
+  // Ogival palate state
+  const [ogivalPalate, setOgivalPalate] = useState<string>("");
+  const [ogivalPalateNotes, setOgivalPalateNotes] = useState<string>("");
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -7140,6 +7148,98 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             value={mandibularDeviationNotes}
                             onChange={(e) => setMandibularDeviationNotes(e.target.value)}
                             placeholder="Additional notes about mandibular deviation"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Open palate */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      Open palate
+                    </h5>
+
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Has Open Palate</label>
+                        </div>
+                        <div className="flex-2">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Has Open Palate */}
+                        <div className="flex-1">
+                          <select
+                            value={openPalate}
+                            onChange={(e) => setOpenPalate(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-2">
+                          <textarea
+                            value={openPalateNotes}
+                            onChange={(e) => setOpenPalateNotes(e.target.value)}
+                            placeholder="Additional notes about open palate"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* OGIVAL PALATE */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      OGIVAL PALATE
+                    </h5>
+
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Has Ogival Palate</label>
+                        </div>
+                        <div className="flex-2">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Has Ogival Palate */}
+                        <div className="flex-1">
+                          <select
+                            value={ogivalPalate}
+                            onChange={(e) => setOgivalPalate(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-2">
+                          <textarea
+                            value={ogivalPalateNotes}
+                            onChange={(e) => setOgivalPalateNotes(e.target.value)}
+                            placeholder="Additional notes about ogival palate"
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                             rows={2}
                           />

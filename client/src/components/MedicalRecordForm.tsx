@@ -5731,47 +5731,29 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-3">
                         Dominant Eye
                       </label>
-                      <div className="flex flex-col space-y-3">
-                        {/* Radio button selection */}
-                        <div className="flex items-center space-x-4">
-                          <label className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              name="dominant-eye"
-                              value="Right (Dx)"
-                              checked={dominantEye === "Right (Dx)"}
-                              onChange={() => setDominantEye("Right (Dx)")}
-                              className="h-4 w-4 text-blue-600"
-                            />
-                            <span className="ml-2 text-sm text-gray-700">Dx (Right)</span>
-                          </label>
-                          <label className="inline-flex items-center">
-                            <input
-                              type="radio"
-                              name="dominant-eye"
-                              value="Left (Sx)"
-                              checked={dominantEye === "Left (Sx)"}
-                              onChange={() => setDominantEye("Left (Sx)")}
-                              className="h-4 w-4 text-blue-600"
-                            />
-                            <span className="ml-2 text-sm text-gray-700">Sx (Left)</span>
-                          </label>
-                        </div>
-                        
-                        {/* Angle input field */}
-                        {dominantEye && (
-                          <div className="flex items-center gap-2">
-                            <label className="text-sm text-gray-700">Angle:</label>
-                            <input
-                              type="text"
-                              value={dominantEyeAngle}
-                              onChange={(e) => setDominantEyeAngle(e.target.value)}
-                              placeholder="Enter angle"
-                              className="text-sm p-2 border border-gray-300 rounded-md w-24"
-                            />
-                            <span className="text-xs text-gray-500">degrees</span>
-                          </div>
-                        )}
+                      <div className="flex items-center space-x-4">
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="dominant-eye"
+                            value="Right (Dx)"
+                            checked={dominantEye === "Right (Dx)"}
+                            onChange={() => setDominantEye("Right (Dx)")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Dx (Right)</span>
+                        </label>
+                        <label className="inline-flex items-center">
+                          <input
+                            type="radio"
+                            name="dominant-eye"
+                            value="Left (Sx)"
+                            checked={dominantEye === "Left (Sx)"}
+                            onChange={() => setDominantEye("Left (Sx)")}
+                            className="h-4 w-4 text-blue-600"
+                          />
+                          <span className="ml-2 text-sm text-gray-700">Sx (Left)</span>
+                        </label>
                       </div>
                     </div>
 

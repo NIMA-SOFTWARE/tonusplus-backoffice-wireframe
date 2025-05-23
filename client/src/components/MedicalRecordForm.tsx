@@ -2782,60 +2782,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </label>
 
                     <div className="flex flex-col space-y-4">
-                      <div className="flex flex-wrap gap-4">
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            id="tfe-dx"
-                            name="tfe"
-                            value="Dx"
-                            checked={tfe === "Dx"}
-                            onChange={() => setTfe("Dx")}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                          />
-                          <label
-                            htmlFor="tfe-dx"
-                            className="ml-2 block text-sm text-gray-700"
-                          >
-                            Dx (Right)
-                          </label>
-                        </div>
-
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            id="tfe-sx"
-                            name="tfe"
-                            value="Sx"
-                            checked={tfe === "Sx"}
-                            onChange={() => setTfe("Sx")}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                          />
-                          <label
-                            htmlFor="tfe-sx"
-                            className="ml-2 block text-sm text-gray-700"
-                          >
-                            Sx (Left)
-                          </label>
-                        </div>
-
-                        <div className="flex items-center">
-                          <input
-                            type="radio"
-                            id="tfe-none"
-                            name="tfe"
-                            value=""
-                            checked={tfe === ""}
-                            onChange={() => setTfe("")}
-                            className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
-                          />
-                          <label
-                            htmlFor="tfe-none"
-                            className="ml-2 block text-sm text-gray-700"
-                          >
-                            None
-                          </label>
-                        </div>
+                      <div className="w-full max-w-xs">
+                        <select
+                          value={tfe}
+                          onChange={(e) => setTfe(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select TFE option</option>
+                          <option value="Dx">Dx (Right)</option>
+                          <option value="Sx">Sx (Left)</option>
+                          <option value="None">None</option>
+                        </select>
                       </div>
 
                       {tfe && (

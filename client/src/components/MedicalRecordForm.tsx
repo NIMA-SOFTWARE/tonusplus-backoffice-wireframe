@@ -291,6 +291,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for sports activities
   const [sportsActivities, setSportsActivities] = useState<string[]>([]);
   
+  // State for daily activities
+  const [dailyActivities, setDailyActivities] = useState<string[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -517,29 +520,28 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   
                   {/* Activities */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Daily Activities</label>
-                    <div className="relative">
-                      <div className="flex flex-wrap gap-2 p-2 border border-gray-300 rounded-md bg-white min-h-10">
-                        <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                          Walking the dog <button className="ml-1 text-blue-500 hover:text-blue-700">×</button>
-                        </span>
-                        <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded">
-                          Gardening <button className="ml-1 text-blue-500 hover:text-blue-700">×</button>
-                        </span>
-                        <input 
-                          type="text" 
-                          placeholder="Add activity..." 
-                          className="flex-1 min-w-[100px] outline-none text-sm"
-                        />
-                      </div>
-                      <div className="hidden absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Gardening</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">House cleaning</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Shopping</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Walking the dog</div>
-                        <div className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm">Child care</div>
-                      </div>
-                    </div>
+                    <TagSelectionInput
+                      label="Daily Activities"
+                      placeholder="Select daily activities..."
+                      options={[
+                        'Gardening',
+                        'House cleaning',
+                        'Shopping',
+                        'Walking the dog',
+                        'Child care',
+                        'Cooking',
+                        'Driving',
+                        'Reading',
+                        'Computer work',
+                        'Manual labor',
+                        'Standing work',
+                        'Heavy lifting'
+                      ]}
+                      selectedTags={dailyActivities}
+                      onTagsChange={setDailyActivities}
+                      allowCustomTags={true}
+                      className="w-full"
+                    />
                   </div>
                   
                   {/* Active Training Section */}

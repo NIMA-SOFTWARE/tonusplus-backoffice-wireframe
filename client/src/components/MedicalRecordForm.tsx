@@ -734,3 +734,5 @@ export function MedicalRecordForm({ participant, onClose, sessionId, sessionDate
     </div>
   );
 }
+
+export default MedicalRecordForm;

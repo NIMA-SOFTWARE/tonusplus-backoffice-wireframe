@@ -71,6 +71,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [prosthesisType, setProsthesisType] = useState<string>("");
   const [prosthesisNotes, setProsthesisNotes] = useState<string>("");
 
+  // Dental bridges state
+  const [hasBridge, setHasBridge] = useState<string>("");
+  const [bridgeLocation, setBridgeLocation] = useState<string>("");
+  const [bridgeType, setBridgeType] = useState<string>("");
+  const [bridgeNotes, setBridgeNotes] = useState<string>("");
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -6995,6 +7001,93 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           <textarea
                             value={prosthesisNotes}
                             onChange={(e) => setProsthesisNotes(e.target.value)}
+                            placeholder="Additional notes"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Dental Bridges Information */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      Dental BRIDGES
+                    </h5>
+
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Has Bridge</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Location</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Type</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Has Bridge */}
+                        <div className="flex-1">
+                          <select
+                            value={hasBridge}
+                            onChange={(e) => {
+                              setHasBridge(e.target.value);
+                              if (e.target.value !== "Yes") {
+                                setBridgeLocation("");
+                                setBridgeType("");
+                              }
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex-1">
+                          <select
+                            value={bridgeLocation}
+                            onChange={(e) => setBridgeLocation(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={hasBridge !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Upper">Upper</option>
+                            <option value="Lower">Lower</option>
+                            <option value="Both">Both</option>
+                          </select>
+                        </div>
+
+                        {/* Type */}
+                        <div className="flex-1">
+                          <select
+                            value={bridgeType}
+                            onChange={(e) => setBridgeType(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={hasBridge !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Total">Total</option>
+                            <option value="Partial">Partial</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-1">
+                          <textarea
+                            value={bridgeNotes}
+                            onChange={(e) => setBridgeNotes(e.target.value)}
                             placeholder="Additional notes"
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                             rows={2}

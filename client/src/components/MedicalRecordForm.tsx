@@ -1808,22 +1808,129 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
 
                       {/* Sprains */}
                       <div className="border-t border-gray-200 pt-4 mt-4"></div>
-                      <TraumaEntrySection
-                        title="Sprains"
-                        entries={sprains}
-                        setEntries={setSprains}
-                        options={[
-                          { value: "Ankle", label: "Ankle" },
-                          { value: "Knee", label: "Knee" },
-                          { value: "Hip", label: "Hip" },
-                          { value: "Fist", label: "Fist" },
-                          {
-                            value: "Other",
-                            label: "Other (specify in observation)",
-                          },
-                        ]}
-                        selectLabel="Add new sprain location"
-                      />
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">
+                          Sprains
+                        </h5>
+
+                        {/* Existing sprains */}
+                        {sprains.map((sprain, index) => (
+                          <div key={index} className="flex items-center gap-2 mb-2">
+                            <select
+                              value={sprain.location}
+                              onChange={(e) => {
+                                const updatedSprains = [...sprains];
+                                updatedSprains[index].location = e.target.value;
+                                setSprains(updatedSprains);
+
+                                // Show/hide other input when "Other" is selected
+                                const otherInput = document.getElementById(
+                                  `sprain-other-${index}`,
+                                );
+                                if (otherInput) {
+                                  otherInput.style.display =
+                                    e.target.value === "Other"
+                                      ? "inline-block"
+                                      : "none";
+                                }
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select sprain location</option>
+                              <option value="Ankle">Ankle</option>
+                              <option value="Knee">Knee</option>
+                              <option value="Hip">Hip</option>
+                              <option value="Fist">Fist</option>
+                              <option value="Other">Other</option>
+                            </select>
+
+                            <input
+                              id={`sprain-other-${index}`}
+                              type="text"
+                              placeholder="Specify sprain location"
+                              style={{
+                                display:
+                                  sprain.location === "Other"
+                                    ? "inline-block"
+                                    : "none",
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              onChange={(e) => {
+                                if (e.target.value.trim()) {
+                                  const updatedSprains = [...sprains];
+                                  updatedSprains[index].location = e.target.value;
+                                  setSprains(updatedSprains);
+                                }
+                              }}
+                            />
+
+                            <input
+                              type="text"
+                              value={sprain.year}
+                              onChange={(e) => {
+                                const updatedSprains = [...sprains];
+                                updatedSprains[index].year = e.target.value;
+                                setSprains(updatedSprains);
+                              }}
+                              placeholder="Year"
+                              className="w-32 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <input
+                              type="text"
+                              value={sprain.observation || ""}
+                              onChange={(e) => {
+                                const updatedSprains = [...sprains];
+                                updatedSprains[index].observation = e.target.value;
+                                setSprains(updatedSprains);
+                              }}
+                              placeholder="Notes"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <button
+                              onClick={() => {
+                                const updatedSprains = [...sprains];
+                                updatedSprains.splice(index, 1);
+                                setSprains(updatedSprains);
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700"
+                              aria-label="Remove"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+
+                        {/* Show blank state message if no sprains */}
+                        {sprains.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no sprains
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
+                          <button
+                            onClick={() => {
+                              // Add a new empty sprain that will appear as editable row
+                              setSprains([
+                                ...sprains,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
+                            }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          >
+                            Add New
+                          </button>
+                        </div>
+                      </div>
 
                       {/* Muscle Tears */}
                       <div className="border-t border-gray-200 pt-4 mt-4"></div>
@@ -1886,56 +1993,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           </div>
                         ))}
 
-                        {/* Add new muscle tear - just inputs in a row */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <input
-                            type="text"
-                            id="muscle-tear-name"
-                            placeholder="Muscle name"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="muscle-tear-year"
-                            placeholder="Year"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="muscle-tear-observation"
-                            placeholder="Observation"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
+                        {/* Show blank state message if no muscle tears */}
+                        {muscleTears.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no muscle tears
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
                           <button
-                            className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                             onClick={() => {
-                              const nameInput = document.getElementById(
-                                "muscle-tear-name",
-                              ) as HTMLInputElement;
-                              const yearInput = document.getElementById(
-                                "muscle-tear-year",
-                              ) as HTMLInputElement;
-                              const obsInput = document.getElementById(
-                                "muscle-tear-observation",
-                              ) as HTMLInputElement;
-
-                              if (nameInput && nameInput.value.trim()) {
-                                setMuscleTears([
-                                  ...muscleTears,
-                                  {
-                                    location: nameInput.value.trim(),
-                                    year: yearInput ? yearInput.value : "",
-                                    observation: obsInput ? obsInput.value : "",
-                                  },
-                                ]);
-
-                                if (nameInput) nameInput.value = "";
-                                if (yearInput) yearInput.value = "";
-                                if (obsInput) obsInput.value = "";
-                              }
+                              // Add a new empty muscle tear that will appear as editable row
+                              setMuscleTears([
+                                ...muscleTears,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
                             }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                           >
-                            Add
+                            Add New
                           </button>
                         </div>
                       </div>
@@ -2002,56 +2085,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           </div>
                         ))}
 
-                        {/* Add new tendon rupture - just inputs in a row */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <input
-                            type="text"
-                            id="tendon-rupture-name"
-                            placeholder="Tendon name"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="tendon-rupture-year"
-                            placeholder="Year"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="tendon-rupture-observation"
-                            placeholder="Observation"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
+                        {/* Show blank state message if no tendon ruptures */}
+                        {tendonRuptures.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no tendon ruptures
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
                           <button
-                            className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                             onClick={() => {
-                              const nameInput = document.getElementById(
-                                "tendon-rupture-name",
-                              ) as HTMLInputElement;
-                              const yearInput = document.getElementById(
-                                "tendon-rupture-year",
-                              ) as HTMLInputElement;
-                              const obsInput = document.getElementById(
-                                "tendon-rupture-observation",
-                              ) as HTMLInputElement;
-
-                              if (nameInput && nameInput.value.trim()) {
-                                setTendonRuptures([
-                                  ...tendonRuptures,
-                                  {
-                                    location: nameInput.value.trim(),
-                                    year: yearInput ? yearInput.value : "",
-                                    observation: obsInput ? obsInput.value : "",
-                                  },
-                                ]);
-
-                                if (nameInput) nameInput.value = "";
-                                if (yearInput) yearInput.value = "";
-                                if (obsInput) obsInput.value = "";
-                              }
+                              // Add a new empty tendon rupture that will appear as editable row
+                              setTendonRuptures([
+                                ...tendonRuptures,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
                             }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                           >
-                            Add
+                            Add New
                           </button>
                         </div>
                       </div>
@@ -2118,56 +2177,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           </div>
                         ))}
 
-                        {/* Add new ligament rupture - just inputs in a row */}
-                        <div className="flex items-center gap-2 mb-2">
-                          <input
-                            type="text"
-                            id="ligament-rupture-name"
-                            placeholder="Ligament name"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="ligament-rupture-year"
-                            placeholder="Year"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
-                          <input
-                            type="text"
-                            id="ligament-rupture-observation"
-                            placeholder="Observation"
-                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          />
+                        {/* Show blank state message if no ligament ruptures */}
+                        {ligamentRuptures.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no ligament ruptures
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
                           <button
-                            className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                             onClick={() => {
-                              const nameInput = document.getElementById(
-                                "ligament-rupture-name",
-                              ) as HTMLInputElement;
-                              const yearInput = document.getElementById(
-                                "ligament-rupture-year",
-                              ) as HTMLInputElement;
-                              const obsInput = document.getElementById(
-                                "ligament-rupture-observation",
-                              ) as HTMLInputElement;
-
-                              if (nameInput && nameInput.value.trim()) {
-                                setLigamentRuptures([
-                                  ...ligamentRuptures,
-                                  {
-                                    location: nameInput.value.trim(),
-                                    year: yearInput ? yearInput.value : "",
-                                    observation: obsInput ? obsInput.value : "",
-                                  },
-                                ]);
-
-                                if (nameInput) nameInput.value = "";
-                                if (yearInput) yearInput.value = "";
-                                if (obsInput) obsInput.value = "";
-                              }
+                              // Add a new empty ligament rupture that will appear as editable row
+                              setLigamentRuptures([
+                                ...ligamentRuptures,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
                             }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                           >
-                            Add
+                            Add New
                           </button>
                         </div>
                       </div>

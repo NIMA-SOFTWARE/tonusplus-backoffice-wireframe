@@ -301,6 +301,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // State for training types
   const [trainingTypes, setTrainingTypes] = useState<string[]>([]);
   
+  // State for medical diagnostics and symptoms
+  const [medicalDiagnostics, setMedicalDiagnostics] = useState<string[]>([]);
+  const [symptoms, setSymptoms] = useState<string[]>([]);
+  
   // Toggle voice input functionality
   const toggleVoiceInput = () => {
     setVoiceInputEnabled(!voiceInputEnabled);
@@ -727,80 +731,56 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   </div>
                   
-                  {/* Main reason with search and voice input */}
+                  {/* Medical Diagnostic */}
                   <div>
-                    <label className="block text-xs font-medium text-gray-500 uppercase mb-2">Main reason</label>
-                    <div className="relative">
-                      <div className="flex items-center">
-                        <div className="relative flex-1">
-                          <input 
-                            type="text"
-                            placeholder="Search medical symptoms..."
-                            value={searchSymptomTerm}
-                            onChange={(e) => setSearchSymptomTerm(e.target.value)}
-                            onFocus={handleSearchFocus}
-                            onBlur={handleSearchBlur}
-                            className="w-full text-sm p-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                          />
-                          <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
-                            <Search className="h-4 w-4 text-gray-400" />
-                          </div>
-                        </div>
-                        {voiceInputEnabled && (
-                          <VoiceInputButton 
-                            onTranscriptionComplete={(text) => {
-                              setSearchSymptomTerm(text);
-                              setShowSymptomSearch(true);
-                            }}
-                            className="ml-2" 
-                          />
-                        )}
-                      </div>
-                      
-                      {/* Selected main reason display */}
-                      {mainReason && (
-                        <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md flex justify-between items-center">
-                          <span className="text-sm text-blue-700">{mainReason}</span>
-                          <button 
-                            type="button"
-                            onClick={() => setMainReason('')}
-                            className="text-blue-500 hover:text-blue-700"
-                          >
-                            ×
-                          </button>
-                        </div>
-                      )}
-                      
-                      {/* Dropdown for search results */}
-                      {showSymptomSearch && (
-                        <div className="absolute top-full left-0 right-0 bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
-                          {['Chronic lower back pain', 'Reduced mobility', 'Neck and shoulder tension', 
-                            'Joint stiffness', 'Postural problems', 'Recovery from injury', 
-                            'Core strength weakness', 'Balance issues', 'Sciatica', 'Scoliosis management']
-                            .filter(symptom => !searchSymptomTerm || symptom.toLowerCase().includes(searchSymptomTerm.toLowerCase()))
-                            .map((symptom, index) => (
-                              <div 
-                                key={index}
-                                className="py-2 px-3 hover:bg-gray-100 cursor-pointer text-sm"
-                                onClick={() => handleSelectSymptom(symptom)}
-                              >
-                                {symptom}
-                              </div>
-                            ))
-                          }
-                          <div 
-                            className="py-2 px-3 hover:bg-blue-50 text-blue-600 cursor-pointer text-sm border-t"
-                            onClick={() => {
-                              if (searchSymptomTerm) {
-                                handleSelectSymptom(searchSymptomTerm);
-                              }
-                            }}
-                          >
-                            {searchSymptomTerm ? `+ Add "${searchSymptomTerm}"` : '+ Add new symptom'}
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    <TagSelectionInput
+                      label="Medical Diagnostic"
+                      placeholder="Select medical diagnostics..."
+                      options={[
+                        'Herniated disc',
+                        'Scoliosis',
+                        'Arthritis',
+                        'Fibromyalgia',
+                        'Osteoporosis',
+                        'Chronic pain syndrome',
+                        'Postural syndrome',
+                        'Muscle imbalance',
+                        'Joint dysfunction',
+                        'Spinal stenosis'
+                      ]}
+                      selectedTags={medicalDiagnostics}
+                      onTagsChange={setMedicalDiagnostics}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                      className="w-full"
+                    />
+                  </div>
+                  
+                  {/* Symptoms */}
+                  <div>
+                    <TagSelectionInput
+                      label="Symptoms"
+                      placeholder="Select symptoms..."
+                      options={[
+                        'Lower back pain',
+                        'Neck stiffness',
+                        'Joint pain',
+                        'Muscle tension',
+                        'Poor posture',
+                        'Chronic fatigue',
+                        'Headaches',
+                        'Balance issues',
+                        'Numbness',
+                        'Tingling',
+                        'Weakness',
+                        'Stiffness'
+                      ]}
+                      selectedTags={symptoms}
+                      onTagsChange={setSymptoms}
+                      allowCustomTags={true}
+                      voiceEnabled={voiceInputEnabled}
+                      className="w-full"
+                    />
                   </div>
                   
                   {/* Other reasons as textarea */}

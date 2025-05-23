@@ -2013,12 +2013,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 8: Specific Clinical History */}
-        <AccordionItem value="clinical-history">
+        {/* Section 8: Objective Examination */}
+        <AccordionItem value="objective-examination">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
-              <History className="mr-2 h-5 w-5 text-indigo-500" />
-              <span>Specific Clinical History</span>
+              <Stethoscope className="mr-2 h-5 w-5 text-teal-500" />
+              <span>Objective Examination</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -5222,40 +5222,129 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 7: Objective Examination */}
-        <AccordionItem value="objective-examination">
+        {/* Section 7: Specific Clinical History */}
+        <AccordionItem value="clinical-history">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
-              <Stethoscope className="mr-2 h-5 w-5 text-teal-500" />
-              <span>Objective Examination</span>
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>Specific Clinical History</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              {/* INSTRUMENTAL EXAMS Section */}
-              <div className="space-y-4 mt-6">
+              {/* Pathologies or Dysfunctions of the circulatory and respiratory systems */}
+              <div className="space-y-4">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  INSTRUMENTAL EXAMS
+                  Pathologies or Dysfunctions of the Circulatory and Respiratory Systems
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Medical Tests and Examinations</h5>
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Pathologies</h5>
                   
-                  {/* Existing Instrumental Exams */}
-                  {instrumentalExams.map((exam: InstrumentalExam, index: number) => (
-                    <div key={index} className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200">
-                      {/* Labels row */}
-                      <div className="flex w-full mb-1">
-                        <div className="flex-1">
-                          <label className="block text-xs text-gray-500">Exam Name</label>
+                  {/* Existing pathologies */}
+                  {pathologies.map((pathology, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {pathology.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={pathology.type}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              updatedPathologies[index].type = e.target.value;
+                              setPathologies(updatedPathologies);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select pathology</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Hypotension">Hypotension</option>
+                            <option value="Arrhythmia">Arrhythmia</option>
+                            <option value="Coronary artery disease">Coronary artery disease</option>
+                            <option value="Heart failure">Heart failure</option>
+                            <option value="Valvular heart disease">Valvular heart disease</option>
+                            <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                            <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                            <option value="Asthma">Asthma</option>
+                            <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                            <option value="Emphysema">Emphysema</option>
+                            <option value="Bronchitis">Bronchitis</option>
+                            <option value="Pneumonia">Pneumonia</option>
+                            <option value="Pleural effusion">Pleural effusion</option>
+                            <option value="Pulmonary embolism">Pulmonary embolism</option>
+                            <option value="Sleep apnea">Sleep apnea</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify pathology"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={pathology.notes.split('|')[0] || ''}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              const parts = pathology.notes.split('|');
+                              parts[0] = e.target.value;
+                              updatedPathologies[index].notes = parts.join('|');
+                              setPathologies(updatedPathologies);
+                            }}
+                          />
                         </div>
-                        <div className="flex-1">
-                          <label className="block text-xs text-gray-500">File Attachment</label>
-                        </div>
-                        <div className="flex-1">
-                          <label className="block text-xs text-gray-500">Notes</label>
-                        </div>
-                        <div className="w-8"></div>
-                      </div>
+                      ) : (
+                        <select
+                          value={pathology.type}
+                          onChange={(e) => {
+                            const updatedPathologies = [...pathologies];
+                            updatedPathologies[index].type = e.target.value;
+                            setPathologies(updatedPathologies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select pathology</option>
+                          <option value="Hypertension">Hypertension</option>
+                          <option value="Hypotension">Hypotension</option>
+                          <option value="Arrhythmia">Arrhythmia</option>
+                          <option value="Coronary artery disease">Coronary artery disease</option>
+                          <option value="Heart failure">Heart failure</option>
+                          <option value="Valvular heart disease">Valvular heart disease</option>
+                          <option value="Peripheral vascular disease">Peripheral vascular disease</option>
+                          <option value="Deep vein thrombosis">Deep vein thrombosis</option>
+                          <option value="Asthma">Asthma</option>
+                          <option value="Chronic obstructive pulmonary disease">Chronic obstructive pulmonary disease</option>
+                          <option value="Emphysema">Emphysema</option>
+                          <option value="Bronchitis">Bronchitis</option>
+                          <option value="Pneumonia">Pneumonia</option>
+                          <option value="Pleural effusion">Pleural effusion</option>
+                          <option value="Pulmonary embolism">Pulmonary embolism</option>
+                          <option value="Sleep apnea">Sleep apnea</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                      <input
+                        type="text"
+                        value={pathology.type === "Other" ? (pathology.notes.split('|')[1] || '') : pathology.notes}
+                        onChange={(e) => {
+                          const updatedPathologies = [...pathologies];
+                          if (pathology.type === "Other") {
+                            const parts = pathology.notes.split('|');
+                            parts[1] = e.target.value;
+                            updatedPathologies[index].notes = parts.join('|');
+                          } else {
+                            updatedPathologies[index].notes = e.target.value;
+                          }
+                          setPathologies(updatedPathologies);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedPathologies = [...pathologies];
+                          updatedPathologies.splice(index, 1);
+                          setPathologies(updatedPathologies);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
                       
                       {/* Inputs row */}
                       <div className="flex w-full items-start">

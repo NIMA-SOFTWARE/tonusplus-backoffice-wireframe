@@ -57,6 +57,13 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   // Voice-to-text state
   const [voiceInputEnabled, setVoiceInputEnabled] = useState(false);
   const [showNewInstrumentalExamForm, setShowNewInstrumentalExamForm] = useState(false);
+  
+  // Convergence tests state
+  const [convergenceTests, setConvergenceTests] = useState<Array<{
+    testName: string;
+    dxNotes: string;
+    sxNotes: string;
+  }>>([]);
 
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
@@ -5859,6 +5866,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             <option value="Amblyopia">Amblyopia</option>
                             <option value="Strabismus">Strabismus</option>
                             <option value="Dry Eye Syndrome">Dry Eye</option>
+                            <option value="Saccadic movements">Saccadic movements</option>
                             <option value="Other">Other</option>
                           </select>
 
@@ -6143,6 +6151,173 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       className="w-full text-sm p-2 border border-gray-300 rounded-md min-h-20"
                       rows={3}
                     ></textarea>
+                  </div>
+
+                  {/* Convergence Test Section */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Convergence Test
+                    </label>
+
+                    {/* Existing convergence tests */}
+                    {convergenceTests.map((test, index) => (
+                      <div
+                        key={index}
+                        className="mb-2 p-3 border border-gray-200 rounded-lg bg-white"
+                      >
+                        <div className="flex items-center gap-3 mb-2">
+                          {/* Test Name */}
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500 mb-1">Test Name</label>
+                            <select
+                              value={test.testName}
+                              onChange={(e) => {
+                                const updatedTests = [...convergenceTests];
+                                updatedTests[index].testName = e.target.value;
+                                setConvergenceTests(updatedTests);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select test</option>
+                              <option value="Glasses/braces/tongue on the spot">Glasses/braces/tongue on the spot</option>
+                              <option value="M. Inf RI">M. Inf RI</option>
+                              <option value="M Inf RE">M Inf RE</option>
+                              <option value="Sitting">Sitting</option>
+                              <option value="Right head position">Right head position</option>
+                            </select>
+                          </div>
+
+                          {/* Remove Button */}
+                          <button
+                            onClick={() => {
+                              const updatedTests = [...convergenceTests];
+                              updatedTests.splice(index, 1);
+                              setConvergenceTests(updatedTests);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {/* Dx Notes */}
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Dx Notes</label>
+                            <textarea
+                              value={test.dxNotes}
+                              onChange={(e) => {
+                                const updatedTests = [...convergenceTests];
+                                updatedTests[index].dxNotes = e.target.value;
+                                setConvergenceTests(updatedTests);
+                              }}
+                              placeholder="Notes for Dx (Right)"
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                              rows={2}
+                            />
+                          </div>
+
+                          {/* Sx Notes */}
+                          <div>
+                            <label className="block text-xs text-gray-500 mb-1">Sx Notes</label>
+                            <textarea
+                              value={test.sxNotes}
+                              onChange={(e) => {
+                                const updatedTests = [...convergenceTests];
+                                updatedTests[index].sxNotes = e.target.value;
+                                setConvergenceTests(updatedTests);
+                              }}
+                              placeholder="Notes for Sx (Left)"
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                              rows={2}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Add new convergence test */}
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      <div className="flex items-center gap-3 mb-2">
+                        {/* Test Name */}
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500 mb-1">Test Name</label>
+                          <select
+                            id="new-convergence-test"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                          >
+                            <option value="" disabled>Select test</option>
+                            <option value="Glasses/braces/tongue on the spot">Glasses/braces/tongue on the spot</option>
+                            <option value="M. Inf RI">M. Inf RI</option>
+                            <option value="M Inf RE">M Inf RE</option>
+                            <option value="Sitting">Sitting</option>
+                            <option value="Right head position">Right head position</option>
+                          </select>
+                        </div>
+
+                        {/* Add Button */}
+                        <div className="flex items-end">
+                          <button
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                            onClick={() => {
+                              const testSelect = document.getElementById(
+                                "new-convergence-test",
+                              ) as HTMLSelectElement;
+                              const dxNotesInput = document.getElementById(
+                                "new-dx-notes",
+                              ) as HTMLTextAreaElement;
+                              const sxNotesInput = document.getElementById(
+                                "new-sx-notes",
+                              ) as HTMLTextAreaElement;
+
+                              if (testSelect && testSelect.value) {
+                                setConvergenceTests([
+                                  ...convergenceTests,
+                                  {
+                                    testName: testSelect.value,
+                                    dxNotes: dxNotesInput ? dxNotesInput.value : "",
+                                    sxNotes: sxNotesInput ? sxNotesInput.value : "",
+                                  },
+                                ]);
+
+                                // Reset inputs
+                                testSelect.selectedIndex = 0;
+                                if (dxNotesInput) dxNotesInput.value = "";
+                                if (sxNotesInput) sxNotesInput.value = "";
+                              }
+                            }}
+                          >
+                            Add Test
+                          </button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {/* Dx Notes */}
+                        <div>
+                          <label className="block text-xs text-gray-500 mb-1">Dx Notes</label>
+                          <textarea
+                            id="new-dx-notes"
+                            placeholder="Notes for Dx (Right)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+
+                        {/* Sx Notes */}
+                        <div>
+                          <label className="block text-xs text-gray-500 mb-1">Sx Notes</label>
+                          <textarea
+                            id="new-sx-notes"
+                            placeholder="Notes for Sx (Left)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

@@ -1682,22 +1682,129 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
 
                       {/* Strains */}
                       <div className="border-t border-gray-200 pt-4 mt-4"></div>
-                      <TraumaEntrySection
-                        title="Strains"
-                        entries={strains}
-                        setEntries={setStrains}
-                        options={[
-                          { value: "Ankle", label: "Ankle" },
-                          { value: "Knee", label: "Knee" },
-                          { value: "Hip", label: "Hip" },
-                          { value: "Fist", label: "Fist" },
-                          {
-                            value: "Other",
-                            label: "Other (specify in observation)",
-                          },
-                        ]}
-                        selectLabel="Add new strain location"
-                      />
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">
+                          Strains
+                        </h5>
+
+                        {/* Existing strains */}
+                        {strains.map((strain, index) => (
+                          <div key={index} className="flex items-center gap-2 mb-2">
+                            <select
+                              value={strain.location}
+                              onChange={(e) => {
+                                const updatedStrains = [...strains];
+                                updatedStrains[index].location = e.target.value;
+                                setStrains(updatedStrains);
+
+                                // Show/hide other input when "Other" is selected
+                                const otherInput = document.getElementById(
+                                  `strain-other-${index}`,
+                                );
+                                if (otherInput) {
+                                  otherInput.style.display =
+                                    e.target.value === "Other"
+                                      ? "inline-block"
+                                      : "none";
+                                }
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select strain location</option>
+                              <option value="Ankle">Ankle</option>
+                              <option value="Knee">Knee</option>
+                              <option value="Hip">Hip</option>
+                              <option value="Fist">Fist</option>
+                              <option value="Other">Other</option>
+                            </select>
+
+                            <input
+                              id={`strain-other-${index}`}
+                              type="text"
+                              placeholder="Specify strain location"
+                              style={{
+                                display:
+                                  strain.location === "Other"
+                                    ? "inline-block"
+                                    : "none",
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              onChange={(e) => {
+                                if (e.target.value.trim()) {
+                                  const updatedStrains = [...strains];
+                                  updatedStrains[index].location = e.target.value;
+                                  setStrains(updatedStrains);
+                                }
+                              }}
+                            />
+
+                            <input
+                              type="text"
+                              value={strain.year}
+                              onChange={(e) => {
+                                const updatedStrains = [...strains];
+                                updatedStrains[index].year = e.target.value;
+                                setStrains(updatedStrains);
+                              }}
+                              placeholder="Year"
+                              className="w-32 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <input
+                              type="text"
+                              value={strain.observation || ""}
+                              onChange={(e) => {
+                                const updatedStrains = [...strains];
+                                updatedStrains[index].observation = e.target.value;
+                                setStrains(updatedStrains);
+                              }}
+                              placeholder="Notes"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <button
+                              onClick={() => {
+                                const updatedStrains = [...strains];
+                                updatedStrains.splice(index, 1);
+                                setStrains(updatedStrains);
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700"
+                              aria-label="Remove"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+
+                        {/* Show blank state message if no strains */}
+                        {strains.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no strains
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
+                          <button
+                            onClick={() => {
+                              // Add a new empty strain that will appear as editable row
+                              setStrains([
+                                ...strains,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
+                            }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          >
+                            Add New
+                          </button>
+                        </div>
+                      </div>
 
                       {/* Sprains */}
                       <div className="border-t border-gray-200 pt-4 mt-4"></div>

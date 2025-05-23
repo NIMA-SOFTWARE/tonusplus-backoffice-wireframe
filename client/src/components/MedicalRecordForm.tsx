@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { 
   User, FileText, Target, Activity, 
   Clipboard, History, Stethoscope, Search, Mic,
-  Dumbbell, Shield
+  Dumbbell, Shield, Baby
 } from 'lucide-react';
 import VoiceEnabledInput from './VoiceEnabledInput';
 import VoiceInputButton from './VoiceInputButton';
@@ -1861,6 +1861,154 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   
 
                 </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        {/* Section 7: Physiological History */}
+        <AccordionItem value="physiological-history">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <Baby className="mr-2 h-5 w-5 text-pink-500" />
+              <span>Physiological History</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Birth Weight */}
+                  <div>
+                    <label htmlFor="birth-weight" className="block text-sm font-medium text-gray-700 mb-1">
+                      Weight at Birth
+                    </label>
+                    <input
+                      type="text"
+                      id="birth-weight"
+                      value={birthWeight}
+                      onChange={(e) => setBirthWeight(e.target.value)}
+                      placeholder="e.g., 3.5 kg"
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  
+                  {/* Breastfed */}
+                  <div>
+                    <label htmlFor="breastfed" className="block text-sm font-medium text-gray-700 mb-1">
+                      Breastfed
+                    </label>
+                    <select
+                      id="breastfed"
+                      value={breastfed}
+                      onChange={(e) => setBreastfed(e.target.value as "yes" | "no" | "")}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  
+                  {/* Birth Process */}
+                  <div>
+                    <label htmlFor="birth-process" className="block text-sm font-medium text-gray-700 mb-1">
+                      How did the birth take place?
+                    </label>
+                    <select
+                      id="birth-process"
+                      value={birthProcess}
+                      onChange={(e) => setBirthProcess(e.target.value as "O" | "S" | "")}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="O">O: Oxytocin</option>
+                      <option value="S">S: Obstetric Pushing</option>
+                    </select>
+                  </div>
+                  
+                  {/* Sucking Reflex */}
+                  <div>
+                    <label htmlFor="sucking-reflex" className="block text-sm font-medium text-gray-700 mb-1">
+                      Presence of the Sucking Reflex
+                    </label>
+                    <select
+                      id="sucking-reflex"
+                      value={suckingReflex}
+                      onChange={(e) => setSuckingReflex(e.target.value as "yes" | "no" | "")}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                  
+                  {/* Labor Duration */}
+                  <div>
+                    <label htmlFor="labor-duration" className="block text-sm font-medium text-gray-700 mb-1">
+                      Duration of Labor
+                    </label>
+                    <input
+                      type="text"
+                      id="labor-duration"
+                      value={laborDuration}
+                      onChange={(e) => setLaborDuration(e.target.value)}
+                      placeholder="e.g., 12 hours"
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                  </div>
+                  
+                  {/* Birth Type */}
+                  <div>
+                    <label htmlFor="birth-type" className="block text-sm font-medium text-gray-700 mb-1">
+                      Type of Birth
+                    </label>
+                    <select
+                      id="birth-type"
+                      value={birthType}
+                      onChange={(e) => setBirthType(e.target.value as "premature" | "normal" | "slow" | "")}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="premature">Premature Birth</option>
+                      <option value="normal">Normal Birth</option>
+                      <option value="slow">Slow Birth</option>
+                    </select>
+                  </div>
+                  
+                  {/* Abnormal Presentation */}
+                  <div>
+                    <label htmlFor="abnormal-presentation" className="block text-sm font-medium text-gray-700 mb-1">
+                      Abnormal Presentation of the Fetus
+                    </label>
+                    <select
+                      id="abnormal-presentation"
+                      value={abnormalPresentation}
+                      onChange={(e) => setAbnormalPresentation(e.target.value as "yes" | "no" | "")}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="yes">Yes</option>
+                      <option value="no">No</option>
+                    </select>
+                  </div>
+                </div>
+                
+                {/* Notes */}
+                <div className="mt-4">
+                  <label htmlFor="physiological-notes" className="block text-sm font-medium text-gray-700 mb-1">
+                    Additional Notes
+                  </label>
+                  <textarea
+                    id="physiological-notes"
+                    value={physiologicalNotes}
+                    onChange={(e) => setPhysiologicalNotes(e.target.value)}
+                    placeholder="Add any additional notes about physiological history..."
+                    className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    rows={4}
+                  ></textarea>
+                </div>
+              </div>
             </div>
           </AccordionContent>
         </AccordionItem>
@@ -5396,146 +5544,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
               
-              {/* PHYSIOLOGICAL HISTORY Section */}
-              <div className="space-y-4 mt-6">
-                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  PHYSIOLOGICAL HISTORY
-                </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Birth Weight */}
-                    <div>
-                      <label htmlFor="birth-weight" className="block text-sm font-medium text-gray-700 mb-1">
-                        Weight at Birth
-                      </label>
-                      <input
-                        type="text"
-                        id="birth-weight"
-                        value={birthWeight}
-                        onChange={(e) => setBirthWeight(e.target.value)}
-                        placeholder="e.g., 3.5 kg"
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    
-                    {/* Breastfed */}
-                    <div>
-                      <label htmlFor="breastfed" className="block text-sm font-medium text-gray-700 mb-1">
-                        Breastfed
-                      </label>
-                      <select
-                        id="breastfed"
-                        value={breastfed}
-                        onChange={(e) => setBreastfed(e.target.value as "yes" | "no" | "")}
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select option</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                    
-                    {/* Birth Process */}
-                    <div>
-                      <label htmlFor="birth-process" className="block text-sm font-medium text-gray-700 mb-1">
-                        How did the birth take place?
-                      </label>
-                      <select
-                        id="birth-process"
-                        value={birthProcess}
-                        onChange={(e) => setBirthProcess(e.target.value as "O" | "S" | "")}
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select option</option>
-                        <option value="O">O: Oxytocin</option>
-                        <option value="S">S: Obstetric Pushing</option>
-                      </select>
-                    </div>
-                    
-                    {/* Sucking Reflex */}
-                    <div>
-                      <label htmlFor="sucking-reflex" className="block text-sm font-medium text-gray-700 mb-1">
-                        Presence of the Sucking Reflex
-                      </label>
-                      <select
-                        id="sucking-reflex"
-                        value={suckingReflex}
-                        onChange={(e) => setSuckingReflex(e.target.value as "yes" | "no" | "")}
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select option</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                    
-                    {/* Labor Duration */}
-                    <div>
-                      <label htmlFor="labor-duration" className="block text-sm font-medium text-gray-700 mb-1">
-                        Duration of Labor
-                      </label>
-                      <input
-                        type="text"
-                        id="labor-duration"
-                        value={laborDuration}
-                        onChange={(e) => setLaborDuration(e.target.value)}
-                        placeholder="e.g., 12 hours"
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      />
-                    </div>
-                    
-                    {/* Birth Type */}
-                    <div>
-                      <label htmlFor="birth-type" className="block text-sm font-medium text-gray-700 mb-1">
-                        Type of Birth
-                      </label>
-                      <select
-                        id="birth-type"
-                        value={birthType}
-                        onChange={(e) => setBirthType(e.target.value as "premature" | "normal" | "slow" | "")}
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select option</option>
-                        <option value="premature">Premature Birth</option>
-                        <option value="normal">Normal Birth</option>
-                        <option value="slow">Slow Birth</option>
-                      </select>
-                    </div>
-                    
-                    {/* Abnormal Presentation */}
-                    <div>
-                      <label htmlFor="abnormal-presentation" className="block text-sm font-medium text-gray-700 mb-1">
-                        Abnormal Presentation of the Fetus
-                      </label>
-                      <select
-                        id="abnormal-presentation"
-                        value={abnormalPresentation}
-                        onChange={(e) => setAbnormalPresentation(e.target.value as "yes" | "no" | "")}
-                        className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      >
-                        <option value="">Select option</option>
-                        <option value="yes">Yes</option>
-                        <option value="no">No</option>
-                      </select>
-                    </div>
-                  </div>
-                  
-                  {/* Notes */}
-                  <div className="mt-4">
-                    <label htmlFor="physiological-notes" className="block text-sm font-medium text-gray-700 mb-1">
-                      Additional Notes
-                    </label>
-                    <textarea
-                      id="physiological-notes"
-                      value={physiologicalNotes}
-                      onChange={(e) => setPhysiologicalNotes(e.target.value)}
-                      placeholder="Add any additional notes about physiological history..."
-                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                      rows={4}
-                    ></textarea>
-                  </div>
-                </div>
-              </div>
+
 
             </div>
           </AccordionContent>

@@ -3197,643 +3197,355 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </select>
                   </div>
 
-                  {/* SEATED POSITION Section */}
-                  <div className="space-y-4 mt-6">
-                    <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                      SEATED POSITION
-                    </h4>
-                    <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  
 
-                    {/* TFS Section */}
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        TFS
-                      </label>
-                      <div className="w-full max-w-xs">
-                        <select
-                          value={seatedTfs}
-                          onChange={(e) => setSeatedTfs(e.target.value)}
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        >
-                          <option value="">Select TFS option</option>
-                          <option value="Dx">Dx</option>
-                          <option value="Sx">Sx</option>
-                          <option value="None">None</option>
-                        </select>
-                      </div>
-                    </div>
+                 
 
-                    {/* Inferior Sacral Angle Section */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Inferior Sacral Angle
-                      </label>
-                      <div className="w-full max-w-xs">
-                        <select
-                          value={inferiorSacralAngle}
-                          onChange={(e) => setInferiorSacralAngle(e.target.value)}
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        >
-                          <option value="">Select option</option>
-                          <option value="Dx">Dx</option>
-                          <option value="Sx">Sx</option>
-                          <option value="None">None</option>
-                        </select>
-                      </div>
-                    </div>
+                  
+                </div>
+              </div>
+              {/* SEATED POSITION Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  SEATED POSITION
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
 
-                    {/* Bending Test Section */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Bending Test
-                      </label>
-                      <div className="flex flex-col space-y-2">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="seated-bending-test"
-                            value="Maintain gibbosity"
-                            checked={seatedBendingTest === "Maintain gibbosity"}
-                            onChange={() =>
-                              setSeatedBendingTest("Maintain gibbosity")
-                            }
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Maintain gibbosity
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="seated-bending-test"
-                            value="Cancel gibbosity"
-                            checked={seatedBendingTest === "Cancel gibbosity"}
-                            onChange={() =>
-                              setSeatedBendingTest("Cancel gibbosity")
-                            }
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Cancel gibbosity
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                {/* TFS Section */}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    TFS
+                  </label>
+                  <div className="w-full max-w-xs">
+                    <select
+                      value={seatedTfs}
+                      onChange={(e) => setSeatedTfs(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select TFS option</option>
+                      <option value="Dx">Dx</option>
+                      <option value="Sx">Sx</option>
+                      <option value="None">None</option>
+                    </select>
                   </div>
+                </div>
 
-                  {/* DECUBITUS POSITION Section */}
-                  <div className="mt-8 pt-5 border-t-2 border-zinc-200">
-                    <h4 className="text-lg font-semibold text-gray-800 uppercase mb-4">
-                      DECUBITUS POSITION
-                    </h4>
+                {/* Inferior Sacral Angle Section */}
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Inferior Sacral Angle
+                  </label>
+                  <div className="w-full max-w-xs">
+                    <select
+                      value={inferiorSacralAngle}
+                      onChange={(e) => setInferiorSacralAngle(e.target.value)}
+                      className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                    >
+                      <option value="">Select option</option>
+                      <option value="Dx">Dx</option>
+                      <option value="Sx">Sx</option>
+                      <option value="None">None</option>
+                    </select>
+                  </div>
+                </div>
 
-                    {/* Barral Section */}
-                    <div className="mb-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Barral
-                      </label>
-
-                      <TagSelectionInput
-                        label="Select Areas"
-                        placeholder="Select areas of interest..."
-                        options={[
-                          "Ankle (Rx)",
-                          "Ankle (Lx)",
-                          "Knee (Rx)",
-                          "Knee (Lx)",
-                          "Hip (Rx)",
-                          "Hip (Lx)",
-                          "Iliac fossa (Rx)",
-                          "Iliac fossa (Lx)",
-                          "Umbilical",
-                          "Hypochondrium (Rx)",
-                          "Hypochondrium (Lx)",
-                          "Spleen",
-                          "Heart",
-                        ]}
-                        selectedTags={decubitusBarralOptions}
-                        onTagsChange={setDecubitusBarralOptions}
-                        allowCustomTags={false}
-                        voiceEnabled={voiceInputEnabled}
-                        className="mb-2"
+                {/* Bending Test Section */}
+                <div className="mt-6 pt-4 border-t border-gray-200">
+                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                    Bending Test
+                  </label>
+                  <div className="flex flex-col space-y-2">
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="seated-bending-test"
+                        value="Maintain gibbosity"
+                        checked={seatedBendingTest === "Maintain gibbosity"}
+                        onChange={() =>
+                          setSeatedBendingTest("Maintain gibbosity")
+                        }
+                        className="h-4 w-4 text-blue-600"
                       />
-                    </div>
+                      <span className="ml-2 text-sm text-gray-700">
+                        Maintain gibbosity
+                      </span>
+                    </label>
+                    <label className="inline-flex items-center">
+                      <input
+                        type="radio"
+                        name="seated-bending-test"
+                        value="Cancel gibbosity"
+                        checked={seatedBendingTest === "Cancel gibbosity"}
+                        onChange={() =>
+                          setSeatedBendingTest("Cancel gibbosity")
+                        }
+                        className="h-4 w-4 text-blue-600"
+                      />
+                      <span className="ml-2 text-sm text-gray-700">
+                        Cancel gibbosity
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-                    {/* Sacral Bone Section */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Sacral Bone
-                      </label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="sacral-bone"
-                            value="Dx-Dx"
-                            checked={sacralBone === "Dx-Dx"}
-                            onChange={() => setSacralBone("Dx-Dx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Dx-Dx
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="sacral-bone"
-                            value="Sx-Sx"
-                            checked={sacralBone === "Sx-Sx"}
-                            onChange={() => setSacralBone("Sx-Sx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Sx-Sx
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="sacral-bone"
-                            value="Dx-Sx"
-                            checked={sacralBone === "Dx-Sx"}
-                            onChange={() => setSacralBone("Dx-Sx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Dx-Sx
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="sacral-bone"
-                            value="Sx-Dx"
-                            checked={sacralBone === "Sx-Dx"}
-                            onChange={() => setSacralBone("Sx-Dx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Sx-Dx
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                {/* DECUBITUS POSITION Section */}
+                   <div className="space-y-4 mt-6">
+                    <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                    DECUBITUS POSITION
+                  </h4>
+                     <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  {/* Barral Section */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Barral
+                    </label>
 
-                    {/* Priority Section */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Priority
-                      </label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="priority"
-                            value="Ascendant"
-                            checked={priority === "Ascendant"}
-                            onChange={() => setPriority("Ascendant")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Ascendant
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="priority"
-                            value="Descendant"
-                            checked={priority === "Descendant"}
-                            onChange={() => setPriority("Descendant")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Descendant
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="priority"
-                            value="Visceral"
-                            checked={priority === "Visceral"}
-                            onChange={() => setPriority("Visceral")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Visceral
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="priority"
-                            value="Mixed"
-                            checked={priority === "Mixed"}
-                            onChange={() => setPriority("Mixed")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            Mixed
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                    <TagSelectionInput
+                      label="Select Areas"
+                      placeholder="Select areas of interest..."
+                      options={[
+                        "Ankle (Rx)",
+                        "Ankle (Lx)",
+                        "Knee (Rx)",
+                        "Knee (Lx)",
+                        "Hip (Rx)",
+                        "Hip (Lx)",
+                        "Iliac fossa (Rx)",
+                        "Iliac fossa (Lx)",
+                        "Umbilical",
+                        "Hypochondrium (Rx)",
+                        "Hypochondrium (Lx)",
+                        "Spleen",
+                        "Heart",
+                      ]}
+                      selectedTags={decubitusBarralOptions}
+                      onTagsChange={setDecubitusBarralOptions}
+                      allowCustomTags={false}
+                      voiceEnabled={voiceInputEnabled}
+                      className="mb-2"
+                    />
+                  </div>
 
-                    {/* Limited Internal Rotation Prone Position */}
-                    <div className="mt-6 pt-4 border-t border-gray-200">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        Limited Internal Rotation Prone Position
+                  {/* Sacral Bone Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Sacral Bone
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="sacral-bone"
+                          value="Dx-Dx"
+                          checked={sacralBone === "Dx-Dx"}
+                          onChange={() => setSacralBone("Dx-Dx")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Dx-Dx
+                        </span>
                       </label>
-                      <div className="flex flex-wrap gap-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="limited-internal-rotation"
-                            value="M inf Sx"
-                            checked={limitedInternalRotation === "M inf Sx"}
-                            onChange={() =>
-                              setLimitedInternalRotation("M inf Sx")
-                            }
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            M inf Sx
-                          </span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="limited-internal-rotation"
-                            value="M inf Dx"
-                            checked={limitedInternalRotation === "M inf Dx"}
-                            onChange={() =>
-                              setLimitedInternalRotation("M inf Dx")
-                            }
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">
-                            M inf Dx
-                          </span>
-                        </label>
-                      </div>
-                    </div>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="sacral-bone"
+                          value="Sx-Sx"
+                          checked={sacralBone === "Sx-Sx"}
+                          onChange={() => setSacralBone("Sx-Sx")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Sx-Sx
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="sacral-bone"
+                          value="Dx-Sx"
+                          checked={sacralBone === "Dx-Sx"}
+                          onChange={() => setSacralBone("Dx-Sx")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Dx-Sx
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="sacral-bone"
+                          value="Sx-Dx"
+                          checked={sacralBone === "Sx-Dx"}
+                          onChange={() => setSacralBone("Sx-Dx")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Sx-Dx
+                        </span>
+                      </label>
                     </div>
                   </div>
 
-                  {/* ANATOMICAL ANOMALIES Section */}
-                  <div className="space-y-4 mt-6">
-                    <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                      ANATOMICAL ANOMALIES (LOCATION AND TYPE)
-                    </h4>
-                    <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                      <h5 className="text-sm font-medium text-gray-700 mb-3">
-                        Structural and Postural Anomalies
-                      </h5>
+                  {/* Priority Section */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Priority
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="priority"
+                          value="Ascendant"
+                          checked={priority === "Ascendant"}
+                          onChange={() => setPriority("Ascendant")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Ascendant
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="priority"
+                          value="Descendant"
+                          checked={priority === "Descendant"}
+                          onChange={() => setPriority("Descendant")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Descendant
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="priority"
+                          value="Visceral"
+                          checked={priority === "Visceral"}
+                          onChange={() => setPriority("Visceral")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Visceral
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="priority"
+                          value="Mixed"
+                          checked={priority === "Mixed"}
+                          onChange={() => setPriority("Mixed")}
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          Mixed
+                        </span>
+                      </label>
+                    </div>
+                  </div>
 
-                      {/* Existing anatomical anomalies */}
-                      {anatomicalAnomalies.map((anomaly, index) => (
-                        <div
-                          key={index}
-                          className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200"
-                        >
-                          {/* Labels row */}
-                          <div className="flex w-full mb-1">
-                            <div className="flex-1">
-                              <label className="block text-xs text-gray-500">
-                                Location
-                              </label>
-                            </div>
-                            <div className="flex-1">
-                              <label className="block text-xs text-gray-500">
-                                Type
-                              </label>
-                            </div>
-                            <div className="flex-1">
-                              <label className="block text-xs text-gray-500">
-                                Observations
-                              </label>
-                            </div>
-                            <div className="w-8"></div>
-                          </div>
+                  {/* Limited Internal Rotation Prone Position */}
+                  <div className="mt-6 pt-4 border-t border-gray-200">
+                    <label className="block text-sm font-medium text-gray-700 mb-3">
+                      Limited Internal Rotation Prone Position
+                    </label>
+                    <div className="flex flex-wrap gap-4">
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="limited-internal-rotation"
+                          value="M inf Sx"
+                          checked={limitedInternalRotation === "M inf Sx"}
+                          onChange={() =>
+                            setLimitedInternalRotation("M inf Sx")
+                          }
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          M inf Sx
+                        </span>
+                      </label>
+                      <label className="inline-flex items-center">
+                        <input
+                          type="radio"
+                          name="limited-internal-rotation"
+                          value="M inf Dx"
+                          checked={limitedInternalRotation === "M inf Dx"}
+                          onChange={() =>
+                            setLimitedInternalRotation("M inf Dx")
+                          }
+                          className="h-4 w-4 text-blue-600"
+                        />
+                        <span className="ml-2 text-sm text-gray-700">
+                          M inf Dx
+                        </span>
+                      </label>
+                    </div>
+                  </div>
+                  </div></div>
+              
+              </div>
 
-                          {/* Inputs row */}
-                          <div className="flex w-full items-start">
-                            {/* Location */}
-                            <div className="flex-1 mr-2">
-                              {anomaly.location === "Other" ? (
-                                <div className="flex gap-1">
-                                  <select
-                                    value={anomaly.location}
-                                    onChange={(e) => {
-                                      const updatedAnomalies = [
-                                        ...anatomicalAnomalies,
-                                      ];
-                                      updatedAnomalies[index].location =
-                                        e.target.value;
-                                      setAnatomicalAnomalies(updatedAnomalies);
-                                    }}
-                                    className="w-1/2 text-sm p-2 border border-gray-300 rounded-md"
-                                  >
-                                    <option value="">Select location</option>
-                                    <option value="Back">Back</option>
-                                    <option value="Spine">Spine</option>
-                                    <option value="Shoulder">Shoulder</option>
-                                    <option value="Arm">Arm</option>
-                                    <option value="Elbow">Elbow</option>
-                                    <option value="Forearm">Forearm</option>
-                                    <option value="Wrist">Wrist</option>
-                                    <option value="Hand">Hand</option>
-                                    <option value="Fingers">Fingers</option>
-                                    <option value="Hip">Hip</option>
-                                    <option value="Thigh">Thigh</option>
-                                    <option value="Knee">Knee</option>
-                                    <option value="Calf">Calf</option>
-                                    <option value="Ankle">Ankle</option>
-                                    <option value="Foot">Foot</option>
-                                    <option value="Toes">Toes</option>
-                                    <option value="Other">Other</option>
-                                  </select>
-                                  <input
-                                    type="text"
-                                    placeholder="Specify location"
-                                    className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                                    value={
-                                      anomaly.observation.split("|")[0] || ""
-                                    }
-                                    onChange={(e) => {
-                                      const updatedAnomalies = [
-                                        ...anatomicalAnomalies,
-                                      ];
-                                      const parts =
-                                        anomaly.observation.split("|");
-                                      parts[0] = e.target.value;
-                                      updatedAnomalies[index].observation =
-                                        parts.join("|");
-                                      setAnatomicalAnomalies(updatedAnomalies);
-                                    }}
-                                  />
-                                </div>
-                              ) : (
-                                <select
-                                  value={anomaly.location}
-                                  onChange={(e) => {
-                                    const updatedAnomalies = [
-                                      ...anatomicalAnomalies,
-                                    ];
-                                    updatedAnomalies[index].location =
-                                      e.target.value;
-                                    setAnatomicalAnomalies(updatedAnomalies);
-                                  }}
-                                  className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                                >
-                                  <option value="">Select location</option>
-                                  <option value="Back">Back</option>
-                                  <option value="Spine">Spine</option>
-                                  <option value="Shoulder">Shoulder</option>
-                                  <option value="Arm">Arm</option>
-                                  <option value="Elbow">Elbow</option>
-                                  <option value="Forearm">Forearm</option>
-                                  <option value="Wrist">Wrist</option>
-                                  <option value="Hand">Hand</option>
-                                  <option value="Fingers">Fingers</option>
-                                  <option value="Hip">Hip</option>
-                                  <option value="Thigh">Thigh</option>
-                                  <option value="Knee">Knee</option>
-                                  <option value="Calf">Calf</option>
-                                  <option value="Ankle">Ankle</option>
-                                  <option value="Foot">Foot</option>
-                                  <option value="Toes">Toes</option>
-                                  <option value="Other">Other</option>
-                                </select>
-                              )}
-                            </div>
+              {/* ANATOMICAL ANOMALIES Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  ANATOMICAL ANOMALIES (LOCATION AND TYPE)
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">
+                    Structural and Postural Anomalies
+                  </h5>
 
-                            {/* Type */}
-                            <div className="flex-1 mr-2">
-                              {anomaly.type === "Other" ? (
-                                <div className="flex gap-1">
-                                  <select
-                                    value={anomaly.type}
-                                    onChange={(e) => {
-                                      const updatedAnomalies = [
-                                        ...anatomicalAnomalies,
-                                      ];
-                                      updatedAnomalies[index].type =
-                                        e.target.value;
-                                      setAnatomicalAnomalies(updatedAnomalies);
-                                    }}
-                                    className="w-1/2 text-sm p-2 border border-gray-300 rounded-md"
-                                  >
-                                    <option value="">Select type</option>
-                                    <option value="Scoliosis">Scoliosis</option>
-                                    <option value="Kyphosis">Kyphosis</option>
-                                    <option value="Lordosis">Lordosis</option>
-                                    <option value="Leg length discrepancy">
-                                      Leg length discrepancy
-                                    </option>
-                                    <option value="Pelvic tilt">
-                                      Pelvic tilt
-                                    </option>
-                                    <option value="Flat feet">Flat feet</option>
-                                    <option value="High arch">High arch</option>
-                                    <option value="Knock knees">
-                                      Knock knees
-                                    </option>
-                                    <option value="Bow legs">Bow legs</option>
-                                    <option value="Limited range of motion">
-                                      Limited range of motion
-                                    </option>
-                                    <option value="Joint hypermobility">
-                                      Joint hypermobility
-                                    </option>
-                                    <option value="Congenital anomaly">
-                                      Congenital anomaly
-                                    </option>
-                                    <option value="Postural deviation">
-                                      Postural deviation
-                                    </option>
-                                    <option value="Other">Other</option>
-                                  </select>
-                                  <input
-                                    type="text"
-                                    placeholder="Specify type"
-                                    className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                                    value={
-                                      anomaly.observation.split("|")[1] || ""
-                                    }
-                                    onChange={(e) => {
-                                      const updatedAnomalies = [
-                                        ...anatomicalAnomalies,
-                                      ];
-                                      const parts =
-                                        anomaly.observation.split("|");
-                                      parts[1] = e.target.value;
-                                      updatedAnomalies[index].observation =
-                                        parts.join("|");
-                                      setAnatomicalAnomalies(updatedAnomalies);
-                                    }}
-                                  />
-                                </div>
-                              ) : (
-                                <select
-                                  value={anomaly.type}
-                                  onChange={(e) => {
-                                    const updatedAnomalies = [
-                                      ...anatomicalAnomalies,
-                                    ];
-                                    updatedAnomalies[index].type =
-                                      e.target.value;
-                                    setAnatomicalAnomalies(updatedAnomalies);
-                                  }}
-                                  className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                                >
-                                  <option value="">Select type</option>
-                                  <option value="Scoliosis">Scoliosis</option>
-                                  <option value="Kyphosis">Kyphosis</option>
-                                  <option value="Lordosis">Lordosis</option>
-                                  <option value="Leg length discrepancy">
-                                    Leg length discrepancy
-                                  </option>
-                                  <option value="Pelvic tilt">
-                                    Pelvic tilt
-                                  </option>
-                                  <option value="Flat feet">Flat feet</option>
-                                  <option value="High arch">High arch</option>
-                                  <option value="Knock knees">
-                                    Knock knees
-                                  </option>
-                                  <option value="Bow legs">Bow legs</option>
-                                  <option value="Limited range of motion">
-                                    Limited range of motion
-                                  </option>
-                                  <option value="Joint hypermobility">
-                                    Joint hypermobility
-                                  </option>
-                                  <option value="Congenital anomaly">
-                                    Congenital anomaly
-                                  </option>
-                                  <option value="Postural deviation">
-                                    Postural deviation
-                                  </option>
-                                  <option value="Other">Other</option>
-                                </select>
-                              )}
-                            </div>
+                  {/* Existing anatomical anomalies */}
+                  {anatomicalAnomalies.map((anomaly, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200"
+                    >
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            Location
+                          </label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            Type
+                          </label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">
+                            Observations
+                          </label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
 
-                            {/* Observations */}
-                            <div className="flex-1 mr-2">
-                              <input
-                                type="text"
-                                value={anomaly.observation}
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start">
+                        {/* Location */}
+                        <div className="flex-1 mr-2">
+                          {anomaly.location === "Other" ? (
+                            <div className="flex gap-1">
+                              <select
+                                value={anomaly.location}
                                 onChange={(e) => {
                                   const updatedAnomalies = [
                                     ...anatomicalAnomalies,
                                   ];
-                                  updatedAnomalies[index].observation =
+                                  updatedAnomalies[index].location =
                                     e.target.value;
                                   setAnatomicalAnomalies(updatedAnomalies);
                                 }}
-                                placeholder="Additional observations"
-                                className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                              />
-                            </div>
-
-                            {/* Remove Button */}
-                            <div className="w-8 flex justify-center">
-                              <button
-                                onClick={() => {
-                                  const updatedAnomalies = [
-                                    ...anatomicalAnomalies,
-                                  ];
-                                  updatedAnomalies.splice(index, 1);
-                                  setAnatomicalAnomalies(updatedAnomalies);
-                                }}
-                                className="p-2 text-red-500 hover:text-red-700"
-                                aria-label="Remove"
+                                className="w-1/2 text-sm p-2 border border-gray-300 rounded-md"
                               >
-                                ✕
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-
-                      {/* Add New Anatomical Anomaly */}
-                      <div className="mt-4 border-t pt-4">
-                        {/* Labels row */}
-                        <div className="flex w-full mb-1">
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              Location
-                            </label>
-                          </div>
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              Type
-                            </label>
-                          </div>
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              Observations
-                            </label>
-                          </div>
-                          <div className="w-8"></div>
-                        </div>
-
-                        {/* Inputs row */}
-                        <div
-                          className="flex w-full items-start"
-                          id="new-anomaly-container"
-                        >
-                          {/* Location */}
-                          <div className="flex-1 mr-2">
-                            <div className="flex items-center gap-2">
-                              <select
-                                id="anomaly-location"
-                                className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                                defaultValue=""
-                                onChange={(e) => {
-                                  const container = document.getElementById(
-                                    "new-anomaly-container",
-                                  );
-                                  const customLocationInput =
-                                    document.getElementById(
-                                      "anomaly-location-custom",
-                                    );
-
-                                  if (
-                                    e.target.value === "Other" &&
-                                    container &&
-                                    !customLocationInput
-                                  ) {
-                                    // Insert custom input after select
-                                    const customField =
-                                      document.createElement("input");
-                                    customField.id = "anomaly-location-custom";
-                                    customField.type = "text";
-                                    customField.placeholder =
-                                      "Specify location";
-                                    customField.className =
-                                      "flex-1 text-sm p-2 border border-gray-300 rounded-md mt-1";
-                                    const locationDiv =
-                                      e.target.parentElement?.parentElement;
-                                    if (locationDiv) {
-                                      locationDiv.appendChild(customField);
-                                    }
-                                  } else if (
-                                    e.target.value !== "Other" &&
-                                    customLocationInput
-                                  ) {
-                                    customLocationInput.remove();
-                                  }
-                                }}
-                              >
-                                <option value="" disabled>
-                                  Select location
-                                </option>
+                                <option value="">Select location</option>
                                 <option value="Back">Back</option>
                                 <option value="Spine">Spine</option>
                                 <option value="Shoulder">Shoulder</option>
@@ -3852,64 +3564,92 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 <option value="Toes">Toes</option>
                                 <option value="Other">Other</option>
                               </select>
-                            </div>
-                          </div>
-
-                          {/* Type */}
-                          <div className="flex-1 mr-2">
-                            <div className="flex items-center gap-2">
-                              <select
-                                id="anomaly-type"
-                                className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                                defaultValue=""
+                              <input
+                                type="text"
+                                placeholder="Specify location"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                                value={
+                                  anomaly.observation.split("|")[0] || ""
+                                }
                                 onChange={(e) => {
-                                  const container = document.getElementById(
-                                    "new-anomaly-container",
-                                  );
-                                  const customTypeInput =
-                                    document.getElementById(
-                                      "anomaly-type-custom",
-                                    );
-
-                                  if (
-                                    e.target.value === "Other" &&
-                                    container &&
-                                    !customTypeInput
-                                  ) {
-                                    // Insert custom input after select
-                                    const customField =
-                                      document.createElement("input");
-                                    customField.id = "anomaly-type-custom";
-                                    customField.type = "text";
-                                    customField.placeholder = "Specify type";
-                                    customField.className =
-                                      "flex-1 text-sm p-2 border border-gray-300 rounded-md mt-1";
-                                    const typeDiv =
-                                      e.target.parentElement?.parentElement;
-                                    if (typeDiv) {
-                                      typeDiv.appendChild(customField);
-                                    }
-                                  } else if (
-                                    e.target.value !== "Other" &&
-                                    customTypeInput
-                                  ) {
-                                    customTypeInput.remove();
-                                  }
+                                  const updatedAnomalies = [
+                                    ...anatomicalAnomalies,
+                                  ];
+                                  const parts =
+                                    anomaly.observation.split("|");
+                                  parts[0] = e.target.value;
+                                  updatedAnomalies[index].observation =
+                                    parts.join("|");
+                                  setAnatomicalAnomalies(updatedAnomalies);
                                 }}
+                              />
+                            </div>
+                          ) : (
+                            <select
+                              value={anomaly.location}
+                              onChange={(e) => {
+                                const updatedAnomalies = [
+                                  ...anatomicalAnomalies,
+                                ];
+                                updatedAnomalies[index].location =
+                                  e.target.value;
+                                setAnatomicalAnomalies(updatedAnomalies);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select location</option>
+                              <option value="Back">Back</option>
+                              <option value="Spine">Spine</option>
+                              <option value="Shoulder">Shoulder</option>
+                              <option value="Arm">Arm</option>
+                              <option value="Elbow">Elbow</option>
+                              <option value="Forearm">Forearm</option>
+                              <option value="Wrist">Wrist</option>
+                              <option value="Hand">Hand</option>
+                              <option value="Fingers">Fingers</option>
+                              <option value="Hip">Hip</option>
+                              <option value="Thigh">Thigh</option>
+                              <option value="Knee">Knee</option>
+                              <option value="Calf">Calf</option>
+                              <option value="Ankle">Ankle</option>
+                              <option value="Foot">Foot</option>
+                              <option value="Toes">Toes</option>
+                              <option value="Other">Other</option>
+                            </select>
+                          )}
+                        </div>
+
+                        {/* Type */}
+                        <div className="flex-1 mr-2">
+                          {anomaly.type === "Other" ? (
+                            <div className="flex gap-1">
+                              <select
+                                value={anomaly.type}
+                                onChange={(e) => {
+                                  const updatedAnomalies = [
+                                    ...anatomicalAnomalies,
+                                  ];
+                                  updatedAnomalies[index].type =
+                                    e.target.value;
+                                  setAnatomicalAnomalies(updatedAnomalies);
+                                }}
+                                className="w-1/2 text-sm p-2 border border-gray-300 rounded-md"
                               >
-                                <option value="" disabled>
-                                  Select type
-                                </option>
+                                <option value="">Select type</option>
                                 <option value="Scoliosis">Scoliosis</option>
                                 <option value="Kyphosis">Kyphosis</option>
                                 <option value="Lordosis">Lordosis</option>
                                 <option value="Leg length discrepancy">
                                   Leg length discrepancy
                                 </option>
-                                <option value="Pelvic tilt">Pelvic tilt</option>
+                                <option value="Pelvic tilt">
+                                  Pelvic tilt
+                                </option>
                                 <option value="Flat feet">Flat feet</option>
                                 <option value="High arch">High arch</option>
-                                <option value="Knock knees">Knock knees</option>
+                                <option value="Knock knees">
+                                  Knock knees
+                                </option>
                                 <option value="Bow legs">Bow legs</option>
                                 <option value="Limited range of motion">
                                   Limited range of motion
@@ -3925,165 +3665,361 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 </option>
                                 <option value="Other">Other</option>
                               </select>
-                            </div>
-                          </div>
-
-                          {/* Observations */}
-                          <div className="flex-1 mr-2">
-                            <input
-                              type="text"
-                              id="anomaly-observation"
-                              placeholder="Additional observations"
-                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                            />
-                          </div>
-
-                          {/* Add Button */}
-                          <div className="w-8 flex justify-center">
-                            <button
-                              className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
-                              onClick={() => {
-                                const locationSelect = document.getElementById(
-                                  "anomaly-location",
-                                ) as HTMLSelectElement;
-                                const typeSelect = document.getElementById(
-                                  "anomaly-type",
-                                ) as HTMLSelectElement;
-                                const observationInput =
-                                  document.getElementById(
-                                    "anomaly-observation",
-                                  ) as HTMLInputElement;
-                                const locationCustomInput =
-                                  document.getElementById(
-                                    "anomaly-location-custom",
-                                  ) as HTMLInputElement;
-                                const typeCustomInput = document.getElementById(
-                                  "anomaly-type-custom",
-                                ) as HTMLInputElement;
-
-                                if (locationSelect && locationSelect.value) {
-                                  let location = locationSelect.value;
-                                  let type = typeSelect ? typeSelect.value : "";
-                                  let observation = observationInput
-                                    ? observationInput.value.trim()
-                                    : "";
-
-                                  // If "Other" is selected, use the custom input values
-                                  if (
-                                    location === "Other" &&
-                                    locationCustomInput &&
-                                    locationCustomInput.value.trim()
-                                  ) {
-                                    // Store the custom location name in the observation field with a special separator
-                                    observation = `custom_location:${locationCustomInput.value.trim()}|${observation}`;
-                                  }
-
-                                  if (
-                                    type === "Other" &&
-                                    typeCustomInput &&
-                                    typeCustomInput.value.trim()
-                                  ) {
-                                    // Store the custom type name in the observation field with a special separator
-                                    observation = `${observation}|custom_type:${typeCustomInput.value.trim()}`;
-                                  }
-
-                                  setAnatomicalAnomalies([
-                                    ...anatomicalAnomalies,
-                                    {
-                                      location: location,
-                                      type: type,
-                                      observation: observation,
-                                    },
-                                  ]);
-
-                                  // Reset inputs
-                                  locationSelect.selectedIndex = 0;
-                                  if (typeSelect) typeSelect.selectedIndex = 0;
-                                  if (observationInput)
-                                    observationInput.value = "";
-
-                                  // Remove custom inputs if they exist
-                                  if (locationCustomInput)
-                                    locationCustomInput.remove();
-                                  if (typeCustomInput) typeCustomInput.remove();
+                              <input
+                                type="text"
+                                placeholder="Specify type"
+                                className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                                value={
+                                  anomaly.observation.split("|")[1] || ""
                                 }
+                                onChange={(e) => {
+                                  const updatedAnomalies = [
+                                    ...anatomicalAnomalies,
+                                  ];
+                                  const parts =
+                                    anomaly.observation.split("|");
+                                  parts[1] = e.target.value;
+                                  updatedAnomalies[index].observation =
+                                    parts.join("|");
+                                  setAnatomicalAnomalies(updatedAnomalies);
+                                }}
+                              />
+                            </div>
+                          ) : (
+                            <select
+                              value={anomaly.type}
+                              onChange={(e) => {
+                                const updatedAnomalies = [
+                                  ...anatomicalAnomalies,
+                                ];
+                                updatedAnomalies[index].type =
+                                  e.target.value;
+                                setAnatomicalAnomalies(updatedAnomalies);
                               }}
-                              aria-label="Add Anomaly"
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
                             >
-                              +
-                            </button>
-                          </div>
+                              <option value="">Select type</option>
+                              <option value="Scoliosis">Scoliosis</option>
+                              <option value="Kyphosis">Kyphosis</option>
+                              <option value="Lordosis">Lordosis</option>
+                              <option value="Leg length discrepancy">
+                                Leg length discrepancy
+                              </option>
+                              <option value="Pelvic tilt">
+                                Pelvic tilt
+                              </option>
+                              <option value="Flat feet">Flat feet</option>
+                              <option value="High arch">High arch</option>
+                              <option value="Knock knees">
+                                Knock knees
+                              </option>
+                              <option value="Bow legs">Bow legs</option>
+                              <option value="Limited range of motion">
+                                Limited range of motion
+                              </option>
+                              <option value="Joint hypermobility">
+                                Joint hypermobility
+                              </option>
+                              <option value="Congenital anomaly">
+                                Congenital anomaly
+                              </option>
+                              <option value="Postural deviation">
+                                Postural deviation
+                              </option>
+                              <option value="Other">Other</option>
+                            </select>
+                          )}
+                        </div>
+
+                        {/* Observations */}
+                        <div className="flex-1 mr-2">
+                          <input
+                            type="text"
+                            value={anomaly.observation}
+                            onChange={(e) => {
+                              const updatedAnomalies = [
+                                ...anatomicalAnomalies,
+                              ];
+                              updatedAnomalies[index].observation =
+                                e.target.value;
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                            placeholder="Additional observations"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          />
+                        </div>
+
+                        {/* Remove Button */}
+                        <div className="w-8 flex justify-center">
+                          <button
+                            onClick={() => {
+                              const updatedAnomalies = [
+                                ...anatomicalAnomalies,
+                              ];
+                              updatedAnomalies.splice(index, 1);
+                              setAnatomicalAnomalies(updatedAnomalies);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
                         </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
 
-                  {/* CONCLUSIONS Section */}
-                  <div className="mt-8 pt-5 border-t-2 border-zinc-200">
-                    <h4 className="text-lg font-semibold text-gray-800 uppercase mb-4">
-                      CONCLUSIONS
-                    </h4>
+                  {/* Add New Anatomical Anomaly */}
+                  <div className="mt-4 border-t pt-4">
+                    {/* Labels row */}
+                    <div className="flex w-full mb-1">
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">
+                          Location
+                        </label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">
+                          Type
+                        </label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">
+                          Observations
+                        </label>
+                      </div>
+                      <div className="w-8"></div>
+                    </div>
 
-                    <div className="mb-6">
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
-                        General Notes
-                      </label>
-                      <div className="relative">
-                        <textarea
-                          value={conclusionsNotes}
-                          onChange={(e) => setConclusionsNotes(e.target.value)}
-                          placeholder="Enter your observations, conclusions, and additional notes about the examination..."
-                          className="w-full text-sm p-4 border border-gray-300 rounded-md min-h-[150px]"
-                          rows={6}
-                        />
-                        {voiceInputEnabled && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              // Start voice recognition for the conclusions textarea
-                              const recognition = new (
-                                window as any
-                              ).webkitSpeechRecognition();
-                              recognition.lang = "en-US";
-                              recognition.continuous = true;
-                              recognition.interimResults = false;
-
-                              recognition.onresult = (event: any) => {
-                                const transcript =
-                                  event.results[event.results.length - 1][0]
-                                    .transcript;
-                                setConclusionsNotes((prevNotes) =>
-                                  prevNotes
-                                    ? prevNotes + " " + transcript
-                                    : transcript,
+                    {/* Inputs row */}
+                    <div
+                      className="flex w-full items-start"
+                      id="new-anomaly-container"
+                    >
+                      {/* Location */}
+                      <div className="flex-1 mr-2">
+                        <div className="flex items-center gap-2">
+                          <select
+                            id="anomaly-location"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                            onChange={(e) => {
+                              const container = document.getElementById(
+                                "new-anomaly-container",
+                              );
+                              const customLocationInput =
+                                document.getElementById(
+                                  "anomaly-location-custom",
                                 );
-                              };
 
-                              recognition.start();
-
-                              // Add a stop button
-                              const stopButton =
-                                document.createElement("button");
-                              stopButton.textContent = "Stop Dictation";
-                              stopButton.className =
-                                "absolute bottom-2 right-14 px-3 py-1 bg-red-500 text-white text-sm rounded-md";
-                              stopButton.onclick = () => {
-                                recognition.stop();
-                                stopButton.remove();
-                              };
-
-                              const parent = document.activeElement?.parentNode;
-                              if (parent) {
-                                parent.appendChild(stopButton);
+                              if (
+                                e.target.value === "Other" &&
+                                container &&
+                                !customLocationInput
+                              ) {
+                                // Insert custom input after select
+                                const customField =
+                                  document.createElement("input");
+                                customField.id = "anomaly-location-custom";
+                                customField.type = "text";
+                                customField.placeholder =
+                                  "Specify location";
+                                customField.className =
+                                  "flex-1 text-sm p-2 border border-gray-300 rounded-md mt-1";
+                                const locationDiv =
+                                  e.target.parentElement?.parentElement;
+                                if (locationDiv) {
+                                  locationDiv.appendChild(customField);
+                                }
+                              } else if (
+                                e.target.value !== "Other" &&
+                                customLocationInput
+                              ) {
+                                customLocationInput.remove();
                               }
                             }}
-                            className="absolute top-2 right-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
-                            aria-label="Voice input"
-                            title="Use voice input"
                           >
-                            🎤
-                          </button>
-                        )}
+                            <option value="" disabled>
+                              Select location
+                            </option>
+                            <option value="Back">Back</option>
+                            <option value="Spine">Spine</option>
+                            <option value="Shoulder">Shoulder</option>
+                            <option value="Arm">Arm</option>
+                            <option value="Elbow">Elbow</option>
+                            <option value="Forearm">Forearm</option>
+                            <option value="Wrist">Wrist</option>
+                            <option value="Hand">Hand</option>
+                            <option value="Fingers">Fingers</option>
+                            <option value="Hip">Hip</option>
+                            <option value="Thigh">Thigh</option>
+                            <option value="Knee">Knee</option>
+                            <option value="Calf">Calf</option>
+                            <option value="Ankle">Ankle</option>
+                            <option value="Foot">Foot</option>
+                            <option value="Toes">Toes</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Type */}
+                      <div className="flex-1 mr-2">
+                        <div className="flex items-center gap-2">
+                          <select
+                            id="anomaly-type"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                            onChange={(e) => {
+                              const container = document.getElementById(
+                                "new-anomaly-container",
+                              );
+                              const customTypeInput =
+                                document.getElementById(
+                                  "anomaly-type-custom",
+                                );
+
+                              if (
+                                e.target.value === "Other" &&
+                                container &&
+                                !customTypeInput
+                              ) {
+                                // Insert custom input after select
+                                const customField =
+                                  document.createElement("input");
+                                customField.id = "anomaly-type-custom";
+                                customField.type = "text";
+                                customField.placeholder = "Specify type";
+                                customField.className =
+                                  "flex-1 text-sm p-2 border border-gray-300 rounded-md mt-1";
+                                const typeDiv =
+                                  e.target.parentElement?.parentElement;
+                                if (typeDiv) {
+                                  typeDiv.appendChild(customField);
+                                }
+                              } else if (
+                                e.target.value !== "Other" &&
+                                customTypeInput
+                              ) {
+                                customTypeInput.remove();
+                              }
+                            }}
+                          >
+                            <option value="" disabled>
+                              Select type
+                            </option>
+                            <option value="Scoliosis">Scoliosis</option>
+                            <option value="Kyphosis">Kyphosis</option>
+                            <option value="Lordosis">Lordosis</option>
+                            <option value="Leg length discrepancy">
+                              Leg length discrepancy
+                            </option>
+                            <option value="Pelvic tilt">Pelvic tilt</option>
+                            <option value="Flat feet">Flat feet</option>
+                            <option value="High arch">High arch</option>
+                            <option value="Knock knees">Knock knees</option>
+                            <option value="Bow legs">Bow legs</option>
+                            <option value="Limited range of motion">
+                              Limited range of motion
+                            </option>
+                            <option value="Joint hypermobility">
+                              Joint hypermobility
+                            </option>
+                            <option value="Congenital anomaly">
+                              Congenital anomaly
+                            </option>
+                            <option value="Postural deviation">
+                              Postural deviation
+                            </option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      {/* Observations */}
+                      <div className="flex-1 mr-2">
+                        <input
+                          type="text"
+                          id="anomaly-observation"
+                          placeholder="Additional observations"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        />
+                      </div>
+
+                      {/* Add Button */}
+                      <div className="w-8 flex justify-center">
+                        <button
+                          className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                          onClick={() => {
+                            const locationSelect = document.getElementById(
+                              "anomaly-location",
+                            ) as HTMLSelectElement;
+                            const typeSelect = document.getElementById(
+                              "anomaly-type",
+                            ) as HTMLSelectElement;
+                            const observationInput =
+                              document.getElementById(
+                                "anomaly-observation",
+                              ) as HTMLInputElement;
+                            const locationCustomInput =
+                              document.getElementById(
+                                "anomaly-location-custom",
+                              ) as HTMLInputElement;
+                            const typeCustomInput = document.getElementById(
+                              "anomaly-type-custom",
+                            ) as HTMLInputElement;
+
+                            if (locationSelect && locationSelect.value) {
+                              let location = locationSelect.value;
+                              let type = typeSelect ? typeSelect.value : "";
+                              let observation = observationInput
+                                ? observationInput.value.trim()
+                                : "";
+
+                              // If "Other" is selected, use the custom input values
+                              if (
+                                location === "Other" &&
+                                locationCustomInput &&
+                                locationCustomInput.value.trim()
+                              ) {
+                                // Store the custom location name in the observation field with a special separator
+                                observation = `custom_location:${locationCustomInput.value.trim()}|${observation}`;
+                              }
+
+                              if (
+                                type === "Other" &&
+                                typeCustomInput &&
+                                typeCustomInput.value.trim()
+                              ) {
+                                // Store the custom type name in the observation field with a special separator
+                                observation = `${observation}|custom_type:${typeCustomInput.value.trim()}`;
+                              }
+
+                              setAnatomicalAnomalies([
+                                ...anatomicalAnomalies,
+                                {
+                                  location: location,
+                                  type: type,
+                                  observation: observation,
+                                },
+                              ]);
+
+                              // Reset inputs
+                              locationSelect.selectedIndex = 0;
+                              if (typeSelect) typeSelect.selectedIndex = 0;
+                              if (observationInput)
+                                observationInput.value = "";
+
+                              // Remove custom inputs if they exist
+                              if (locationCustomInput)
+                                locationCustomInput.remove();
+                              if (typeCustomInput) typeCustomInput.remove();
+                            }
+                          }}
+                          aria-label="Add Anomaly"
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -4103,11 +4039,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionTrigger>
           <AccordionContent>
             <div className="p-4 space-y-4">
-              {/* Pathologies or Dysfunctions of the circulatory and respiratory systems */}
+              {/* Respiratory systems */}
               <div className="space-y-4">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  Pathologies or Dysfunctions of the Circulatory and Respiratory
-                  Systems
+                  Respiratory systems
                 </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">
@@ -4383,7 +4318,286 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   </div>
                 </div>
               </div>
+              {/* Circulatory systems */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Circulatory systems
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">
+                    Pathologies
+                  </h5>
 
+                  {/* Existing pathologies */}
+                  {pathologies.map((pathology, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      {pathology.type === "Other" ? (
+                        <div className="flex-1 flex gap-1">
+                          <select
+                            value={pathology.type}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              updatedPathologies[index].type = e.target.value;
+                              setPathologies(updatedPathologies);
+                            }}
+                            className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select pathology</option>
+                            <option value="Hypertension">Hypertension</option>
+                            <option value="Hypotension">Hypotension</option>
+                            <option value="Arrhythmia">Arrhythmia</option>
+                            <option value="Coronary artery disease">
+                              Coronary artery disease
+                            </option>
+                            <option value="Heart failure">Heart failure</option>
+                            <option value="Valvular heart disease">
+                              Valvular heart disease
+                            </option>
+                            <option value="Peripheral vascular disease">
+                              Peripheral vascular disease
+                            </option>
+                            <option value="Deep vein thrombosis">
+                              Deep vein thrombosis
+                            </option>
+                            <option value="Asthma">Asthma</option>
+                            <option value="Chronic obstructive pulmonary disease">
+                              Chronic obstructive pulmonary disease
+                            </option>
+                            <option value="Emphysema">Emphysema</option>
+                            <option value="Bronchitis">Bronchitis</option>
+                            <option value="Pneumonia">Pneumonia</option>
+                            <option value="Pleural effusion">
+                              Pleural effusion
+                            </option>
+                            <option value="Pulmonary embolism">
+                              Pulmonary embolism
+                            </option>
+                            <option value="Sleep apnea">Sleep apnea</option>
+                            <option value="Other">Other</option>
+                          </select>
+                          <input
+                            type="text"
+                            placeholder="Specify pathology"
+                            className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            value={pathology.notes.split("|")[0] || ""}
+                            onChange={(e) => {
+                              const updatedPathologies = [...pathologies];
+                              const parts = pathology.notes.split("|");
+                              parts[0] = e.target.value;
+                              updatedPathologies[index].notes = parts.join("|");
+                              setPathologies(updatedPathologies);
+                            }}
+                          />
+                        </div>
+                      ) : (
+                        <select
+                          value={pathology.type}
+                          onChange={(e) => {
+                            const updatedPathologies = [...pathologies];
+                            updatedPathologies[index].type = e.target.value;
+                            setPathologies(updatedPathologies);
+                          }}
+                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select pathology</option>
+                          <option value="Hypertension">Hypertension</option>
+                          <option value="Hypotension">Hypotension</option>
+                          <option value="Arrhythmia">Arrhythmia</option>
+                          <option value="Coronary artery disease">
+                            Coronary artery disease
+                          </option>
+                          <option value="Heart failure">Heart failure</option>
+                          <option value="Valvular heart disease">
+                            Valvular heart disease
+                          </option>
+                          <option value="Peripheral vascular disease">
+                            Peripheral vascular disease
+                          </option>
+                          <option value="Deep vein thrombosis">
+                            Deep vein thrombosis
+                          </option>
+                          <option value="Asthma">Asthma</option>
+                          <option value="Chronic obstructive pulmonary disease">
+                            Chronic obstructive pulmonary disease
+                          </option>
+                          <option value="Emphysema">Emphysema</option>
+                          <option value="Bronchitis">Bronchitis</option>
+                          <option value="Pneumonia">Pneumonia</option>
+                          <option value="Pleural effusion">
+                            Pleural effusion
+                          </option>
+                          <option value="Pulmonary embolism">
+                            Pulmonary embolism
+                          </option>
+                          <option value="Sleep apnea">Sleep apnea</option>
+                          <option value="Other">Other</option>
+                        </select>
+                      )}
+                      <input
+                        type="text"
+                        value={
+                          pathology.type === "Other"
+                            ? pathology.notes.split("|")[1] || ""
+                            : pathology.notes
+                        }
+                        onChange={(e) => {
+                          const updatedPathologies = [...pathologies];
+                          if (pathology.type === "Other") {
+                            const parts = pathology.notes.split("|");
+                            parts[1] = e.target.value;
+                            updatedPathologies[index].notes = parts.join("|");
+                          } else {
+                            updatedPathologies[index].notes = e.target.value;
+                          }
+                          setPathologies(updatedPathologies);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      <button
+                        onClick={() => {
+                          const updatedPathologies = [...pathologies];
+                          updatedPathologies.splice(index, 1);
+                          setPathologies(updatedPathologies);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+
+                  {/* Add new pathology */}
+                  <div
+                    className="flex items-center gap-2 mb-2"
+                    id="new-pathology-container"
+                  >
+                    <select
+                      id="pathology-type"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      defaultValue=""
+                      onChange={(e) => {
+                        const container = document.getElementById(
+                          "new-pathology-container",
+                        );
+                        const customInput =
+                          document.getElementById("pathology-custom");
+
+                        if (
+                          e.target.value === "Other" &&
+                          container &&
+                          !customInput
+                        ) {
+                          // Insert custom input after select
+                          const customField = document.createElement("input");
+                          customField.id = "pathology-custom";
+                          customField.type = "text";
+                          customField.placeholder = "Specify pathology";
+                          customField.className =
+                            "flex-1 text-sm p-2 border border-gray-300 rounded-md";
+                          container.insertBefore(
+                            customField,
+                            document.getElementById("pathology-notes"),
+                          );
+                        } else if (e.target.value !== "Other" && customInput) {
+                          customInput.remove();
+                        }
+                      }}
+                    >
+                      <option value="" disabled>
+                        Select pathology
+                      </option>
+                      <option value="Hypertension">Hypertension</option>
+                      <option value="Hypotension">Hypotension</option>
+                      <option value="Arrhythmia">Arrhythmia</option>
+                      <option value="Coronary artery disease">
+                        Coronary artery disease
+                      </option>
+                      <option value="Heart failure">Heart failure</option>
+                      <option value="Valvular heart disease">
+                        Valvular heart disease
+                      </option>
+                      <option value="Peripheral vascular disease">
+                        Peripheral vascular disease
+                      </option>
+                      <option value="Deep vein thrombosis">
+                        Deep vein thrombosis
+                      </option>
+                      <option value="Asthma">Asthma</option>
+                      <option value="Chronic obstructive pulmonary disease">
+                        Chronic obstructive pulmonary disease
+                      </option>
+                      <option value="Emphysema">Emphysema</option>
+                      <option value="Bronchitis">Bronchitis</option>
+                      <option value="Pneumonia">Pneumonia</option>
+                      <option value="Pleural effusion">Pleural effusion</option>
+                      <option value="Pulmonary embolism">
+                        Pulmonary embolism
+                      </option>
+                      <option value="Sleep apnea">Sleep apnea</option>
+                      <option value="Other">Other</option>
+                    </select>
+                    <input
+                      type="text"
+                      id="pathology-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    <button
+                      className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                      onClick={() => {
+                        const typeSelect = document.getElementById(
+                          "pathology-type",
+                        ) as HTMLSelectElement;
+                        const notesInput = document.getElementById(
+                          "pathology-notes",
+                        ) as HTMLInputElement;
+                        const customInput = document.getElementById(
+                          "pathology-custom",
+                        ) as HTMLInputElement;
+
+                        if (typeSelect && typeSelect.value) {
+                          let pathologyType = typeSelect.value;
+                          let pathologyNotes = notesInput
+                            ? notesInput.value
+                            : "";
+
+                          // If "Other" is selected, include the custom type in the notes with a separator
+                          if (
+                            pathologyType === "Other" &&
+                            customInput &&
+                            customInput.value
+                          ) {
+                            pathologyNotes =
+                              customInput.value + "|" + pathologyNotes;
+                          }
+
+                          setPathologies([
+                            ...pathologies,
+                            {
+                              type: pathologyType,
+                              notes: pathologyNotes,
+                            },
+                          ]);
+
+                          // Reset inputs
+                          typeSelect.selectedIndex = 0;
+                          if (notesInput) notesInput.value = "";
+
+                          // Remove the custom input if it exists
+                          if (customInput) {
+                            customInput.remove();
+                          }
+                        }
+                      }}
+                    >
+                      Add
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
               {/* Diseases or Dysfunctions of the digestive system */}
               <div className="space-y-4 mt-6">
                 <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
@@ -5018,6 +5232,9 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <option value="Sexually transmitted infection">
                         Sexually transmitted infection
                       </option>
+                      <option value="Nocturnal urination frequency">
+                        Nocturnal urination frequency
+                      </option>
                       <option value="Other">Other</option>
                     </select>
                     <input
@@ -5124,6 +5341,25 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           className="text-sm text-gray-700 mr-2 w-44"
                         >
                           Number of children born:
+                        </label>
+                        <input
+                          type="number"
+                          id="children-count"
+                          min="0"
+                          step="1"
+                          value={childrenCount}
+                          onChange={(e) => setChildrenCount(e.target.value)}
+                          className="text-sm p-2 border border-gray-300 rounded-md w-20"
+                        />
+                      </div>
+
+                      {/* Number of pregnancies */}
+                      <div className="flex items-center mb-4">
+                        <label
+                          htmlFor="children-count"
+                          className="text-sm text-gray-700 mr-2 w-44"
+                        >
+                          Number of pregnancies:
                         </label>
                         <input
                           type="number"
@@ -5437,6 +5673,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       </p>
                     </div>
                   </div>
+
+                 
                 </div>
               </div>
 
@@ -8402,6 +8640,83 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
 
+        {/* CONCLUSIONS Section */}
+        <AccordionItem value="conclusions">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>CONCLUSIONS</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+          <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+        
+
+          <div className="mb-6">
+            <label className="block text-sm font-medium text-gray-700 mb-3">
+              General Notes
+            </label>
+            <div className="relative">
+              <textarea
+                value={conclusionsNotes}
+                onChange={(e) => setConclusionsNotes(e.target.value)}
+                placeholder="Enter your observations, conclusions, and additional notes about the examination..."
+                className="w-full text-sm p-4 border border-gray-300 rounded-md min-h-[150px]"
+                rows={6}
+              />
+              {voiceInputEnabled && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Start voice recognition for the conclusions textarea
+                    const recognition = new (
+                      window as any
+                    ).webkitSpeechRecognition();
+                    recognition.lang = "en-US";
+                    recognition.continuous = true;
+                    recognition.interimResults = false;
+
+                    recognition.onresult = (event: any) => {
+                      const transcript =
+                        event.results[event.results.length - 1][0]
+                          .transcript;
+                      setConclusionsNotes((prevNotes) =>
+                        prevNotes
+                          ? prevNotes + " " + transcript
+                          : transcript,
+                      );
+                    };
+
+                    recognition.start();
+
+                    // Add a stop button
+                    const stopButton =
+                      document.createElement("button");
+                    stopButton.textContent = "Stop Dictation";
+                    stopButton.className =
+                      "absolute bottom-2 right-14 px-3 py-1 bg-red-500 text-white text-sm rounded-md";
+                    stopButton.onclick = () => {
+                      recognition.stop();
+                      stopButton.remove();
+                    };
+
+                    const parent = document.activeElement?.parentNode;
+                    if (parent) {
+                      parent.appendChild(stopButton);
+                    }
+                  }}
+                  className="absolute top-2 right-2 p-2 text-white bg-blue-500 rounded-md hover:bg-blue-600"
+                  aria-label="Voice input"
+                  title="Use voice input"
+                >
+                  🎤
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+          </AccordionContent>
+        </AccordionItem>
         {/* EXERCISES */}
         <AccordionItem value="exercises">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">

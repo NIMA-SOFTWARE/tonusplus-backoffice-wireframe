@@ -6165,10 +6165,24 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         key={index}
                         className="mb-2 p-3 border border-gray-200 rounded-lg bg-white"
                       >
-                        <div className="flex items-center gap-3 mb-2">
+                        {/* Labels row */}
+                        <div className="flex w-full mb-1">
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500">Test Name</label>
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500">Dx Notes</label>
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500">Sx Notes</label>
+                          </div>
+                          <div className="w-8"></div>
+                        </div>
+                        
+                        {/* Inputs row */}
+                        <div className="flex w-full items-start gap-2">
                           {/* Test Name */}
                           <div className="flex-1">
-                            <label className="block text-xs text-gray-500 mb-1">Test Name</label>
                             <select
                               value={test.testName}
                               onChange={(e) => {
@@ -6187,24 +6201,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             </select>
                           </div>
 
-                          {/* Remove Button */}
-                          <button
-                            onClick={() => {
-                              const updatedTests = [...convergenceTests];
-                              updatedTests.splice(index, 1);
-                              setConvergenceTests(updatedTests);
-                            }}
-                            className="p-2 text-red-500 hover:text-red-700"
-                            aria-label="Remove"
-                          >
-                            ✕
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                           {/* Dx Notes */}
-                          <div>
-                            <label className="block text-xs text-gray-500 mb-1">Dx Notes</label>
+                          <div className="flex-1">
                             <textarea
                               value={test.dxNotes}
                               onChange={(e) => {
@@ -6219,8 +6217,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           </div>
 
                           {/* Sx Notes */}
-                          <div>
-                            <label className="block text-xs text-gray-500 mb-1">Sx Notes</label>
+                          <div className="flex-1">
                             <textarea
                               value={test.sxNotes}
                               onChange={(e) => {
@@ -6233,16 +6230,45 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                               rows={2}
                             />
                           </div>
+
+                          {/* Remove Button */}
+                          <div className="w-8 flex justify-center">
+                            <button
+                              onClick={() => {
+                                const updatedTests = [...convergenceTests];
+                                updatedTests.splice(index, 1);
+                                setConvergenceTests(updatedTests);
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700"
+                              aria-label="Remove"
+                            >
+                              ✕
+                            </button>
+                          </div>
                         </div>
                       </div>
                     ))}
 
                     {/* Add new convergence test */}
                     <div className="p-3 border border-gray-200 rounded-lg bg-white">
-                      <div className="flex items-center gap-3 mb-2">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Test Name</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Dx Notes</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Sx Notes</label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
                         {/* Test Name */}
                         <div className="flex-1">
-                          <label className="block text-xs text-gray-500 mb-1">Test Name</label>
                           <select
                             id="new-convergence-test"
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
@@ -6257,10 +6283,30 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                           </select>
                         </div>
 
+                        {/* Dx Notes */}
+                        <div className="flex-1">
+                          <textarea
+                            id="new-dx-notes"
+                            placeholder="Notes for Dx (Right)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+
+                        {/* Sx Notes */}
+                        <div className="flex-1">
+                          <textarea
+                            id="new-sx-notes"
+                            placeholder="Notes for Sx (Left)"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+
                         {/* Add Button */}
-                        <div className="flex items-end">
+                        <div className="w-8 flex justify-center">
                           <button
-                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                            className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
                             onClick={() => {
                               const testSelect = document.getElementById(
                                 "new-convergence-test",
@@ -6288,33 +6334,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 if (sxNotesInput) sxNotesInput.value = "";
                               }
                             }}
+                            aria-label="Add Test"
                           >
-                            Add Test
+                            +
                           </button>
-                        </div>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                        {/* Dx Notes */}
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Dx Notes</label>
-                          <textarea
-                            id="new-dx-notes"
-                            placeholder="Notes for Dx (Right)"
-                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                            rows={2}
-                          />
-                        </div>
-
-                        {/* Sx Notes */}
-                        <div>
-                          <label className="block text-xs text-gray-500 mb-1">Sx Notes</label>
-                          <textarea
-                            id="new-sx-notes"
-                            placeholder="Notes for Sx (Left)"
-                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                            rows={2}
-                          />
                         </div>
                       </div>
                     </div>

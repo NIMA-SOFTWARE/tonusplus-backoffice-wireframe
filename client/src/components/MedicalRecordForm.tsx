@@ -2013,21 +2013,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 8: Anatomical Anomalies */}
-        <AccordionItem value="anatomical-anomalies">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <History className="mr-2 h-5 w-5 text-indigo-500" />
-              <span>Anatomical Anomalies</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="p-4 space-y-4">
-              {/* Anatomical Anomalies section */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  Anatomical Anomalies (Location and Type)
-                </h4>
+        {/* Section 8: Clinical History */}
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Anatomical Anomalies</h5>
                   

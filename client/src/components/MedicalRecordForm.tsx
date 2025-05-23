@@ -2333,22 +2333,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 9: Old Section */}
-        <AccordionItem value="old-section">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <History className="mr-2 h-5 w-5 text-indigo-500" />
-              <span>Old Section</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="p-4 space-y-4">
-
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        
-        {/* Section 6: Specific Clinical History */}
+        {/* Section 9: Specific Clinical History */}
         <AccordionItem value="clinical-history">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">

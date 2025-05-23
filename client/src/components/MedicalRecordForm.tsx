@@ -2013,12 +2013,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 8: Objective Examination */}
-        <AccordionItem value="objective-examination">
+        {/* Section 8: Specific Clinical History */}
+        <AccordionItem value="clinical-history">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
-              <Stethoscope className="mr-2 h-5 w-5 text-teal-500" />
-              <span>Objective Examination</span>
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>Specific Clinical History</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -5222,12 +5222,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 7: Specific Clinical History */}
-        <AccordionItem value="clinical-history">
+        {/* Section 7: Objective Examination */}
+        <AccordionItem value="objective-examination">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
-              <History className="mr-2 h-5 w-5 text-indigo-500" />
-              <span>Specific Clinical History</span>
+              <Stethoscope className="mr-2 h-5 w-5 text-teal-500" />
+              <span>Objective Examination</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>

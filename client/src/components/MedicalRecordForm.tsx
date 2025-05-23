@@ -89,6 +89,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [ogivalPalate, setOgivalPalate] = useState<string>("");
   const [ogivalPalateNotes, setOgivalPalateNotes] = useState<string>("");
 
+  // Dental arches state
+  const [dentalArches, setDentalArches] = useState<Array<{
+    location: string;
+    shape: string;
+  }>>([]);
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -7243,6 +7249,167 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                             rows={2}
                           />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* DENTAL ARCHES */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      DENTAL ARCHES
+                    </h5>
+
+                    {/* Existing dental arches */}
+                    {dentalArches.map((arch, index) => (
+                      <div
+                        key={index}
+                        className="mb-2 p-3 border border-gray-200 rounded-lg bg-white"
+                      >
+                        {/* Labels row */}
+                        <div className="flex w-full mb-1">
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500">Location</label>
+                          </div>
+                          <div className="flex-1">
+                            <label className="block text-xs text-gray-500">Shape</label>
+                          </div>
+                          <div className="w-8"></div>
+                        </div>
+                        
+                        {/* Inputs row */}
+                        <div className="flex w-full items-start gap-2">
+                          {/* Location */}
+                          <div className="flex-1">
+                            <select
+                              value={arch.location}
+                              onChange={(e) => {
+                                const updatedArches = [...dentalArches];
+                                updatedArches[index].location = e.target.value;
+                                setDentalArches(updatedArches);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select location</option>
+                              <option value="congruent UPPER">congruent UPPER</option>
+                              <option value="congruent LOWER">congruent LOWER</option>
+                              <option value="UPPER RIGHT">UPPER RIGHT</option>
+                              <option value="UPPER LEFT">UPPER LEFT</option>
+                              <option value="LOWER RIGHT">LOWER RIGHT</option>
+                              <option value="LOWER LEFT">LOWER LEFT</option>
+                            </select>
+                          </div>
+
+                          {/* Shape */}
+                          <div className="flex-1">
+                            <select
+                              value={arch.shape}
+                              onChange={(e) => {
+                                const updatedArches = [...dentalArches];
+                                updatedArches[index].shape = e.target.value;
+                                setDentalArches(updatedArches);
+                              }}
+                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select shape</option>
+                              <option value="∩">∩ (normal)</option>
+                              <option value="П">П</option>
+                              <option value="Ω">Ω</option>
+                              <option value="▲">▲</option>
+                            </select>
+                          </div>
+
+                          {/* Remove Button */}
+                          <div className="w-8 flex justify-center">
+                            <button
+                              onClick={() => {
+                                const updatedArches = [...dentalArches];
+                                updatedArches.splice(index, 1);
+                                setDentalArches(updatedArches);
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700"
+                              aria-label="Remove"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+
+                    {/* Add new dental arch */}
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Location</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Shape</label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Location */}
+                        <div className="flex-1">
+                          <select
+                            id="new-arch-location"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                          >
+                            <option value="" disabled>Select location</option>
+                            <option value="congruent UPPER">congruent UPPER</option>
+                            <option value="congruent LOWER">congruent LOWER</option>
+                            <option value="UPPER RIGHT">UPPER RIGHT</option>
+                            <option value="UPPER LEFT">UPPER LEFT</option>
+                            <option value="LOWER RIGHT">LOWER RIGHT</option>
+                            <option value="LOWER LEFT">LOWER LEFT</option>
+                          </select>
+                        </div>
+
+                        {/* Shape */}
+                        <div className="flex-1">
+                          <select
+                            id="new-arch-shape"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            defaultValue=""
+                          >
+                            <option value="" disabled>Select shape</option>
+                            <option value="∩">∩ (normal)</option>
+                            <option value="П">П</option>
+                            <option value="Ω">Ω</option>
+                            <option value="▲">▲</option>
+                          </select>
+                        </div>
+
+                        {/* Add Button */}
+                        <div className="w-8 flex justify-center">
+                          <button
+                            className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                            onClick={() => {
+                              const locationSelect = document.getElementById("new-arch-location") as HTMLSelectElement;
+                              const shapeSelect = document.getElementById("new-arch-shape") as HTMLSelectElement;
+
+                              if (locationSelect && locationSelect.value && shapeSelect && shapeSelect.value) {
+                                setDentalArches([
+                                  ...dentalArches,
+                                  {
+                                    location: locationSelect.value,
+                                    shape: shapeSelect.value,
+                                  },
+                                ]);
+
+                                // Reset inputs
+                                locationSelect.selectedIndex = 0;
+                                shapeSelect.selectedIndex = 0;
+                              }
+                            }}
+                            aria-label="Add Arch"
+                          >
+                            +
+                          </button>
                         </div>
                       </div>
                     </div>

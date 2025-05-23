@@ -1762,8 +1762,6 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           <AccordionContent>
             <div className="p-4 space-y-4">
               <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Surgical Interventions</h5>
-                  
                   {/* Existing surgical interventions */}
                   {surgicalInterventionsList.map((intervention, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
@@ -1849,137 +1847,32 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     </div>
                   ))}
                   
-                  {/* Show blank state message if no interventions and form is not shown */}
-                  {surgicalInterventionsList.length === 0 && !showSurgicalInterventionForm && (
+                  {/* Show blank state message if no interventions */}
+                  {surgicalInterventionsList.length === 0 && (
                     <div className="text-center py-6">
                       <p className="text-gray-500 mb-4">Patient has no surgical interventions</p>
-                      <button
-                        onClick={() => setShowSurgicalInterventionForm(true)}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                      >
-                        Add New
-                      </button>
                     </div>
                   )}
                   
-                  {/* Show add form when requested */}
-                  {showSurgicalInterventionForm && (
-                    <div className="border-t pt-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <select
-                          id="surgical-intervention-type"
-                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                          defaultValue=""
-                          onChange={(e) => {
-                            // Show/hide other input when "Other" is selected
-                            const otherInput = document.getElementById('other-intervention-input');
-                            if (otherInput) {
-                              otherInput.style.display = e.target.value === 'Other' ? 'inline-block' : 'none';
-                            }
-                          }}
-                        >
-                          <option value="" disabled>Select intervention type</option>
-                          <option value="Appendectomy">Appendectomy</option>
-                          <option value="Cesarean section">Cesarean section</option>
-                          <option value="Cholecystectomy">Cholecystectomy</option>
-                          <option value="Hysterectomy">Hysterectomy</option>
-                          <option value="Mastectomy">Mastectomy</option>
-                          <option value="Renal">Renal</option>
-                          <option value="Pulmonary">Pulmonary</option>
-                          <option value="Tumor">Tumor</option>
-                          <option value="Other">Other</option>
-                        </select>
-                        
-                        <input
-                          type="text"
-                          id="other-intervention-input"
-                          placeholder="Specify intervention"
-                          style={{ display: 'none' }}
-                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                        />
-                        
-                        <input
-                          type="text"
-                          id="intervention-year"
-                          placeholder="Year"
-                          className="w-32 text-sm p-2 border border-gray-300 rounded-md"
-                        />
-                        
-                        <input
-                          type="text"
-                          id="intervention-notes"
-                          placeholder="Notes"
-                          className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                        />
-                        
-                        <button
-                          className="px-3 py-2 bg-green-500 text-white text-sm rounded-md hover:bg-green-600"
-                          onClick={() => {
-                            const typeSelect = document.getElementById('surgical-intervention-type') as HTMLSelectElement;
-                            const otherInput = document.getElementById('other-intervention-input') as HTMLInputElement;
-                            const yearInput = document.getElementById('intervention-year') as HTMLInputElement;
-                            const notesInput = document.getElementById('intervention-notes') as HTMLInputElement;
-                            
-                            if (typeSelect && typeSelect.value) {
-                              let interventionType = typeSelect.value;
-                              
-                              // Use the custom value if "Other" is selected
-                              if (interventionType === 'Other' && otherInput && otherInput.value.trim()) {
-                                interventionType = otherInput.value.trim();
-                              }
-                              
-                              if (interventionType !== 'Other' || (interventionType === 'Other' && otherInput && otherInput.value.trim())) {
-                                // Add the new intervention to our list
-                                setSurgicalInterventionsList([
-                                  ...surgicalInterventionsList,
-                                  {
-                                    name: interventionType,
-                                    year: yearInput ? yearInput.value : '',
-                                    notes: notesInput ? notesInput.value : ''
-                                  }
-                                ]);
-                                
-                                // Reset inputs
-                                typeSelect.selectedIndex = 0;
-                                if (otherInput) otherInput.value = '';
-                                if (yearInput) yearInput.value = '';
-                                if (notesInput) notesInput.value = '';
-                                
-                                // Hide other input
-                                if (otherInput) {
-                                  otherInput.style.display = 'none';
-                                }
-                                
-                                // Hide the form
-                                setShowSurgicalInterventionForm(false);
-                              }
-                            }
-                          }}
-                        >
-                          Add
-                        </button>
-                        
-                        <button
-                          className="px-3 py-2 bg-gray-500 text-white text-sm rounded-md hover:bg-gray-600"
-                          onClick={() => setShowSurgicalInterventionForm(false)}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Show "Add New" button if there are existing interventions but form is not shown */}
-                  {surgicalInterventionsList.length > 0 && !showSurgicalInterventionForm && (
-                    <div className="text-center pt-2">
-                      <button
-                        onClick={() => setShowSurgicalInterventionForm(true)}
-                        className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
-                      >
-                        Add New
-                      </button>
-                    </div>
-                  )}
+                  {/* Always show "Add New" button */}
+                  <div className="text-center pt-2">
+                    <button
+                      onClick={() => {
+                        // Add a new empty intervention that will appear as editable row
+                        setSurgicalInterventionsList([
+                          ...surgicalInterventionsList,
+                          {
+                            name: '',
+                            year: '',
+                            notes: ''
+                          }
+                        ]);
+                      }}
+                      className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                    >
+                      Add New
+                    </button>
+                  </div>
                   
 
                 </div>

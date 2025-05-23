@@ -3208,29 +3208,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-3">
                         TFS
                       </label>
-                      <div className="flex items-center space-x-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="seated-tfs"
-                            value="Dx"
-                            checked={seatedTfs === "Dx"}
-                            onChange={() => setSeatedTfs("Dx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Dx</span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="seated-tfs"
-                            value="Sx"
-                            checked={seatedTfs === "Sx"}
-                            onChange={() => setSeatedTfs("Sx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Sx</span>
-                        </label>
+                      <div className="w-full max-w-xs">
+                        <select
+                          value={seatedTfs}
+                          onChange={(e) => setSeatedTfs(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select TFS option</option>
+                          <option value="Dx">Dx</option>
+                          <option value="Sx">Sx</option>
+                          <option value="None">None</option>
+                        </select>
                       </div>
                     </div>
 
@@ -3239,29 +3227,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <label className="block text-sm font-medium text-gray-700 mb-3">
                         Inferior Sacral Angle
                       </label>
-                      <div className="flex items-center space-x-4">
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="inferior-sacral-angle"
-                            value="Dx"
-                            checked={inferiorSacralAngle === "Dx"}
-                            onChange={() => setInferiorSacralAngle("Dx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Dx</span>
-                        </label>
-                        <label className="inline-flex items-center">
-                          <input
-                            type="radio"
-                            name="inferior-sacral-angle"
-                            value="Sx"
-                            checked={inferiorSacralAngle === "Sx"}
-                            onChange={() => setInferiorSacralAngle("Sx")}
-                            className="h-4 w-4 text-blue-600"
-                          />
-                          <span className="ml-2 text-sm text-gray-700">Sx</span>
-                        </label>
+                      <div className="w-full max-w-xs">
+                        <select
+                          value={inferiorSacralAngle}
+                          onChange={(e) => setInferiorSacralAngle(e.target.value)}
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                        >
+                          <option value="">Select option</option>
+                          <option value="Dx">Dx</option>
+                          <option value="Sx">Sx</option>
+                          <option value="None">None</option>
+                        </select>
                       </div>
                     </div>
 

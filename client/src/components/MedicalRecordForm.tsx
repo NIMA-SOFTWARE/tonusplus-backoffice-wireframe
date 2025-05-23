@@ -6916,6 +6916,93 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       <option value="Short posterior">Short posterior</option>
                     </select>
                   </div>
+
+                  {/* Dental Prosthesis Information */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      Dental Prosthesis Information
+                    </h5>
+
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Has Prosthesis</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Location</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Type</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Has Prosthesis */}
+                        <div className="flex-1">
+                          <select
+                            value={hasProsthesis}
+                            onChange={(e) => {
+                              setHasProsthesis(e.target.value);
+                              if (e.target.value !== "Yes") {
+                                setProsthesisLocation("");
+                                setProsthesisType("");
+                              }
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex-1">
+                          <select
+                            value={prosthesisLocation}
+                            onChange={(e) => setProsthesisLocation(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={hasProsthesis !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Upper">Upper</option>
+                            <option value="Lower">Lower</option>
+                            <option value="Both">Both</option>
+                          </select>
+                        </div>
+
+                        {/* Type */}
+                        <div className="flex-1">
+                          <select
+                            value={prosthesisType}
+                            onChange={(e) => setProsthesisType(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={hasProsthesis !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Total">Total</option>
+                            <option value="Partial">Partial</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-1">
+                          <textarea
+                            value={prosthesisNotes}
+                            onChange={(e) => setProsthesisNotes(e.target.value)}
+                            placeholder="Additional notes"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -7193,97 +7280,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 </div>
               </div>
 
-              {/* DENTAL PROSTHESES Section */}
-              <div className="space-y-4 mt-6">
-                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  DENTAL PROSTHESES
-                </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">
-                    Dental Prosthesis Information
-                  </h5>
 
-                  <div className="p-3 border border-gray-200 rounded-lg bg-white">
-                    {/* Labels row */}
-                    <div className="flex w-full mb-1">
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">Has Prosthesis</label>
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">Location</label>
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">Type</label>
-                      </div>
-                      <div className="flex-1">
-                        <label className="block text-xs text-gray-500">Notes</label>
-                      </div>
-                    </div>
-                    
-                    {/* Inputs row */}
-                    <div className="flex w-full items-start gap-2">
-                      {/* Has Prosthesis */}
-                      <div className="flex-1">
-                        <select
-                          value={hasProsthesis}
-                          onChange={(e) => {
-                            setHasProsthesis(e.target.value);
-                            if (e.target.value !== "Yes") {
-                              setProsthesisLocation("");
-                              setProsthesisType("");
-                            }
-                          }}
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                        >
-                          <option value="">Select</option>
-                          <option value="Yes">Yes</option>
-                          <option value="No">No</option>
-                        </select>
-                      </div>
-
-                      {/* Location */}
-                      <div className="flex-1">
-                        <select
-                          value={prosthesisLocation}
-                          onChange={(e) => setProsthesisLocation(e.target.value)}
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          disabled={hasProsthesis !== "Yes"}
-                        >
-                          <option value="">Select</option>
-                          <option value="Upper">Upper</option>
-                          <option value="Lower">Lower</option>
-                          <option value="Both">Both</option>
-                        </select>
-                      </div>
-
-                      {/* Type */}
-                      <div className="flex-1">
-                        <select
-                          value={prosthesisType}
-                          onChange={(e) => setProsthesisType(e.target.value)}
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          disabled={hasProsthesis !== "Yes"}
-                        >
-                          <option value="">Select</option>
-                          <option value="Total">Total</option>
-                          <option value="Partial">Partial</option>
-                        </select>
-                      </div>
-
-                      {/* Notes */}
-                      <div className="flex-1">
-                        <textarea
-                          value={prosthesisNotes}
-                          onChange={(e) => setProsthesisNotes(e.target.value)}
-                          placeholder="Additional notes"
-                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                          rows={2}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
 
               {/* ORIENTATION OF TEETH IN DIFFERENT SECTORS Section */}
               <div className="space-y-4 mt-6">

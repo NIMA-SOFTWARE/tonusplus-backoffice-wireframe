@@ -1736,22 +1736,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 6: Generic Anamnesis */}
-        <AccordionItem value="generic-anamnesis">
-          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
-            <div className="flex items-center">
-              <Clipboard className="mr-2 h-5 w-5 text-amber-500" />
-              <span>Generic Anamnesis</span>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="p-4 space-y-6">
-              {/* Other Generic Anamnesis content will go here */}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-        
-        {/* Section 7: Surgical Interventions */}
+        {/* Section 6: Surgical Interventions */}
         <AccordionItem value="surgical-interventions">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">

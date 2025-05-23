@@ -65,6 +65,14 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
     sxNotes: string;
   }>>([]);
 
+  // Dental prostheses state
+  const [dentalProstheses, setDentalProstheses] = useState<Array<{
+    hasProsthesis: string; // "Yes" or "No"
+    location: string; // "Upper" or "Lower"
+    type: string; // "Total" or "Partial"
+    notes: string;
+  }>>([]);
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -7181,6 +7189,259 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             </button>
                           </div>
                         ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* DENTAL PROSTHESES Section */}
+              <div className="space-y-4 mt-6">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  DENTAL PROSTHESES
+                </h4>
+                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">
+                    Dental Prosthesis Information
+                  </h5>
+
+                  {/* Existing dental prostheses */}
+                  {dentalProstheses.map((prosthesis, index) => (
+                    <div
+                      key={index}
+                      className="mb-2 p-3 border border-gray-200 rounded-lg bg-white"
+                    >
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Has Prosthesis</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Location</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Type</label>
+                        </div>
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                        <div className="w-8"></div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Has Prosthesis */}
+                        <div className="flex-1">
+                          <select
+                            value={prosthesis.hasProsthesis}
+                            onChange={(e) => {
+                              const updatedProstheses = [...dentalProstheses];
+                              updatedProstheses[index].hasProsthesis = e.target.value;
+                              setDentalProstheses(updatedProstheses);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                          </select>
+                        </div>
+
+                        {/* Location */}
+                        <div className="flex-1">
+                          <select
+                            value={prosthesis.location}
+                            onChange={(e) => {
+                              const updatedProstheses = [...dentalProstheses];
+                              updatedProstheses[index].location = e.target.value;
+                              setDentalProstheses(updatedProstheses);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={prosthesis.hasProsthesis !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Upper">Upper</option>
+                            <option value="Lower">Lower</option>
+                            <option value="Both">Both</option>
+                          </select>
+                        </div>
+
+                        {/* Type */}
+                        <div className="flex-1">
+                          <select
+                            value={prosthesis.type}
+                            onChange={(e) => {
+                              const updatedProstheses = [...dentalProstheses];
+                              updatedProstheses[index].type = e.target.value;
+                              setDentalProstheses(updatedProstheses);
+                            }}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            disabled={prosthesis.hasProsthesis !== "Yes"}
+                          >
+                            <option value="">Select</option>
+                            <option value="Total">Total</option>
+                            <option value="Partial">Partial</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-1">
+                          <textarea
+                            value={prosthesis.notes}
+                            onChange={(e) => {
+                              const updatedProstheses = [...dentalProstheses];
+                              updatedProstheses[index].notes = e.target.value;
+                              setDentalProstheses(updatedProstheses);
+                            }}
+                            placeholder="Additional notes"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+
+                        {/* Remove Button */}
+                        <div className="w-8 flex justify-center">
+                          <button
+                            onClick={() => {
+                              const updatedProstheses = [...dentalProstheses];
+                              updatedProstheses.splice(index, 1);
+                              setDentalProstheses(updatedProstheses);
+                            }}
+                            className="p-2 text-red-500 hover:text-red-700"
+                            aria-label="Remove"
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Add new dental prosthesis */}
+                  <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                    {/* Labels row */}
+                    <div className="flex w-full mb-1">
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Has Prosthesis</label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Location</label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Type</label>
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-xs text-gray-500">Notes</label>
+                      </div>
+                      <div className="w-8"></div>
+                    </div>
+                    
+                    {/* Inputs row */}
+                    <div className="flex w-full items-start gap-2">
+                      {/* Has Prosthesis */}
+                      <div className="flex-1">
+                        <select
+                          id="new-prosthesis-has"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          defaultValue=""
+                          onChange={(e) => {
+                            const locationSelect = document.getElementById("new-prosthesis-location") as HTMLSelectElement;
+                            const typeSelect = document.getElementById("new-prosthesis-type") as HTMLSelectElement;
+                            
+                            if (e.target.value !== "Yes") {
+                              locationSelect.disabled = true;
+                              typeSelect.disabled = true;
+                              locationSelect.value = "";
+                              typeSelect.value = "";
+                            } else {
+                              locationSelect.disabled = false;
+                              typeSelect.disabled = false;
+                            }
+                          }}
+                        >
+                          <option value="" disabled>Select</option>
+                          <option value="Yes">Yes</option>
+                          <option value="No">No</option>
+                        </select>
+                      </div>
+
+                      {/* Location */}
+                      <div className="flex-1">
+                        <select
+                          id="new-prosthesis-location"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          defaultValue=""
+                          disabled
+                        >
+                          <option value="" disabled>Select</option>
+                          <option value="Upper">Upper</option>
+                          <option value="Lower">Lower</option>
+                          <option value="Both">Both</option>
+                        </select>
+                      </div>
+
+                      {/* Type */}
+                      <div className="flex-1">
+                        <select
+                          id="new-prosthesis-type"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          defaultValue=""
+                          disabled
+                        >
+                          <option value="" disabled>Select</option>
+                          <option value="Total">Total</option>
+                          <option value="Partial">Partial</option>
+                        </select>
+                      </div>
+
+                      {/* Notes */}
+                      <div className="flex-1">
+                        <textarea
+                          id="new-prosthesis-notes"
+                          placeholder="Additional notes"
+                          className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          rows={2}
+                        />
+                      </div>
+
+                      {/* Add Button */}
+                      <div className="w-8 flex justify-center">
+                        <button
+                          className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                          onClick={() => {
+                            const hasSelect = document.getElementById("new-prosthesis-has") as HTMLSelectElement;
+                            const locationSelect = document.getElementById("new-prosthesis-location") as HTMLSelectElement;
+                            const typeSelect = document.getElementById("new-prosthesis-type") as HTMLSelectElement;
+                            const notesInput = document.getElementById("new-prosthesis-notes") as HTMLTextAreaElement;
+
+                            if (hasSelect && hasSelect.value) {
+                              setDentalProstheses([
+                                ...dentalProstheses,
+                                {
+                                  hasProsthesis: hasSelect.value,
+                                  location: locationSelect ? locationSelect.value : "",
+                                  type: typeSelect ? typeSelect.value : "",
+                                  notes: notesInput ? notesInput.value : "",
+                                },
+                              ]);
+
+                              // Reset inputs
+                              hasSelect.selectedIndex = 0;
+                              if (locationSelect) {
+                                locationSelect.selectedIndex = 0;
+                                locationSelect.disabled = true;
+                              }
+                              if (typeSelect) {
+                                typeSelect.selectedIndex = 0;
+                                typeSelect.disabled = true;
+                              }
+                              if (notesInput) notesInput.value = "";
+                            }
+                          }}
+                          aria-label="Add Prosthesis"
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>

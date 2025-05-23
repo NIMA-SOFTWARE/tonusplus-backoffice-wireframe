@@ -2513,19 +2513,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     ),
                   )}
 
-                  {/* Add New Button (always visible) */}
-                  <div className="flex justify-center">
-                    <button
-                      onClick={() => setShowNewInstrumentalExamForm(!showNewInstrumentalExamForm)}
-                      className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex items-center gap-2"
-                    >
-                      <span>+</span>
-                      <span>{showNewInstrumentalExamForm ? 'Cancel' : 'Add New Instrumental Exam'}</span>
-                    </button>
-                  </div>
-                  
-                  {/* Add New Instrumental Exam Form */}
-                  {showNewInstrumentalExamForm && (
+                  {/* Add New Instrumental Exam Form (always visible) */}
                     <div className="mt-4 border-t pt-4">
                       {/* Labels row */}
                       <div className="flex w-full mb-1">
@@ -2652,10 +2640,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         />
                       </div>
 
-                      {/* Add Button */}
-                      <div className="w-8 flex justify-center">
+                      {/* Add New Button */}
+                      <div className="w-auto flex justify-center">
                         <button
-                          className="p-2 bg-green-500 text-white rounded-md hover:bg-green-600"
+                          className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600 flex items-center gap-2"
                           onClick={() => {
                             const nameSelect = document.getElementById(
                               "new-exam-name",
@@ -2710,19 +2698,16 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                                 "new-exam-file",
                               ) as HTMLInputElement;
                               if (fileInput) fileInput.value = "";
-                              
-                              // Hide the form after adding
-                              setShowNewInstrumentalExamForm(false);
                             }
                           }}
                           aria-label="Add Exam"
                         >
-                          +
+                          <span>+</span>
+                          <span>Add New</span>
                         </button>
                       </div>
                     </div>
-                    </div>
-                  )}
+                  </div>
                 </div>
               </div>
 

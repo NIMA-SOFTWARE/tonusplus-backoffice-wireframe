@@ -1541,43 +1541,144 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                   return (
                     <>
                       {/* Fractures */}
-                      <TraumaEntrySection
-                        title="Fractures"
-                        entries={fractures}
-                        setEntries={setFractures}
-                        options={[
-                          { value: "Humerus", label: "Humerus" },
-                          { value: "Radius", label: "Radius" },
-                          { value: "Cubitus", label: "Cubitus" },
-                          { value: "Olecranon", label: "Olecranon" },
-                          { value: "Carpals", label: "Carpals" },
-                          { value: "Costal", label: "Costal" },
-                          { value: "Vertebra", label: "Vertebra" },
-                          { value: "Pelvis", label: "Pelvis" },
-                          { value: "Coccyx", label: "Coccyx" },
-                          { value: "Femoral neck", label: "Femoral neck" },
-                          { value: "Femur", label: "Femur" },
-                          { value: "Tibial plateau", label: "Tibial plateau" },
-                          { value: "Tibia", label: "Tibia" },
-                          { value: "Fibula", label: "Fibula" },
-                          {
-                            value: "Internal malleolus",
-                            label: "Internal malleolus",
-                          },
-                          {
-                            value: "External malleolus",
-                            label: "External malleolus",
-                          },
-                          { value: "Bimalleolar", label: "Bimalleolar" },
-                          { value: "Tarsals", label: "Tarsals" },
-                          { value: "Halcus", label: "Halcus" },
-                          {
-                            value: "Other",
-                            label: "Other (specify in observation)",
-                          },
-                        ]}
-                        selectLabel="Add new fracture location"
-                      />
+                      <div>
+                        <h5 className="text-sm font-medium text-gray-700 mb-3">
+                          Fractures
+                        </h5>
+
+                        {/* Existing fractures */}
+                        {fractures.map((fracture, index) => (
+                          <div key={index} className="flex items-center gap-2 mb-2">
+                            <select
+                              value={fracture.location}
+                              onChange={(e) => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures[index].location = e.target.value;
+                                setFractures(updatedFractures);
+
+                                // Show/hide other input when "Other" is selected
+                                const otherInput = document.getElementById(
+                                  `fracture-other-${index}`,
+                                );
+                                if (otherInput) {
+                                  otherInput.style.display =
+                                    e.target.value === "Other"
+                                      ? "inline-block"
+                                      : "none";
+                                }
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            >
+                              <option value="">Select fracture location</option>
+                              <option value="Humerus">Humerus</option>
+                              <option value="Radius">Radius</option>
+                              <option value="Cubitus">Cubitus</option>
+                              <option value="Olecranon">Olecranon</option>
+                              <option value="Carpals">Carpals</option>
+                              <option value="Costal">Costal</option>
+                              <option value="Vertebra">Vertebra</option>
+                              <option value="Pelvis">Pelvis</option>
+                              <option value="Coccyx">Coccyx</option>
+                              <option value="Femoral neck">Femoral neck</option>
+                              <option value="Femur">Femur</option>
+                              <option value="Tibial plateau">Tibial plateau</option>
+                              <option value="Tibia">Tibia</option>
+                              <option value="Fibula">Fibula</option>
+                              <option value="Internal malleolus">Internal malleolus</option>
+                              <option value="External malleolus">External malleolus</option>
+                              <option value="Bimalleolar">Bimalleolar</option>
+                              <option value="Tarsals">Tarsals</option>
+                              <option value="Halcus">Halcus</option>
+                              <option value="Other">Other</option>
+                            </select>
+
+                            <input
+                              id={`fracture-other-${index}`}
+                              type="text"
+                              placeholder="Specify fracture location"
+                              style={{
+                                display:
+                                  fracture.location === "Other"
+                                    ? "inline-block"
+                                    : "none",
+                              }}
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                              onChange={(e) => {
+                                if (e.target.value.trim()) {
+                                  const updatedFractures = [...fractures];
+                                  updatedFractures[index].location = e.target.value;
+                                  setFractures(updatedFractures);
+                                }
+                              }}
+                            />
+
+                            <input
+                              type="text"
+                              value={fracture.year}
+                              onChange={(e) => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures[index].year = e.target.value;
+                                setFractures(updatedFractures);
+                              }}
+                              placeholder="Year"
+                              className="w-32 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <input
+                              type="text"
+                              value={fracture.observation || ""}
+                              onChange={(e) => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures[index].observation = e.target.value;
+                                setFractures(updatedFractures);
+                              }}
+                              placeholder="Notes"
+                              className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                            />
+
+                            <button
+                              onClick={() => {
+                                const updatedFractures = [...fractures];
+                                updatedFractures.splice(index, 1);
+                                setFractures(updatedFractures);
+                              }}
+                              className="p-2 text-red-500 hover:text-red-700"
+                              aria-label="Remove"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                        ))}
+
+                        {/* Show blank state message if no fractures */}
+                        {fractures.length === 0 && (
+                          <div className="text-center py-6">
+                            <p className="text-gray-500 mb-4">
+                              Patient has no fractures
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Always show "Add New" button */}
+                        <div className="text-center pt-2">
+                          <button
+                            onClick={() => {
+                              // Add a new empty fracture that will appear as editable row
+                              setFractures([
+                                ...fractures,
+                                {
+                                  location: "",
+                                  year: "",
+                                  observation: "",
+                                },
+                              ]);
+                            }}
+                            className="px-4 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
+                          >
+                            Add New
+                          </button>
+                        </div>
+                      </div>
 
                       {/* Strains */}
                       <div className="border-t border-gray-200 pt-4 mt-4"></div>

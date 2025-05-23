@@ -2013,25 +2013,39 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 8: Clinical History */}
+        {/* Section 8: Specific Clinical History */}
+        <AccordionItem value="clinical-history">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>Specific Clinical History</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              {/* Pathologies or Dysfunctions of the circulatory and respiratory systems */}
+              <div className="space-y-4">
+                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
+                  Pathologies or Dysfunctions of the Circulatory and Respiratory Systems
+                </h4>
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
-                  <h5 className="text-sm font-medium text-gray-700 mb-3">Anatomical Anomalies</h5>
+                  <h5 className="text-sm font-medium text-gray-700 mb-3">Pathologies</h5>
                   
-                  {/* Existing anatomical anomalies */}
-                  {anatomicalAnomalies.map((anomaly, index) => (
+                  {/* Existing pathologies */}
+                  {pathologies.map((pathology, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
-                      {anomaly.location === "Other" ? (
+                      {pathology.type === "Other" ? (
                         <div className="flex-1 flex gap-1">
                           <select
-                            value={anomaly.location}
+                            value={pathology.type}
                             onChange={(e) => {
-                              const updatedAnomalies = [...anatomicalAnomalies];
-                              updatedAnomalies[index].location = e.target.value;
-                              setAnatomicalAnomalies(updatedAnomalies);
+                              const updatedPathologies = [...pathologies];
+                              updatedPathologies[index].type = e.target.value;
+                              setPathologies(updatedPathologies);
                             }}
                             className="w-1/3 text-sm p-2 border border-gray-300 rounded-md"
                           >
-                            <option value="">Select location</option>
+                            <option value="">Select condition</option>
                             <option value="Back">Back</option>
                             <option value="Spine">Spine</option>
                             <option value="Shoulder">Shoulder</option>
@@ -2054,27 +2068,27 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             type="text"
                             placeholder="Specify location"
                             className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                            value={anomaly.observation.split('|')[0] || ''}
+                            value={pathology.notes.split('|')[0] || ''}
                             onChange={(e) => {
-                              const updatedAnomalies = [...anatomicalAnomalies];
-                              const parts = anomaly.observation.split('|');
+                              const updatedPathologies = [...pathologies];
+                              const parts = pathology.notes.split('|');
                               parts[0] = e.target.value;
-                              updatedAnomalies[index].observation = parts.join('|');
-                              setAnatomicalAnomalies(updatedAnomalies);
+                              updatedPathologies[index].notes = parts.join('|');
+                              setPathologies(updatedPathologies);
                             }}
                           />
                         </div>
                       ) : (
                         <select
-                          value={anomaly.location}
+                          value={pathology.type}
                           onChange={(e) => {
-                            const updatedAnomalies = [...anatomicalAnomalies];
-                            updatedAnomalies[index].location = e.target.value;
-                            setAnatomicalAnomalies(updatedAnomalies);
+                            const updatedPathologies = [...pathologies];
+                            updatedPathologies[index].type = e.target.value;
+                            setPathologies(updatedPathologies);
                           }}
                           className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                         >
-                          <option value="">Select location</option>
+                          <option value="">Select condition</option>
                           <option value="Back">Back</option>
                           <option value="Spine">Spine</option>
                           <option value="Shoulder">Shoulder</option>
@@ -2095,10 +2109,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </select>
                       )}
                       
-                      {anomaly.type === "Other" ? (
+                      {pathology.type === "Other" ? (
                         <div className="flex-1 flex gap-1">
                           <select
-                            value={anomaly.type}
+                            value={pathology.type}
                             onChange={(e) => {
                               const updatedAnomalies = [...anatomicalAnomalies];
                               updatedAnomalies[index].type = e.target.value;
@@ -2126,10 +2140,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             type="text"
                             placeholder="Specify type"
                             className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                            value={anomaly.observation.split('|')[1] || ''}
+                            value={pathology.observation.split('|')[1] || ''}
                             onChange={(e) => {
                               const updatedAnomalies = [...anatomicalAnomalies];
-                              const parts = anomaly.observation.split('|');
+                              const parts = pathology.observation.split('|');
                               parts[1] = e.target.value;
                               updatedAnomalies[index].observation = parts.join('|');
                               setAnatomicalAnomalies(updatedAnomalies);
@@ -2138,7 +2152,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         </div>
                       ) : (
                         <select
-                          value={anomaly.type}
+                          value={pathology.type}
                           onChange={(e) => {
                             const updatedAnomalies = [...anatomicalAnomalies];
                             updatedAnomalies[index].type = e.target.value;
@@ -2165,7 +2179,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       )}
                       <input
                         type="text"
-                        value={anomaly.observation}
+                        value={pathology.observation}
                         onChange={(e) => {
                           const updatedAnomalies = [...anatomicalAnomalies];
                           updatedAnomalies[index].observation = e.target.value;

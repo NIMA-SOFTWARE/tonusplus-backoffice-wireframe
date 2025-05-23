@@ -77,6 +77,10 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   const [bridgeType, setBridgeType] = useState<string>("");
   const [bridgeNotes, setBridgeNotes] = useState<string>("");
 
+  // Mandibular deviation state
+  const [mandibularDeviation, setMandibularDeviation] = useState<string>("");
+  const [mandibularDeviationNotes, setMandibularDeviationNotes] = useState<string>("");
+
   // Local Anamnesis state
   const [whenDoesItHurt, setWhenDoesItHurt] = useState<string[]>([]);
   const [howDoesItHurt, setHowDoesItHurt] = useState<string[]>([]);
@@ -7089,6 +7093,53 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             value={bridgeNotes}
                             onChange={(e) => setBridgeNotes(e.target.value)}
                             placeholder="Additional notes"
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                            rows={2}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Mandibular Deviation */}
+                  <div className="mt-6 pt-4 border-t border-zinc-200">
+                    <h5 className="text-sm font-medium text-gray-700 mb-3">
+                      MANDIBULAR DEVIATION
+                    </h5>
+
+                    <div className="p-3 border border-gray-200 rounded-lg bg-white">
+                      {/* Labels row */}
+                      <div className="flex w-full mb-1">
+                        <div className="flex-1">
+                          <label className="block text-xs text-gray-500">Deviation Direction</label>
+                        </div>
+                        <div className="flex-2">
+                          <label className="block text-xs text-gray-500">Notes</label>
+                        </div>
+                      </div>
+                      
+                      {/* Inputs row */}
+                      <div className="flex w-full items-start gap-2">
+                        {/* Deviation Direction */}
+                        <div className="flex-1">
+                          <select
+                            value={mandibularDeviation}
+                            onChange={(e) => setMandibularDeviation(e.target.value)}
+                            className="w-full text-sm p-2 border border-gray-300 rounded-md"
+                          >
+                            <option value="">Select direction</option>
+                            <option value="Left">Left</option>
+                            <option value="Right">Right</option>
+                            <option value="None">None</option>
+                          </select>
+                        </div>
+
+                        {/* Notes */}
+                        <div className="flex-2">
+                          <textarea
+                            value={mandibularDeviationNotes}
+                            onChange={(e) => setMandibularDeviationNotes(e.target.value)}
+                            placeholder="Additional notes about mandibular deviation"
                             className="w-full text-sm p-2 border border-gray-300 rounded-md"
                             rows={2}
                           />

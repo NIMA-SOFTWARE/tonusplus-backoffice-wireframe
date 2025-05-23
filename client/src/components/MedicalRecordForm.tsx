@@ -2633,170 +2633,110 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
                   <h5 className="text-sm font-medium text-gray-700 mb-3">Medical Tests and Examinations</h5>
                   
-                  {/* Show message when no exams */}
-                  {instrumentalExams.length === 0 && !showNewInstrumentalExamForm && (
-                    <div className="text-center py-4">
-                      <p className="text-sm text-gray-500 mb-3">Patient has no instrumental exams recorded</p>
+                  {/* Show blank state message if no exams */}
+                  {instrumentalExams.length === 0 && (
+                    <div className="text-center py-6">
+                      <p className="text-gray-500 mb-4">
+                        Patient has no instrumental exams
+                      </p>
                     </div>
                   )}
 
-                  {/* Existing Instrumental Exams */}
-                  {instrumentalExams.map(
-                    (exam: InstrumentalExam, index: number) => (
-                      <div
-                        key={index}
-                        className="flex items-center gap-3 mb-4 pb-3 border-b border-gray-200"
+                  {/* Existing instrumental exams */}
+                  {instrumentalExams.map((exam, index) => (
+                    <div key={index} className="flex items-center gap-2 mb-2">
+                      <select
+                        value={exam.name.includes("|") ? "Other" : exam.name}
+                        onChange={(e) => {
+                          const updatedExams = [...instrumentalExams];
+                          updatedExams[index].name = e.target.value;
+                          setInstrumentalExams(updatedExams);
+
+                          // Show/hide other input when "Other" is selected
+                          const otherInput = document.getElementById(
+                            `exam-other-${index}`,
+                          );
+                          if (otherInput) {
+                            otherInput.style.display =
+                              e.target.value === "Other"
+                                ? "inline-block"
+                                : "none";
+                          }
+                        }}
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
                       >
-                        {/* Labels row */}
-                        <div className="flex w-full mb-1">
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              Exam Name
-                            </label>
-                          </div>
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              File Attachment
-                            </label>
-                          </div>
-                          <div className="flex-1">
-                            <label className="block text-xs text-gray-500">
-                              Notes
-                            </label>
-                          </div>
-                          <div className="w-8"></div>
-                        </div>
+                        <option value="">Select exam type</option>
+                        <option value="X-Ray">X-Ray</option>
+                        <option value="MRI">MRI</option>
+                        <option value="CT Scan">CT Scan</option>
+                        <option value="Ultrasound">Ultrasound</option>
+                        <option value="Blood Test">Blood Test</option>
+                        <option value="Urine Test">Urine Test</option>
+                        <option value="EKG/ECG">EKG/ECG</option>
+                        <option value="EMG">EMG</option>
+                        <option value="Bone Densitometry">Bone Densitometry</option>
+                        <option value="PET Scan">PET Scan</option>
+                        <option value="Endoscopy">Endoscopy</option>
+                        <option value="Other">Other</option>
+                      </select>
 
-                        {/* Inputs row */}
-                        <div className="flex w-full items-start">
-                          {/* Exam Name */}
-                          <div className="flex-1 mr-2">
-                            <div className="flex items-center gap-2">
-                              <select
-                                value={
-                                  exam.name.includes("|") ? "Other" : exam.name
-                                }
-                                onChange={(e) => {
-                                  const updatedExams = [...instrumentalExams];
+                      <input
+                        id={`exam-other-${index}`}
+                        type="text"
+                        placeholder="Specify exam type"
+                        style={{
+                          display:
+                            exam.name === "Other" || exam.name.includes("|")
+                              ? "inline-block"
+                              : "none",
+                        }}
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                        onChange={(e) => {
+                          if (e.target.value.trim()) {
+                            const updatedExams = [...instrumentalExams];
+                            updatedExams[index].name = e.target.value;
+                            setInstrumentalExams(updatedExams);
+                          }
+                        }}
+                      />
 
-                                  if (e.target.value === "Other") {
-                                    const customName = exam.name.includes("|")
-                                      ? exam.name.split("|")[1]
-                                      : "";
-                                    updatedExams[index].name =
-                                      `Other|${customName}`;
-                                  } else {
-                                    updatedExams[index].name = e.target.value;
-                                  }
+                      <input
+                        type="text"
+                        value={exam.fileAttachment}
+                        onChange={(e) => {
+                          const updatedExams = [...instrumentalExams];
+                          updatedExams[index].fileAttachment = e.target.value;
+                          setInstrumentalExams(updatedExams);
+                        }}
+                        placeholder="File name"
+                        className="w-32 text-sm p-2 border border-gray-300 rounded-md"
+                      />
 
-                                  setInstrumentalExams(updatedExams);
-                                }}
-                                className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                              >
-                                <option value="X-Ray">X-Ray</option>
-                                <option value="MRI">MRI</option>
-                                <option value="CT Scan">CT Scan</option>
-                                <option value="Ultrasound">Ultrasound</option>
-                                <option value="Blood Test">Blood Test</option>
-                                <option value="Urine Test">Urine Test</option>
-                                <option value="EKG/ECG">EKG/ECG</option>
-                                <option value="EMG">EMG</option>
-                                <option value="Bone Densitometry">
-                                  Bone Densitometry
-                                </option>
-                                <option value="PET Scan">PET Scan</option>
-                                <option value="Endoscopy">Endoscopy</option>
-                                <option value="Other">Other</option>
-                              </select>
+                      <input
+                        type="text"
+                        value={exam.notes || ""}
+                        onChange={(e) => {
+                          const updatedExams = [...instrumentalExams];
+                          updatedExams[index].notes = e.target.value;
+                          setInstrumentalExams(updatedExams);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
 
-                              {exam.name.includes("|") && (
-                                <input
-                                  type="text"
-                                  value={exam.name.split("|")[1] || ""}
-                                  onChange={(e) => {
-                                    const updatedExams = [...instrumentalExams];
-                                    updatedExams[index].name =
-                                      `Other|${e.target.value}`;
-                                    setInstrumentalExams(updatedExams);
-                                  }}
-                                  placeholder="Specify exam type"
-                                  className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
-                                />
-                              )}
-                            </div>
-                          </div>
-
-                          {/* File Attachment */}
-                          <div className="flex-1 mr-2">
-                            <div className="flex items-center">
-                              <input
-                                type="text"
-                                value={exam.fileAttachment}
-                                onChange={(e) => {
-                                  const updatedExams = [...instrumentalExams];
-                                  updatedExams[index].fileAttachment =
-                                    e.target.value;
-                                  setInstrumentalExams(updatedExams);
-                                }}
-                                placeholder="No file selected"
-                                className="w-full text-sm p-2 border border-gray-300 rounded-l-md"
-                                readOnly
-                              />
-                              <label
-                                htmlFor={`file-upload-${index}`}
-                                className="cursor-pointer bg-blue-500 text-white px-2 py-2 text-sm rounded-r-md hover:bg-blue-600"
-                              >
-                                Browse
-                              </label>
-                              <input
-                                id={`file-upload-${index}`}
-                                type="file"
-                                className="hidden"
-                                onChange={(e) => {
-                                  if (e.target.files && e.target.files[0]) {
-                                    const updatedExams = [...instrumentalExams];
-                                    updatedExams[index].fileAttachment =
-                                      e.target.files[0].name;
-                                    setInstrumentalExams(updatedExams);
-                                  }
-                                }}
-                              />
-                            </div>
-                          </div>
-
-                          {/* Notes */}
-                          <div className="flex-1">
-                            <input
-                              type="text"
-                              value={exam.notes}
-                              onChange={(e) => {
-                                const updatedExams = [...instrumentalExams];
-                                updatedExams[index].notes = e.target.value;
-                                setInstrumentalExams(updatedExams);
-                              }}
-                              placeholder="Additional notes about the exam"
-                              className="w-full text-sm p-2 border border-gray-300 rounded-md"
-                            />
-                          </div>
-
-                          {/* Remove Button */}
-                          <div className="w-8 flex justify-center">
-                            <button
-                              onClick={() => {
-                                const updatedExams = [...instrumentalExams];
-                                updatedExams.splice(index, 1);
-                                setInstrumentalExams(updatedExams);
-                              }}
-                              className="p-2 text-red-500 hover:text-red-700"
-                              aria-label="Remove"
-                            >
-                              ✕
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    ),
-                  )}
+                      <button
+                        onClick={() => {
+                          const updatedExams = [...instrumentalExams];
+                          updatedExams.splice(index, 1);
+                          setInstrumentalExams(updatedExams);
+                        }}
+                        className="p-2 text-red-500 hover:text-red-700"
+                        aria-label="Remove"
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
 
                   {/* Add New Instrumental Exam Form (always visible) */}
                     <div className="mt-4 border-t pt-4">

@@ -80,6 +80,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
   interface SurgicalIntervention {
     name: string;
     year: string;
+    notes: string;
   }
   const [surgicalInterventionsList, setSurgicalInterventionsList] = useState<SurgicalIntervention[]>([]);
   
@@ -1821,6 +1822,18 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                         className="w-32 text-sm p-2 border border-gray-300 rounded-md"
                       />
                       
+                      <input
+                        type="text"
+                        value={intervention.notes || ''}
+                        onChange={(e) => {
+                          const updatedInterventions = [...surgicalInterventionsList];
+                          updatedInterventions[index].notes = e.target.value;
+                          setSurgicalInterventionsList(updatedInterventions);
+                        }}
+                        placeholder="Notes"
+                        className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                      />
+                      
                       <button
                         onClick={() => {
                           const updatedInterventions = [...surgicalInterventionsList];
@@ -1876,12 +1889,20 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       className="w-32 text-sm p-2 border border-gray-300 rounded-md"
                     />
                     
+                    <input
+                      type="text"
+                      id="intervention-notes"
+                      placeholder="Notes"
+                      className="flex-1 text-sm p-2 border border-gray-300 rounded-md"
+                    />
+                    
                     <button
                       className="px-3 py-2 bg-blue-500 text-white text-sm rounded-md hover:bg-blue-600"
                       onClick={() => {
                         const typeSelect = document.getElementById('surgical-intervention-type') as HTMLSelectElement;
                         const otherInput = document.getElementById('other-intervention-input') as HTMLInputElement;
                         const yearInput = document.getElementById('intervention-year') as HTMLInputElement;
+                        const notesInput = document.getElementById('intervention-notes') as HTMLInputElement;
                         
                         if (typeSelect && typeSelect.value) {
                           let interventionType = typeSelect.value;
@@ -1897,7 +1918,8 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                               ...surgicalInterventionsList,
                               {
                                 name: interventionType,
-                                year: yearInput ? yearInput.value : ''
+                                year: yearInput ? yearInput.value : '',
+                                notes: notesInput ? notesInput.value : ''
                               }
                             ]);
                             
@@ -1905,6 +1927,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                             typeSelect.selectedIndex = 0;
                             if (otherInput) otherInput.value = '';
                             if (yearInput) yearInput.value = '';
+                            if (notesInput) notesInput.value = '';
                             
                             // Hide other input
                             if (otherInput) {

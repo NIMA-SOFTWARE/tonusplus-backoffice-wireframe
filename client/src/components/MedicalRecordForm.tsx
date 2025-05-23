@@ -8,7 +8,7 @@ import { format } from 'date-fns';
 import { 
   User, FileText, Target, Activity, 
   Clipboard, History, Stethoscope, Search, Mic,
-  Dumbbell
+  Dumbbell, Shield
 } from 'lucide-react';
 import VoiceEnabledInput from './VoiceEnabledInput';
 import VoiceInputButton from './VoiceInputButton';
@@ -813,12 +813,12 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 4: Local Anamnesis */}
+        {/* Section 4: Pain Assessment */}
         <AccordionItem value="local-anamnesis">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
               <Activity className="mr-2 h-5 w-5 text-purple-500" />
-              <span>Local Anamnesis</span>
+              <span>Pain Assessment</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
@@ -846,7 +846,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       ]}
                       selectedTags={whenDoesItHurt}
                       onTagsChange={setWhenDoesItHurt}
-                      allowCustomTags={true}
+                      allowCustomTags={false}
                       voiceEnabled={voiceInputEnabled}
                     />
                   </div>
@@ -878,7 +878,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       ]}
                       selectedTags={howDoesItHurt}
                       onTagsChange={setHowDoesItHurt}
-                      allowCustomTags={true}
+                      allowCustomTags={false}
                       voiceEnabled={voiceInputEnabled}
                     />
                   </div>
@@ -951,7 +951,7 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                       ]}
                       selectedTags={whereDoesItHurt}
                       onTagsChange={setWhereDoesItHurt}
-                      allowCustomTags={true}
+                      allowCustomTags={false}
                       voiceEnabled={voiceInputEnabled}
                     />
                   </div>
@@ -1149,22 +1149,17 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
           </AccordionContent>
         </AccordionItem>
         
-        {/* Section 5: Generic Anamnesis */}
-        <AccordionItem value="generic-anamnesis">
+        {/* Section 5: Trauma and Diseases/Dysfunctions of the Musculoskeletal System */}
+        <AccordionItem value="trauma-diseases">
           <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
             <div className="flex items-center">
-              <Clipboard className="mr-2 h-5 w-5 text-amber-500" />
-              <span>Generic Anamnesis</span>
+              <Shield className="mr-2 h-5 w-5 text-red-500" />
+              <span>Trauma and Diseases/Dysfunctions of the Musculoskeletal System</span>
             </div>
           </AccordionTrigger>
           <AccordionContent>
-            <div className="p-4 space-y-6">
-              {/* Trauma and Diseases/Dysfunctions subsection */}
-              <div className="space-y-4">
-                <h4 className="text-sm font-semibold uppercase text-gray-600 border-b pb-1">
-                  Trauma and Diseases/Dysfunctions of the Musculoskeletal System
-                </h4>
-                <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-6">
+            <div className="p-4 space-y-4">
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200 space-y-6">
                   {/* Reusable trauma entry component */}
                   {/* This is a local component for reuse within the medical record form */}
                   {(() => {
@@ -1735,7 +1730,20 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
                     );
                   })()}
                 </div>
-              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        {/* Section 6: Generic Anamnesis */}
+        <AccordionItem value="generic-anamnesis">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <Clipboard className="mr-2 h-5 w-5 text-amber-500" />
+              <span>Generic Anamnesis</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-6">
               
               {/* Surgical Interventions subsection */}
               <div className="space-y-4">

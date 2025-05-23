@@ -2015,8 +2015,35 @@ const MedicalRecordForm: React.FC<MedicalRecordFormProps> = ({
         
         {/* Section 8: Specific Clinical History */}
         <AccordionItem value="clinical-history">
-                  
-                  {/* Existing anatomical anomalies */}
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <History className="mr-2 h-5 w-5 text-indigo-500" />
+              <span>Specific Clinical History</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
+              <div className="bg-zinc-50 p-4 rounded-lg border border-zinc-200">
+                <h5 className="text-sm font-medium text-gray-700 mb-3">Clinical History Details</h5>
+                
+                <div className="text-center py-6">
+                  <p className="text-gray-500">Clinical history details will be added here</p>
+                </div>
+              </div>
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+        
+        {/* Placeholder for other sections */}
+        <AccordionItem value="temp-section">
+          <AccordionTrigger className="text-base font-medium py-3 hover:bg-gray-50 px-2 rounded">
+            <div className="flex items-center">
+              <FileText className="mr-2 h-5 w-5 text-gray-500" />
+              <span>Other Medical Information</span>
+            </div>
+          </AccordionTrigger>
+          <AccordionContent>
+            <div className="p-4 space-y-4">
                   {anatomicalAnomalies.map((anomaly, index) => (
                     <div key={index} className="flex items-center gap-2 mb-2">
                       {anomaly.location === "Other" ? (

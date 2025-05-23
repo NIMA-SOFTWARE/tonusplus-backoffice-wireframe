@@ -23,7 +23,7 @@ import {
   Clock,
   MapPin
 } from 'lucide-react';
-import { TagSelectionInput } from './TagSelectionInput';
+import TagSelectionInput from './TagSelectionInput';
 import type { Participant } from '@/lib/types';
 
 interface MedicalRecordFormProps {
